@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LoginPage from "./pages/login/Login";
+import LoginPage from "./Pages/Login";
 import Dashboard from "./Pages/Dashboard";
 
 export default function App() {
