@@ -1,11 +1,11 @@
 import Dashboard from "./Pages/Dashboard";
 
-function App() {
+export default function App() {
   return (
-    <div className="flex bg-[#f9fafb] min-h-screen text-xs">
-      <Dashboard />
+    <div>
+      <div className="flex-1 transition-all duration-300 ease-in-out">
+        <Dashboard />
+      </div>
     </div>
   );
 }
-
-export default App;
