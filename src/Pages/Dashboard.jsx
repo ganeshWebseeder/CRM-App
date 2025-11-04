@@ -1,6 +1,4 @@
 import React from "react";
-import Navbar from "../components/Dash-ui/Navbar";
-import Sidebar from "../components/Dash-ui/Sidebar";
 
 export default function Dashboard() {
   // Summary data (later this will come from backend API)
@@ -47,10 +45,7 @@ export default function Dashboard() {
   ];
 
   return (
-     <div className="flex flex-1">
-      <Sidebar />
-      <div className="flex-1 p-4">
-        <Navbar />
+    
         <div className="p-6">
       {/* Header */}
       <div className="mb-6">
@@ -104,7 +99,6 @@ export default function Dashboard() {
         </div>
       </div>
       </div>
-    </div>
-  </div>
+   
   );
 }
