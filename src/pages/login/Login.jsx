@@ -1,20 +1,27 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
-    // Add your login logic here (API call, validation, etc.)
+
+    // Dummy credentials (you can replace with your API later)
+    if (email === "admin@example.com" && password === "admin123") {
+      navigate("/dashboard");
+    } else {
+      setError("Invalid email or password");
+    }
   };
 
   return (
     <div className="flex h-screen">
       {/* Left Side with Image */}
-      <div className="w-1/2 relative  hidden md:flex items-center justify-center bg-gray-100">
+      <div className="w-1/2 relative hidden md:flex items-center justify-center bg-gray-100">
         <img
           src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d"
           alt="Office Work"
@@ -69,6 +76,12 @@ export default function LoginPage() {
               />
             </div>
 
+            {error && (
+              <p className="text-red-500 text-sm font-medium text-center">
+                {error}
+              </p>
+            )}
+
             <button
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition"
@@ -78,7 +91,8 @@ export default function LoginPage() {
           </form>
 
           <p className="text-center text-gray-500 text-sm mt-6">
-            Secured by <span className="font-semibold">WebSeeder Technology</span>
+            Secured by{" "}
+            <span className="font-semibold">WebSeeder Technology</span>
           </p>
         </div>
       </div>
