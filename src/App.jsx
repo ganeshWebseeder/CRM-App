@@ -1,21 +1,18 @@
-
-import React from 'react'
-import LoginPage from './pages/login/Login'
-function App() {
- 
-
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LoginPage from "./pages/login/Login";
 import Dashboard from "./Pages/Dashboard";
 
 export default function App() {
-
   return (
-    <div>
-     <LoginPage/>
+    <BrowserRouter>
+      <Routes>
+        {/* Default route → Login Page */}
+        <Route path="/" element={<LoginPage />} />
 
-      <div className="flex-1 transition-all duration-300 ease-in-out">
-        <Dashboard />
-      </div>
-
-    </div>
+        {/* Dashboard route */}
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
