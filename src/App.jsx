@@ -1,13 +1,11 @@
-import React from 'react'
+import Dashboard from "./Pages/Dashboard";
+
 function App() {
- 
   return (
-    <>
-    <div>
-      Hello World
+    <div className="flex bg-[#f9fafb] min-h-screen text-xs">
+      <Dashboard />
     </div>
-    </>
-  )
+  );
 }
 
-export default App
+export default App;
