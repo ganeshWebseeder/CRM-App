@@ -46,30 +46,31 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="flex justify-between items-center bg-gradient-to-r from-slate-800 to-indigo-900 px-6 py-3 rounded-lg shadow-md mb-4 text-white">
+    <div className="flex justify-between items-center px-6 py-3 rounded-lg shadow-sm border border-gray-200 mb-4 bg-white">
       {/* LEFT SIDE — Breadcrumb & Time */}
       <div className="flex items-center space-x-6">
-        <div className="flex items-center space-x-2 text-white/90">
-          <i className="ri-dashboard-line text-lg text-indigo-300"></i>
+        <div className="flex items-center space-x-2 text-gray-700">
+          <i className="ri-dashboard-line text-lg text-indigo-500"></i>
           <p className="text-sm">
-            Dashboard / <span className="font-semibold text-indigo-300">Project Overview</span>
+            Dashboard /{" "}
+            <span className="font-semibold text-indigo-600">Project Overview</span>
           </p>
         </div>
 
         {/* Live Time */}
-        <div className="flex items-center text-xs text-white/80">
-          <i className="ri-time-line mr-2 text-base text-indigo-300"></i>
+        <div className="flex items-center text-xs text-gray-500">
+          <i className="ri-time-line mr-2 text-base text-indigo-500"></i>
           {currentTime}
         </div>
       </div>
 
       {/* CENTER — Search */}
       <div className="relative w-[32rem]">
-        <i className="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 text-base"></i>
+        <i className="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base"></i>
         <input
           type="text"
           placeholder="Search projects, leads, invoices..."
-          className="w-full pl-10 pr-4 py-2.5 text-sm rounded-md bg-white/10 placeholder-white/70 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          className="w-full pl-10 pr-4 py-2.5 text-sm rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400"
         />
       </div>
 
@@ -79,40 +80,43 @@ export default function Navbar() {
         <button
           title="Toggle Fullscreen"
           onClick={toggleFullscreen}
-          className="hover:bg-white/20 p-2 rounded-md transition"
+          className="hover:bg-gray-100 p-2 rounded-md transition"
         >
           <i
             className={`${
               isFullscreen ? "ri-fullscreen-exit-line" : "ri-fullscreen-line"
-            } text-lg text-white`}
+            } text-lg text-gray-700`}
           ></i>
         </button>
 
         {/* Notifications */}
-        <button title="Reminders / Notifications" className="relative hover:bg-white/20 p-2 rounded-md transition">
-          <i className="ri-notification-2-line text-lg text-white"></i>
-          <span className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full"></span>
+        <button
+          title="Reminders / Notifications"
+          className="relative hover:bg-gray-100 p-2 rounded-md transition"
+        >
+          <i className="ri-notification-2-line text-lg text-gray-700"></i>
+          <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
         </button>
 
         {/* Divider */}
-        <div className="w-px h-6 bg-white/30"></div>
+        <div className="w-px h-6 bg-gray-300"></div>
 
         {/* User Dropdown */}
         <div className="relative">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center space-x-2 hover:bg-white/20 rounded-md px-2 py-1 transition"
+            className="flex items-center space-x-2 hover:bg-gray-100 rounded-md px-2 py-1 transition"
           >
-            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-              <i className="ri-user-3-line text-white text-base"></i>
+            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+              <i className="ri-user-3-line text-gray-700 text-base"></i>
             </div>
             <div className="flex items-center">
               <div className="text-left">
-                <p className="text-xs font-semibold text-white">Ganesh Borole</p>
-                <p className="text-[10px] text-white/70">Admin</p>
+                <p className="text-xs font-semibold text-gray-800">Ganesh Borole</p>
+                <p className="text-[10px] text-gray-500">Admin</p>
               </div>
               <i
-                className={`ri-arrow-down-s-line ml-1 text-white/70 transition-transform duration-200 ${
+                className={`ri-arrow-down-s-line ml-1 text-gray-500 transition-transform duration-200 ${
                   isDropdownOpen ? "rotate-180" : ""
                 }`}
               ></i>
@@ -138,17 +142,19 @@ export default function Navbar() {
 
               {/* Menu Options */}
               <ul className="py-1">
-                <li className="px-4 py-2 hover:bg-indigo-50 hover:text-indigo-600 cursor-pointer flex items-center space-x-2 transition">
-                  <i className="ri-user-line"></i> <span>My Profile</span>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-2 transition">
+                  <i className="ri-user-line text-gray-600"></i> <span>My Profile</span>
                 </li>
-                <li className="px-4 py-2 hover:bg-indigo-50 hover:text-indigo-600 cursor-pointer flex items-center space-x-2 transition">
-                  <i className="ri-settings-3-line"></i> <span>Account Settings</span>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-2 transition">
+                  <i className="ri-settings-3-line text-gray-600"></i>{" "}
+                  <span>Account Settings</span>
                 </li>
-                <li className="px-4 py-2 hover:bg-indigo-50 hover:text-indigo-600 cursor-pointer flex items-center space-x-2 transition">
-                  <i className="ri-question-line"></i> <span>Help & Support</span>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-2 transition">
+                  <i className="ri-question-line text-gray-600"></i>{" "}
+                  <span>Help & Support</span>
                 </li>
-                <li className="px-4 py-2 hover:bg-indigo-50 hover:text-indigo-600 cursor-pointer flex items-center space-x-2 transition">
-                  <i className="ri-translate-2"></i> <span>Language</span>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-2 transition">
+                  <i className="ri-translate-2 text-gray-600"></i> <span>Language</span>
                 </li>
                 <hr className="my-1 border-gray-200" />
                 <li className="px-4 py-2 hover:bg-red-500 hover:text-white cursor-pointer flex items-center space-x-2 text-red-600 transition">
