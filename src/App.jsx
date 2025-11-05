@@ -7,7 +7,7 @@ import MainLayout from "./components/layouts/MainLayout";
 
 function App() {
   return (
-    <BrowserRouter>
+
       <Routes>
         <Route path="/" element={<Login />} />
         <Route
@@ -19,7 +19,7 @@ function App() {
           }
         />
       </Routes>
-    </BrowserRouter>
+   
   );
 }
 
