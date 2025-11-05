@@ -5,6 +5,7 @@ import Login from "./Pages/Login";
 import Dashboard from "./Pages/Dashboard";
 
 import MainLayout from "./components/layouts/MainLayout";
+import Projects from "./Pages/Projects";
 
 function App() {
   return (
@@ -16,9 +17,20 @@ function App() {
           element={
             <MainLayout>
               <Dashboard />
+              
             </MainLayout>
           }
         />
+        <Route
+          path="/projects"
+          element={
+            <MainLayout>
+              <Projects />
+              
+            </MainLayout>
+          }
+        />
+        
       </Routes>
    
   );

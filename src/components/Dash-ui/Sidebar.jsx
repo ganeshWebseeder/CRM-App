@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Sidebar() {
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation(); // To highlight active route
 
+  // 🧭 Menu Items with their navigation paths
   const menuItems = [
-    { icon: "ri-dashboard-line", label: "Dashboard" },
-    { icon: "ri-briefcase-line", label: "Projects" },
-    { icon: "ri-user-star-line", label: "Leads" },
-    { icon: "ri-file-list-3-line", label: "Invoices" },
-    { icon: "ri-notification-3-line", label: "Reminders" },
-    { icon: "ri-bar-chart-2-line", label: "Reports" },
-    { icon: "ri-settings-3-line", label: "Settings" },
+    { icon: "ri-dashboard-line", label: "Dashboard", path: "/dashboard" },
+    { icon: "ri-briefcase-line", label: "Projects", path: "/projects" },
+    { icon: "ri-user-star-line", label: "Leads", path: "/leads" },
+    { icon: "ri-file-list-3-line", label: "Invoices", path: "/invoices" },
+    { icon: "ri-notification-3-line", label: "Reminders", path: "/reminders" },
+    { icon: "ri-bar-chart-2-line", label: "Reports", path: "/reports" },
+    { icon: "ri-settings-3-line", label: "Settings", path: "/settings" },
   ];
 
   const handleLogout = () => {
@@ -33,7 +35,7 @@ export default function Sidebar() {
           <div className="text-indigo-500 text-2xl font-bold">📊</div>
           {isHovered && (
             <span className="ml-2 font-semibold text-sm whitespace-nowrap text-gray-800">
-              Welcome !
+              CRM Panel
             </span>
           )}
         </div>
@@ -42,22 +44,39 @@ export default function Sidebar() {
 
       {/* 📋 Menu Items */}
       <nav className="flex-1 flex flex-col text-sm space-y-0.5 px-1 mt-1">
-        {menuItems.map((item, index) => (
-          <div
-            key={index}
-            className={`flex items-center px-4 py-2 rounded-md cursor-pointer transition-all duration-150
-              ${
-                isHovered
-                  ? "justify-start space-x-3 hover:bg-gray-100"
-                  : "justify-center hover:bg-gray-100"
-              }`}
-          >
-            <i className={`${item.icon} text-lg text-indigo-600`}></i>
-            {isHovered && (
-              <span className="truncate text-gray-700">{item.label}</span>
-            )}
-          </div>
-        ))}
+        {menuItems.map((item, index) => {
+          const isActive = location.pathname === item.path; // active page check
+
+          return (
+            <div
+              key={index}
+              onClick={() => navigate(item.path)}
+              className={`flex items-center px-4 py-2 rounded-md cursor-pointer transition-all duration-150
+                ${
+                  isHovered
+                    ? "justify-start space-x-3 hover:bg-gray-100"
+                    : "justify-center hover:bg-gray-100"
+                }
+                ${isActive ? "bg-indigo-100 text-indigo-700 font-medium" : ""}
+              `}
+            >
+              <i
+                className={`${item.icon} text-lg ${
+                  isActive ? "text-indigo-700" : "text-indigo-600"
+                }`}
+              ></i>
+              {isHovered && (
+                <span
+                  className={`truncate ${
+                    isActive ? "text-indigo-700 font-medium" : "text-gray-700"
+                  }`}
+                >
+                  {item.label}
+                </span>
+              )}
+            </div>
+          );
+        })}
       </nav>
 
       {/* 🚪 Logout Button */}
@@ -69,9 +88,7 @@ export default function Sidebar() {
             hover:bg-red-500 hover:text-white`}
         >
           <i className="ri-logout-box-r-line text-lg text-red-500"></i>
-          {isHovered && (
-            <span className="text-sm font-medium">Logout</span>
-          )}
+          {isHovered && <span className="text-sm font-medium">Logout</span>}
         </div>
       </div>
     </div>
