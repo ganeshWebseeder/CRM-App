@@ -1,9 +1,9 @@
 
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import Login from "./Pages/Login";
 import Dashboard from "./Pages/Dashboard";
+
 import MainLayout from "./components/layouts/MainLayout";
 
 function App() {

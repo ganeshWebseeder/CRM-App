@@ -1,104 +1,263 @@
-import React from "react";
+import React, { useEffect } from "react";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  animate,
+} from "framer-motion";
+import {
+  Briefcase,
+  PlayCircle,
+  Users,
+  IndianRupee,
+  Bell,
+  UserPlus,
+  FileText,
+  AlarmClock,
+  PieChart as PieIcon,
+} from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Pie,
+  Cell,
+  PieChart,
+} from "recharts";
+
+
+// Animated Counter Component
+function AnimatedCounter({ value, isCurrency = false }) {
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, (latest) =>
+    isCurrency
+      ? "₹" + Math.floor(latest).toLocaleString("en-IN")
+      : Math.floor(latest).toLocaleString("en-IN")
+  );
+
+  useEffect(() => {
+    const controls = animate(count, value, { duration: 2, ease: "easeOut" });
+    return controls.stop;
+  }, [value]);
+
+  return (
+    <motion.span className="text-3xl font-semibold text-gray-800 tracking-tight">
+      {rounded}
+    </motion.span>
+  );
+}
 
 export default function Dashboard() {
-  // Summary data (later this will come from backend API)
   const summary = [
     {
       title: "Total Projects",
       value: 128,
-      icon: "ri-briefcase-line",
-      color: "bg-indigo-100 text-indigo-700",
+      icon: <Briefcase size={24} />,
+      color: "from-blue-400 to-blue-600",
     },
     {
       title: "Active Projects",
       value: 76,
-      icon: "ri-play-circle-line",
-      color: "bg-green-100 text-green-600",
+      icon: <PlayCircle size={24} />,
+      color: "from-green-400 to-green-600",
     },
     {
       title: "Leads Count",
       value: 54,
-      icon: "ri-user-star-line",
-      color: "bg-yellow-100 text-yellow-700",
+      icon: <Users size={24} />,
+      color: "from-yellow-400 to-yellow-600",
     },
     {
       title: "Outstanding Amount",
-      value: "₹4,52,300",
-      icon: "ri-money-rupee-circle-line",
-      color: "bg-red-100 text-red-600",
+      value: 452300,
+      isCurrency: true,
+      icon: <IndianRupee size={24} />,
+      color: "from-rose-400 to-red-600",
     },
     {
       title: "Reminders Today",
       value: 9,
-      icon: "ri-notification-3-line",
-      color: "bg-blue-100 text-blue-600",
+      icon: <Bell size={24} />,
+      color: "from-indigo-400 to-indigo-600",
     },
   ];
 
-  // Quick actions (from spec)
   const quickActions = [
-    { icon: "ri-add-circle-line", label: "Add New Project" },
-    { icon: "ri-user-add-line", label: "Add New Lead" },
-    { icon: "ri-file-list-3-line", label: "Create Invoice" },
-    { icon: "ri-alarm-warning-line", label: "Set Reminder" },
-    { icon: "ri-bar-chart-2-line", label: "View Reports" },
+    { icon: <UserPlus size={18} />, label: "Add New Lead" },
+    { icon: <FileText size={18} />, label: "Create Invoice" },
+    { icon: <AlarmClock size={18} />, label: "Set Reminder" },
+    { icon: <PieIcon size={18} />, label: "View Reports" },
   ];
 
+  // Chart Data
+  const revenueData = [
+    { month: "Jan", revenue: 40000 },
+    { month: "Feb", revenue: 52000 },
+    { month: "Mar", revenue: 61000 },
+    { month: "Apr", revenue: 48000 },
+    { month: "May", revenue: 72000 },
+    { month: "Jun", revenue: 66000 },
+  ];
+
+  const leadData = [
+    { name: "Cold Leads", value: 30 },
+    { name: "Warm Leads", value: 45 },
+    { name: "Hot Leads", value: 25 },
+  ];
+
+  const COLORS = ["#60A5FA", "#34D399", "#FBBF24"];
+
+  const cardVariant = {
+    hidden: { opacity: 0, y: 50 },
+    show: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.1, type: "spring", stiffness: 100 },
+    }),
+  };
+
   return (
-    
-        <div className="p-6">
+    <div className="p-8 min-h-screen bg-gradient-to-br from-white via-blue-50 to-gray-100">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-gray-800">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="mb-10 text-center"
+      >
+        <h1 className="text-4xl font-bold text-gray-800">
           Project Management Dashboard
         </h1>
-        <p className="text-gray-500 text-sm">
-          Key metrics and quick actions for daily operations
+        <p className="text-gray-500 text-sm mt-2">
+          Track progress, revenue, and leads at a glance 🌤️
         </p>
-      </div>
+      </motion.div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
+      <motion.div
+        initial="hidden"
+        animate="show"
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6 mb-12"
+      >
         {summary.map((item, i) => (
-          <div
+          <motion.div
             key={i}
-            className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition flex justify-between items-center"
+            custom={i}
+            variants={cardVariant}
+            whileHover={{
+              scale: 1.05,
+              y: -5,
+              boxShadow: "0 12px 25px rgba(0,0,0,0.1)",
+            }}
+            className={`p-5 rounded-2xl bg-gradient-to-r ${item.color} text-white shadow-md flex justify-between items-center`}
           >
             <div>
-              <p className="text-xs text-gray-500 font-medium uppercase">
+              <p className="text-sm uppercase font-medium opacity-90">
                 {item.title}
               </p>
-              <h2 className="text-lg font-bold text-gray-800 mt-1">
-                {item.value}
-              </h2>
+              <AnimatedCounter
+                value={item.value}
+                isCurrency={item.isCurrency}
+              />
             </div>
-            <div
-              className={`w-10 h-10 flex items-center justify-center rounded-full ${item.color}`}
-            >
-              <i className={`${item.icon} text-lg`}></i>
-            </div>
-          </div>
+            <div className="bg-white/30 p-3 rounded-full">{item.icon}</div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
-      {/* Quick Actions Section */}
-      <div>
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">
-          Quick Actions
+      {/* Charts Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12"
+      >
+        {/* Revenue Chart */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">
+            📊 Revenue Overview (Last 6 Months)
+          </h2>
+          <ResponsiveContainer width="100%" height={280}>
+            <BarChart data={revenueData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" />
+              <XAxis dataKey="month" stroke="#6B7280" />
+              <YAxis stroke="#6B7280" />
+              <Tooltip />
+              <Bar
+                dataKey="revenue"
+                fill="url(#colorRevenue)"
+                radius={[8, 8, 0, 0]}
+              />
+              <defs>
+                <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#60A5FA" stopOpacity={0.9} />
+                  <stop offset="95%" stopColor="#93C5FD" stopOpacity={0.5} />
+                </linearGradient>
+              </defs>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Leads Chart */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">
+            🎯 Leads Distribution
+          </h2>
+          <ResponsiveContainer width="100%" height={280}>
+            <PieChart>
+              <Pie
+                data={leadData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                label={({ name, percent }) =>
+                  `${name}: ${(percent * 100).toFixed(0)}%`
+                }
+                outerRadius={100}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {leadData.map((_, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </motion.div>
+
+      {/* Quick Actions */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        <h2 className="text-xl font-semibold text-gray-700 mb-4 flex items-center gap-2">
+          Quick Actions ⚡
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {quickActions.map((action, i) => (
-            <button
+            <motion.button
               key={i}
-              className="flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-slate-700 text-white py-3 rounded-lg shadow hover:opacity-90 transition text-sm font-medium"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 200 }}
+              className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-3 rounded-xl shadow hover:shadow-lg transition text-sm font-medium"
             >
-              <i className={`${action.icon} text-base`}></i>
+              {action.icon}
               {action.label}
-            </button>
+            </motion.button>
           ))}
         </div>
-      </div>
-      </div>
-   
+      </motion.div>
+    </div>
   );
 }
