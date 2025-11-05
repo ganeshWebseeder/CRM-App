@@ -1,21 +1,26 @@
-import React, { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router-dom';
-import Dashboard from './Pages/Dashboard';
 
-// Lazy load the Login page
-const LoginPage = lazy(() => import('./pages/login/Login'));
 
-export default function App() {
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import MainLayout from "./components/layouts/MainLayout";
+
+function App() {
   return (
-    <>
-      <div>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Routes>
-            <Route path="/" element={<LoginPage />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Routes>
-        </Suspense>
-      </div>
-    </>
+    
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route
+          path="/dashboard"
+          element={
+            <MainLayout>
+              <Dashboard />
+            </MainLayout>
+          }
+        />
+      </Routes>
+ 
   );
 }
+
+export default App;

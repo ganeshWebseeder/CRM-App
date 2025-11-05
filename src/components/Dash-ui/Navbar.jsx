@@ -6,12 +6,16 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Live time
+  // 🕒 Live time update
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
       const time = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-      const date = now.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
+      const date = now.toLocaleDateString([], {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+      });
       setCurrentTime(`${time} · ${date}`);
     };
     updateTime();
@@ -19,7 +23,7 @@ export default function Navbar() {
     return () => clearInterval(timer);
   }, []);
 
-  // Fullscreen toggle
+  // 🖥️ Fullscreen toggle
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();
@@ -30,7 +34,7 @@ export default function Navbar() {
     }
   };
 
-  // Close dropdown when clicked outside
+  // 🧠 Close dropdown when clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -42,67 +46,73 @@ export default function Navbar() {
   }, []);
 
   return (
-    <div className="flex justify-between items-center bg-white px-6 py-3 rounded-lg shadow-sm mb-4">
-      {/* LEFT SIDE */}
+    <div className="flex justify-between items-center bg-gradient-to-r from-slate-800 to-indigo-900 px-6 py-3 rounded-lg shadow-md mb-4 text-white">
+      {/* LEFT SIDE — Breadcrumb & Time */}
       <div className="flex items-center space-x-6">
-        <div className="flex items-center space-x-2 text-gray-700">
-          <i className="ri-dashboard-line text-base text-gray-500"></i>
-          <p className="text-sm text-gray-500">
-            Dashboard / <span className="text-gray-900 font-medium text-orange-600">Overview</span>
+        <div className="flex items-center space-x-2 text-white/90">
+          <i className="ri-dashboard-line text-lg text-indigo-300"></i>
+          <p className="text-sm">
+            Dashboard / <span className="font-semibold text-indigo-300">Project Overview</span>
           </p>
         </div>
-        <div className="flex items-center text-xs text-gray-600">
-          <i className="ri-time-line mr-2 text-base text-gray-500"></i>
+
+        {/* Live Time */}
+        <div className="flex items-center text-xs text-white/80">
+          <i className="ri-time-line mr-2 text-base text-indigo-300"></i>
           {currentTime}
         </div>
       </div>
 
-      {/* CENTER: Search */}
-      <div className="relative w-[36rem]">
-        <i className="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base"></i>
+      {/* CENTER — Search */}
+      <div className="relative w-[32rem]">
+        <i className="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 text-base"></i>
         <input
           type="text"
-          placeholder="Search orders, customers, menu items..."
-          className="border border-gray-200 rounded-md pl-10 pr-4 py-2.5 text-sm w-full focus:outline-none focus:ring-1 focus:ring-gray-300"
+          placeholder="Search projects, leads, invoices..."
+          className="w-full pl-10 pr-4 py-2.5 text-sm rounded-md bg-white/10 placeholder-white/70 text-white border border-white/20 focus:outline-none focus:ring-2 focus:ring-indigo-400"
         />
       </div>
 
-      {/* RIGHT SIDE: Icons + User */}
-      <div className="flex items-center space-x-5 text-gray-600" ref={dropdownRef}>
+      {/* RIGHT SIDE — Icons & User */}
+      <div className="flex items-center space-x-5" ref={dropdownRef}>
         {/* Fullscreen */}
-        <button title="Toggle Fullscreen" onClick={toggleFullscreen}>
+        <button
+          title="Toggle Fullscreen"
+          onClick={toggleFullscreen}
+          className="hover:bg-white/20 p-2 rounded-md transition"
+        >
           <i
             className={`${
               isFullscreen ? "ri-fullscreen-exit-line" : "ri-fullscreen-line"
-            } text-lg hover:text-gray-800`}
+            } text-lg text-white`}
           ></i>
         </button>
 
         {/* Notifications */}
-        <button title="Notifications" className="relative">
-          <i className="ri-notification-2-line text-lg hover:text-gray-800"></i>
-          <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        <button title="Reminders / Notifications" className="relative hover:bg-white/20 p-2 rounded-md transition">
+          <i className="ri-notification-2-line text-lg text-white"></i>
+          <span className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full"></span>
         </button>
 
         {/* Divider */}
-        <div className="w-px h-6 bg-gray-200"></div>
+        <div className="w-px h-6 bg-white/30"></div>
 
         {/* User Dropdown */}
         <div className="relative">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center space-x-2 hover:bg-gray-50 rounded-md px-2 py-1"
+            className="flex items-center space-x-2 hover:bg-white/20 rounded-md px-2 py-1 transition"
           >
-            <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-              <i className="ri-user-3-line text-gray-700 text-base"></i>
+            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+              <i className="ri-user-3-line text-white text-base"></i>
             </div>
             <div className="flex items-center">
               <div className="text-left">
-                <p className="text-xs font-semibold text-gray-800">John Doe</p>
-                <p className="text-[10px] text-gray-500">Super Admin</p>
+                <p className="text-xs font-semibold text-white">Ganesh Borole</p>
+                <p className="text-[10px] text-white/70">Admin</p>
               </div>
               <i
-                className={`ri-arrow-down-s-line ml-1 text-gray-500 transition-transform duration-200 ${
+                className={`ri-arrow-down-s-line ml-1 text-white/70 transition-transform duration-200 ${
                   isDropdownOpen ? "rotate-180" : ""
                 }`}
               ></i>
@@ -111,15 +121,15 @@ export default function Navbar() {
 
           {/* Dropdown Menu */}
           {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-md shadow-lg text-xs z-50">
-              {/* User Info Section */}
+            <div className="absolute right-0 mt-2 w-56 bg-white text-gray-700 border border-gray-200 rounded-md shadow-lg text-xs z-50">
+              {/* User Info */}
               <div className="px-4 py-3 border-b border-gray-200 flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-                  <i className="ri-user-3-line text-gray-700 text-lg"></i>
+                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                  <i className="ri-user-3-line text-gray-600 text-lg"></i>
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-800 text-sm">John Doe</p>
-                  <p className="text-gray-500 text-[11px]">john@example.com</p>
+                  <p className="font-semibold text-gray-800 text-sm">Ganesh Borole</p>
+                  <p className="text-gray-500 text-[11px]">admin@crmapp.com</p>
                   <div className="flex items-center text-[10px] text-gray-400">
                     <i className="ri-shield-user-line mr-1 text-gray-500"></i> Super Admin
                   </div>
@@ -128,20 +138,20 @@ export default function Navbar() {
 
               {/* Menu Options */}
               <ul className="py-1">
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-2">
+                <li className="px-4 py-2 hover:bg-indigo-50 hover:text-indigo-600 cursor-pointer flex items-center space-x-2 transition">
                   <i className="ri-user-line"></i> <span>My Profile</span>
                 </li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-2">
+                <li className="px-4 py-2 hover:bg-indigo-50 hover:text-indigo-600 cursor-pointer flex items-center space-x-2 transition">
                   <i className="ri-settings-3-line"></i> <span>Account Settings</span>
                 </li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-2">
+                <li className="px-4 py-2 hover:bg-indigo-50 hover:text-indigo-600 cursor-pointer flex items-center space-x-2 transition">
                   <i className="ri-question-line"></i> <span>Help & Support</span>
                 </li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-2">
+                <li className="px-4 py-2 hover:bg-indigo-50 hover:text-indigo-600 cursor-pointer flex items-center space-x-2 transition">
                   <i className="ri-translate-2"></i> <span>Language</span>
                 </li>
                 <hr className="my-1 border-gray-200" />
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-2 text-red-600">
+                <li className="px-4 py-2 hover:bg-red-500 hover:text-white cursor-pointer flex items-center space-x-2 text-red-600 transition">
                   <i className="ri-logout-box-r-line"></i> <span>Sign Out</span>
                 </li>
               </ul>
