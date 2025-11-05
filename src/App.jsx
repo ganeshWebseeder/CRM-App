@@ -24,20 +24,3 @@ function App() {
 }
 
 export default App;
-
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route
-          path="/dashboard"
-          element={
-            <MainLayout>
-              <Dashboard />
-            </MainLayout>
-          }
-        />
-      </Routes>
- 
-  );
-}
-
-export default App;
