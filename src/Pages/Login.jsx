@@ -82,12 +82,23 @@ export default function LoginPage() {
               </p>
             )}
 
-            <button
+
+<div className="flex gap-x-3">
+   <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition cursor-pointer"
             >
-              Sign In
+              LogIn
             </button>
+
+   <button
+             type="passwor"
+              className="w-full bg-blue-600 hover:bg-blue-900 text-white py-2 rounded-lg font-medium transition cursor-pointer"
+            >
+              forget password
+            </button>
+</div>
+           
           </form>
 
           <p className="text-center text-gray-500 text-sm mt-6">
