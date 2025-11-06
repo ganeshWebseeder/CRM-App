@@ -43,13 +43,13 @@ export default function Projects() {
     },
   ]);
 
-  // 🧠 Get unique clients dynamically
+  //  Get unique clients dynamically
   const uniqueClients = useMemo(
     () => ["All", ...new Set(projects.map((p) => p.client))],
     [projects]
   );
 
-  // 🔍 Apply Search + Filters
+  //  Apply Search + Filters
   const filteredProjects = projects.filter((p) => {
     const matchesSearch =
       p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -61,7 +61,7 @@ export default function Projects() {
     return matchesSearch && matchesStatus && matchesClient;
   });
 
-  // ➕ Add or Edit Project
+  //  Add or Edit Project
   const handleSave = (project) => {
     if (editProject) {
       setProjects((prev) =>

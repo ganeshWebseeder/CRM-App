@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
@@ -10,7 +11,6 @@ export default function LoginPage() {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    // Dummy credentials (you can replace with your API later)
     if (email === "admin@example.com" && password === "admin123") {
       navigate("/dashboard");
     } else {
@@ -19,39 +19,73 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex h-screen">
-      {/* Left Side with Image */}
-      <div className="w-1/2 relative hidden md:flex items-center justify-center bg-gray-100">
+    <div className="flex flex-col md:flex-row h-screen">
+      {/* ---------- LEFT SIDE ---------- */}
+      <div className="hidden md:flex w-1/2 relative items-center justify-center overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d"
-          alt="Office Work"
+          src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f"
+          alt="Teamwork Office"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="relative z-10 text-white text-center px-8">
-          <h1 className="text-4xl font-bold mb-4">Secure Access</h1>
-          <p className="text-lg">
-            Your data is protected with enterprise-grade security
-          </p>
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-900/70 via-black/60 to-gray-900/70"></div>
+
+        <div className="relative z-10 text-center text-white px-8">
+          <motion.h1
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="text-5xl font-extrabold mb-4 leading-tight"
+          >
+            Empower Your <br />
+            <span className="text-blue-400">Digital Workspace</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 1 }}
+            className="text-lg max-w-md mx-auto opacity-90"
+          >
+            Manage your workflow efficiently and securely — built with cutting-edge
+            technology for modern professionals.
+          </motion.p>
+
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="mt-10 text-sm uppercase tracking-widest text-gray-300"
+          >
+            <span className="border border-gray-400 px-4 py-2 rounded-full backdrop-blur-md bg-white/10">
+              Powered by WebSeeder
+            </span>
+          </motion.div>
         </div>
+
+        {/* Logo watermark at corner */}
+        <img
+          src="./WebSeeder Logo.jpeg"
+          alt="Watermark"
+          className="absolute bottom-6 right-6 w-16 h-16 opacity-60 rounded-full"
+        />
       </div>
 
-      {/* Right Side with Login Form */}
-      <div className="w-full md:w-1/2 flex items-center justify-center bg-white">
-        <div className="w-full max-w-md px-8">
+      {/* ---------- RIGHT SIDE ---------- */}
+      <div className="flex w-full md:w-1/2 items-center justify-center bg-white px-8">
+        <div className="w-full max-w-md">
           <div className="text-center mb-6">
             <img
               src="./WebSeeder Logo.jpeg"
               alt="Logo"
-              className="w-26 h-35 mx-auto"
+              className="w-24 h-24 mx-auto rounded-full shadow-md mb-3"
             />
-            <h2 className="text-2xl font-bold">Welcome Back</h2>
-            <p className="text-gray-500">Sign in to your account to continue</p>
+            <h2 className="text-3xl font-bold text-gray-800">Welcome Back</h2>
+            <p className="text-gray-500">Sign in to continue</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-5">
             <div>
-              <label className="block text-gray-700 text-sm font-medium mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Email Address
               </label>
               <input
@@ -59,12 +93,13 @@ export default function LoginPage() {
                 placeholder="admin@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 text-sm font-medium mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Password
               </label>
               <input
@@ -72,7 +107,8 @@ export default function LoginPage() {
                 placeholder="********"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
               />
             </div>
 
@@ -82,26 +118,29 @@ export default function LoginPage() {
               </p>
             )}
 
-            <div className="flex gap-x-3">
+            <div className="flex flex-col sm:flex-row gap-3 mt-4">
               <button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition cursor-pointer"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition-all"
               >
-                LogIn
+                Log In
               </button>
 
               <button
-                type="passwor"
-                className="w-full bg-blue-600 hover:bg-blue-900 text-white py-2 rounded-lg font-medium transition cursor-pointer"
+                type="button"
+                onClick={() => alert('Forgot Password clicked!')}
+                className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded-lg font-semibold transition-all"
               >
-                forget password
+                Forgot Password
               </button>
             </div>
           </form>
 
-          <p className="text-center text-gray-500 text-sm mt-6">
+          <p className="text-center text-gray-500 text-sm mt-8">
             Secured by{" "}
-            <span className="font-semibold">WebSeeder Technology</span>
+            <span className="font-semibold text-blue-600">
+              WebSeeder Technology
+            </span>
           </p>
         </div>
       </div>
