@@ -43,7 +43,7 @@ export default function Sidebar() {
                 transition={{ duration: 0.3 }}
                 className="ml-2 font-semibold text-sm whitespace-nowrap text-gray-800"
               >
-                CRM Panel
+                Welcome !
               </motion.span>
             )}
           </AnimatePresence>
