@@ -6,6 +6,7 @@ import Dashboard from "./Pages/Dashboard";
 
 import MainLayout from "./components/layouts/MainLayout";
 import Projects from "./Pages/Projects";
+import LeadManagementPage from "./Pages/Leads";
 
 function App() {
   return (
@@ -26,6 +27,15 @@ function App() {
           element={
             <MainLayout>
               <Projects />
+              
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/leads"
+          element={
+            <MainLayout>
+              <LeadManagementPage />
               
             </MainLayout>
           }
