@@ -1,13 +1,18 @@
 import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import ProjectModal from "../components/ProjectModal";
 
 export default function Projects() {
+  const navigate = useNavigate();
+
+  // 🧠 States
   const [showModal, setShowModal] = useState(false);
   const [editProject, setEditProject] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [clientFilter, setClientFilter] = useState("All");
 
+  // 📋 Sample Data
   const [projects, setProjects] = useState([
     {
       id: 1,
@@ -43,25 +48,36 @@ export default function Projects() {
     },
   ]);
 
-  //  Get unique clients dynamically
+  // 🧮 Unique Clients
   const uniqueClients = useMemo(
     () => ["All", ...new Set(projects.map((p) => p.client))],
     [projects]
   );
 
-  //  Apply Search + Filters
+  // 🔍 Filters
   const filteredProjects = projects.filter((p) => {
     const matchesSearch =
       p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.client.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus =
-      statusFilter === "All" || p.status === statusFilter;
-    const matchesClient =
-      clientFilter === "All" || p.client === clientFilter;
+    const matchesStatus = statusFilter === "All" || p.status === statusFilter;
+    const matchesClient = clientFilter === "All" || p.client === clientFilter;
     return matchesSearch && matchesStatus && matchesClient;
   });
 
-  //  Add or Edit Project
+  // ✏️ Edit Project
+  const handleEdit = (project) => {
+    setEditProject(project);
+    setShowModal(true);
+  };
+
+  // ❌ Delete Project
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this project?")) {
+      setProjects((prev) => prev.filter((p) => p.id !== id));
+    }
+  };
+
+  // 💾 Save Project (from Modal)
   const handleSave = (project) => {
     if (editProject) {
       setProjects((prev) =>
@@ -74,26 +90,13 @@ export default function Projects() {
     setEditProject(null);
   };
 
-  // ✏️ Edit
-  const handleEdit = (project) => {
-    setEditProject(project);
-    setShowModal(true);
-  };
-
-  // ❌ Delete
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this project?")) {
-      setProjects((prev) => prev.filter((p) => p.id !== id));
-    }
-  };
-
   return (
     <div className="p-6 space-y-6">
-      {/* 🏷 Header */}
+      {/* 🏷 Page Header */}
       <div>
         <h1 className="text-2xl font-semibold text-gray-800">Projects</h1>
         <p className="text-gray-500 text-sm">
-          Manage, search, and filter projects easily.
+          Manage, search, filter, and view all active and completed projects.
         </p>
       </div>
 
@@ -125,9 +128,8 @@ export default function Projects() {
         </div>
       </div>
 
-      {/* 🔍 Search + Filters + Add */}
+      {/* 🔍 Search & Filters */}
       <div className="flex flex-wrap justify-between items-center gap-4">
-        {/* Search */}
         <input
           type="text"
           placeholder="Search by name or client..."
@@ -136,9 +138,7 @@ export default function Projects() {
           className="border border-gray-300 rounded-md px-3 py-1 text-sm w-64 focus:ring-1 focus:ring-indigo-400"
         />
 
-        {/* Filters */}
         <div className="flex space-x-2">
-          {/* Status Filter */}
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -150,7 +150,6 @@ export default function Projects() {
             <option value="On Hold">On Hold</option>
           </select>
 
-          {/* Client Filter */}
           <select
             value={clientFilter}
             onChange={(e) => setClientFilter(e.target.value)}
@@ -164,7 +163,6 @@ export default function Projects() {
           </select>
         </div>
 
-        {/* Add Button */}
         <button
           onClick={() => {
             setEditProject(null);
@@ -176,7 +174,7 @@ export default function Projects() {
         </button>
       </div>
 
-      {/* 📋 Table */}
+      {/* 📋 Projects Table */}
       <div className="overflow-x-auto bg-white rounded-lg shadow">
         <table className="min-w-full text-xs text-gray-700">
           <thead className="bg-gray-100 text-gray-600 uppercase">
@@ -192,10 +190,7 @@ export default function Projects() {
           <tbody>
             {filteredProjects.length > 0 ? (
               filteredProjects.map((p) => (
-                <tr
-                  key={p.id}
-                  className="border-t hover:bg-gray-50 transition"
-                >
+                <tr key={p.id} className="border-t hover:bg-gray-50 transition">
                   <td className="p-3">{p.name}</td>
                   <td className="p-3">{p.client}</td>
                   <td
@@ -212,15 +207,21 @@ export default function Projects() {
                   <td className="p-3">{p.start}</td>
                   <td className="p-3">{p.end}</td>
                   <td className="p-3 text-center space-x-2">
+                    <button
+                      onClick={() => navigate(`/projects/${p.id}`)}
+                      className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1 rounded-md transition"
+                    >
+                      View Project Details
+                    </button>
                     <i
-                      className="ri-edit-line text-indigo-600 cursor-pointer"
-                      onClick={() => handleEdit(p)}
-                    ></i>
-                    <i
-                      className="ri-delete-bin-line text-red-500 cursor-pointer"
-                      onClick={() => handleDelete(p.id)}
-                    ></i>
-                  </td>
+    className="ri-edit-line text-indigo-600 cursor-pointer"
+    onClick={() => handleEdit(p)}
+  ></i>
+  <i
+    className="ri-delete-bin-line text-red-500 cursor-pointer"
+    onClick={() => handleDelete(p.id)}
+  ></i>
+</td>
                 </tr>
               ))
             ) : (

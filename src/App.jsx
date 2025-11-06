@@ -7,6 +7,7 @@ import Dashboard from "./Pages/Dashboard";
 import MainLayout from "./components/layouts/MainLayout";
 import Projects from "./Pages/Projects";
 import LeadManagementPage from "./Pages/Leads";
+import ProjectDetails from "./Pages/ProjectDetails";
 
 function App() {
   return (
@@ -40,7 +41,15 @@ function App() {
             </MainLayout>
           }
         />
-        
+         {/* 📄 Project Details (Dynamic Route) */}
+        <Route
+          path="/projects/:id"
+          element={
+            <MainLayout>
+              <ProjectDetails />
+            </MainLayout>
+          }
+        />
       </Routes>
    
 
