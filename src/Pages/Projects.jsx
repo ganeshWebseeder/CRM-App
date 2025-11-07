@@ -1,13 +1,18 @@
 import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import ProjectModal from "../components/ProjectModal";
 
 export default function Projects() {
+  const navigate = useNavigate();
+
+  // 🧠 State
   const [showModal, setShowModal] = useState(false);
   const [editProject, setEditProject] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [clientFilter, setClientFilter] = useState("All");
 
+  // 📋 Sample Data
   const [projects, setProjects] = useState([
     {
       id: 1,
@@ -43,25 +48,36 @@ export default function Projects() {
     },
   ]);
 
-  // Unique client list
+  // 🧮 Unique Clients
   const uniqueClients = useMemo(
     () => ["All", ...new Set(projects.map((p) => p.client))],
     [projects]
   );
 
-  // Search + filter logic
+  // 🔍 Filters
   const filteredProjects = projects.filter((p) => {
+    const q = searchTerm.toLowerCase();
     const matchesSearch =
-      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.client.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus =
-      statusFilter === "All" || p.status === statusFilter;
-    const matchesClient =
-      clientFilter === "All" || p.client === clientFilter;
+      p.name.toLowerCase().includes(q) || p.client.toLowerCase().includes(q);
+    const matchesStatus = statusFilter === "All" || p.status === statusFilter;
+    const matchesClient = clientFilter === "All" || p.client === clientFilter;
     return matchesSearch && matchesStatus && matchesClient;
   });
 
-  // Save Project
+  // ✏️ Edit Project
+  const handleEdit = (project) => {
+    setEditProject(project);
+    setShowModal(true);
+  };
+
+  // ❌ Delete Project
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this project?")) {
+      setProjects((prev) => prev.filter((p) => p.id !== id));
+    }
+  };
+
+  // 💾 Save Project (from Modal)
   const handleSave = (project) => {
     if (editProject) {
       setProjects((prev) =>
@@ -74,26 +90,13 @@ export default function Projects() {
     setEditProject(null);
   };
 
-  // Edit Project
-  const handleEdit = (project) => {
-    setEditProject(project);
-    setShowModal(true);
-  };
-
-  // Delete Project
-  const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this project?")) {
-      setProjects((prev) => prev.filter((p) => p.id !== id));
-    }
-  };
-
   return (
     <div className="px-4 sm:px-6 lg:px-10 py-6 space-y-6 bg-gray-50 min-h-screen overflow-x-hidden">
-      {/* 🏷 Header */}
+      {/* 🏷 Page Header */}
       <div>
         <h1 className="text-2xl font-semibold text-gray-800">Projects</h1>
         <p className="text-gray-500 text-sm">
-          Manage, search, and filter your ongoing and completed projects.
+          Manage, search, filter, and view all active and completed projects.
         </p>
       </div>
 
@@ -129,9 +132,8 @@ export default function Projects() {
         ))}
       </div>
 
-      {/* 🔍 Filters + Search + Add */}
+      {/* 🔍 Search & Filters */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-lg shadow-sm">
-        {/* Search Input */}
         <input
           type="text"
           placeholder="Search by name or client..."
@@ -140,7 +142,6 @@ export default function Projects() {
           className="border border-gray-300 rounded-md px-3 py-2 text-sm w-full md:w-64 focus:ring-1 focus:ring-indigo-500"
         />
 
-        {/* Filters */}
         <div className="flex flex-wrap gap-2">
           <select
             value={statusFilter}
@@ -209,7 +210,13 @@ export default function Projects() {
                   </td>
                   <td className="p-3">{p.start}</td>
                   <td className="p-3">{p.end}</td>
-                  <td className="p-3 text-center space-x-3">
+                  <td className="p-3 text-center space-x-2">
+                    <button
+                      onClick={() => navigate(`/projects/${p.id}`)}
+                      className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1 rounded-md transition"
+                    >
+                      View Project Details
+                    </button>
                     <i
                       className="ri-edit-line text-indigo-600 cursor-pointer hover:text-indigo-800"
                       onClick={() => handleEdit(p)}
