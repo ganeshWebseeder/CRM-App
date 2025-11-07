@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { Icon } from "lucide-react";
+import { label } from "framer-motion/client";
 
 export default function Sidebar() {
   const [isHovered, setIsHovered] = useState(false);
@@ -10,6 +12,7 @@ export default function Sidebar() {
   const menuItems = [
     { icon: "ri-dashboard-line", label: "Dashboard", path: "/dashboard" },
     { icon: "ri-briefcase-line", label: "Projects", path: "/projects" },
+    { icon: "ri-money-dollar-circle-line", label: "Expenses", path: "/expenses" },
     { icon: "ri-user-star-line", label: "Leads", path: "/leads" },
     { icon: "ri-file-list-3-line", label: "Invoices", path: "/invoices" },
     { icon: "ri-notification-3-line", label: "Reminders", path: "/reminders" },
