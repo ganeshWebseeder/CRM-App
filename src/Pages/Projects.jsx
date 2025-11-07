@@ -43,13 +43,13 @@ export default function Projects() {
     },
   ]);
 
-  //  Get unique clients dynamically
+  // Unique client list
   const uniqueClients = useMemo(
     () => ["All", ...new Set(projects.map((p) => p.client))],
     [projects]
   );
 
-  //  Apply Search + Filters
+  // Search + filter logic
   const filteredProjects = projects.filter((p) => {
     const matchesSearch =
       p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -61,7 +61,7 @@ export default function Projects() {
     return matchesSearch && matchesStatus && matchesClient;
   });
 
-  //  Add or Edit Project
+  // Save Project
   const handleSave = (project) => {
     if (editProject) {
       setProjects((prev) =>
@@ -74,13 +74,13 @@ export default function Projects() {
     setEditProject(null);
   };
 
-  // ✏️ Edit
+  // Edit Project
   const handleEdit = (project) => {
     setEditProject(project);
     setShowModal(true);
   };
 
-  // ❌ Delete
+  // Delete Project
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this project?")) {
       setProjects((prev) => prev.filter((p) => p.id !== id));
@@ -88,61 +88,64 @@ export default function Projects() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="px-4 sm:px-6 lg:px-10 py-6 space-y-6 bg-gray-50 min-h-screen overflow-x-hidden">
       {/* 🏷 Header */}
       <div>
         <h1 className="text-2xl font-semibold text-gray-800">Projects</h1>
         <p className="text-gray-500 text-sm">
-          Manage, search, and filter projects easily.
+          Manage, search, and filter your ongoing and completed projects.
         </p>
       </div>
 
       {/* 📊 Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg shadow text-center">
-          <p className="text-gray-500 text-xs">Total Projects</p>
-          <h2 className="text-xl font-semibold text-gray-800">
-            {projects.length}
-          </h2>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow text-center">
-          <p className="text-gray-500 text-xs">Active</p>
-          <h2 className="text-xl font-semibold text-green-600">
-            {projects.filter((p) => p.status === "Active").length}
-          </h2>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow text-center">
-          <p className="text-gray-500 text-xs">Completed</p>
-          <h2 className="text-xl font-semibold text-indigo-600">
-            {projects.filter((p) => p.status === "Completed").length}
-          </h2>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow text-center">
-          <p className="text-gray-500 text-xs">On Hold</p>
-          <h2 className="text-xl font-semibold text-yellow-600">
-            {projects.filter((p) => p.status === "On Hold").length}
-          </h2>
-        </div>
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { label: "Total Projects", value: projects.length, color: "text-gray-800" },
+          {
+            label: "Active",
+            value: projects.filter((p) => p.status === "Active").length,
+            color: "text-green-600",
+          },
+          {
+            label: "Completed",
+            value: projects.filter((p) => p.status === "Completed").length,
+            color: "text-indigo-600",
+          },
+          {
+            label: "On Hold",
+            value: projects.filter((p) => p.status === "On Hold").length,
+            color: "text-yellow-600",
+          },
+        ].map((card, idx) => (
+          <div
+            key={idx}
+            className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition text-center"
+          >
+            <p className="text-gray-500 text-xs">{card.label}</p>
+            <h2 className={`text-xl font-semibold ${card.color}`}>
+              {card.value}
+            </h2>
+          </div>
+        ))}
       </div>
 
-      {/* 🔍 Search + Filters + Add */}
-      <div className="flex flex-wrap justify-between items-center gap-4">
-        {/* Search */}
+      {/* 🔍 Filters + Search + Add */}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-lg shadow-sm">
+        {/* Search Input */}
         <input
           type="text"
           placeholder="Search by name or client..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="border border-gray-300 rounded-md px-3 py-1 text-sm w-64 focus:ring-1 focus:ring-indigo-400"
+          className="border border-gray-300 rounded-md px-3 py-2 text-sm w-full md:w-64 focus:ring-1 focus:ring-indigo-500"
         />
 
         {/* Filters */}
-        <div className="flex space-x-2">
-          {/* Status Filter */}
+        <div className="flex flex-wrap gap-2">
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:ring-1 focus:ring-indigo-400"
+            className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-indigo-500"
           >
             <option value="All">All Status</option>
             <option value="Active">Active</option>
@@ -150,36 +153,34 @@ export default function Projects() {
             <option value="On Hold">On Hold</option>
           </select>
 
-          {/* Client Filter */}
           <select
             value={clientFilter}
             onChange={(e) => setClientFilter(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:ring-1 focus:ring-indigo-400"
+            className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-indigo-500"
           >
-            {uniqueClients.map((client, index) => (
-              <option key={index} value={client}>
+            {uniqueClients.map((client, i) => (
+              <option key={i} value={client}>
                 {client}
               </option>
             ))}
           </select>
-        </div>
 
-        {/* Add Button */}
-        <button
-          onClick={() => {
-            setEditProject(null);
-            setShowModal(true);
-          }}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-md transition"
-        >
-          + Add Project
-        </button>
+          <button
+            onClick={() => {
+              setEditProject(null);
+              setShowModal(true);
+            }}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-md transition"
+          >
+            + Add Project
+          </button>
+        </div>
       </div>
 
-      {/* 📋 Table */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
-        <table className="min-w-full text-xs text-gray-700">
-          <thead className="bg-gray-100 text-gray-600 uppercase">
+      {/* 📋 Projects Table */}
+      <div className="overflow-x-auto bg-white rounded-lg shadow-sm">
+        <table className="min-w-full text-sm text-gray-700">
+          <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
             <tr>
               <th className="p-3 text-left">Project Name</th>
               <th className="p-3 text-left">Client</th>
@@ -192,14 +193,11 @@ export default function Projects() {
           <tbody>
             {filteredProjects.length > 0 ? (
               filteredProjects.map((p) => (
-                <tr
-                  key={p.id}
-                  className="border-t hover:bg-gray-50 transition"
-                >
-                  <td className="p-3">{p.name}</td>
+                <tr key={p.id} className="border-t hover:bg-gray-50 transition">
+                  <td className="p-3 font-medium text-gray-800">{p.name}</td>
                   <td className="p-3">{p.client}</td>
                   <td
-                    className={`p-3 font-medium ${
+                    className={`p-3 font-semibold ${
                       p.status === "Active"
                         ? "text-green-600"
                         : p.status === "Completed"
@@ -211,13 +209,13 @@ export default function Projects() {
                   </td>
                   <td className="p-3">{p.start}</td>
                   <td className="p-3">{p.end}</td>
-                  <td className="p-3 text-center space-x-2">
+                  <td className="p-3 text-center space-x-3">
                     <i
-                      className="ri-edit-line text-indigo-600 cursor-pointer"
+                      className="ri-edit-line text-indigo-600 cursor-pointer hover:text-indigo-800"
                       onClick={() => handleEdit(p)}
                     ></i>
                     <i
-                      className="ri-delete-bin-line text-red-500 cursor-pointer"
+                      className="ri-delete-bin-line text-red-500 cursor-pointer hover:text-red-700"
                       onClick={() => handleDelete(p.id)}
                     ></i>
                   </td>
@@ -225,10 +223,7 @@ export default function Projects() {
               ))
             ) : (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-center text-gray-500 py-4 text-sm"
-                >
+                <td colSpan="6" className="text-center text-gray-500 py-6">
                   No projects found.
                 </td>
               </tr>

@@ -14,6 +14,7 @@ export default function LeadManagementPage() {
       id: 1,
       clientName: "Rohan Patel",
       phone: "9876543210",
+      mail:"rohan.patel@example.com",
       status: "New",
       source: "Website",
       notes: "Interested in website redesign",
@@ -22,6 +23,7 @@ export default function LeadManagementPage() {
       id: 2,
       clientName: "Priya Sharma",
       phone: "9876501234",
+      mail:"priya.sharma@example.com",
       status: "Follow Up",
       source: "Referral",
       notes: "Needs quotation by Friday",
@@ -119,6 +121,14 @@ export default function LeadManagementPage() {
             className="border p-2 rounded-lg w-full"
             required
           />
+          <input
+            type="email"
+            placeholder="Email"
+            value={newLead.mail}
+            onChange={(e) => setNewLead({ ...newLead, mail: e.target.value })}
+            className="border p-2 rounded-lg w-full"
+            required
+          />
           <select
             value={newLead.status}
             onChange={(e) =>
@@ -169,6 +179,7 @@ export default function LeadManagementPage() {
             <tr className="bg-indigo-100 text-gray-700 text-sm sm:text-base">
               <th className="p-3 text-left">Client Name</th>
               <th className="p-3 text-left">Phone</th>
+              <th className="p-3 text-left">Email</th>
               <th className="p-3 text-left">Status</th>
               <th className="p-3 text-left">Source</th>
               <th className="p-3 text-left">Notes</th>
@@ -179,12 +190,13 @@ export default function LeadManagementPage() {
             {leads.map((lead) => (
               <motion.tr
                 key={lead.id}
-                className="border-b hover:bg-gray-50 transition-all text-sm sm:text-base"
+                className="border-b-1 hover:bg-gray-50 transition-all text-sm sm:text-base"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
                 <td className="p-3">{lead.clientName}</td>
                 <td className="p-3">{lead.phone}</td>
+                <td className="p-3">{lead.mail}</td>
                 <td className="p-3">
                   <select
                     value={lead.status}
