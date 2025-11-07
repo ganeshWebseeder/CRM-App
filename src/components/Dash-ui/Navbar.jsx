@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
+import { PlusSquare } from "lucide-react";
+
 export default function Navbar() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
@@ -90,6 +92,13 @@ export default function Navbar() {
         </button>
 
         {/* Notifications */}
+          <button
+              title="Create"
+              className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm transition"
+            >
+              <PlusSquare size={14} />
+              <span>New Lead</span>
+            </button>
         <button
           title="Reminders / Notifications"
           className="relative hover:bg-gray-100 p-2 rounded-md transition"

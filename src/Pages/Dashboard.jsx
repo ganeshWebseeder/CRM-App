@@ -28,6 +28,7 @@ import {
   Cell,
   PieChart,
 } from "recharts";
+import { useNavigate } from "react-router-dom";
 
 // 🎯 Animated Counter
 function AnimatedCounter({ value, isCurrency = false }) {
@@ -51,19 +52,54 @@ function AnimatedCounter({ value, isCurrency = false }) {
 }
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
+  // Summary cards
   const summary = [
-    { title: "Total Projects", value: 128, icon: <Briefcase size={22} />, color: "from-blue-400 to-blue-600" },
-    { title: "Active Projects", value: 76, icon: <PlayCircle size={22} />, color: "from-green-400 to-green-600" },
-    { title: "Leads Count", value: 54, icon: <Users size={22} />, color: "from-yellow-400 to-yellow-600" },
-    { title: "Outstanding Amount", value: 452300, isCurrency: true, icon: <IndianRupee size={22} />, color: "from-rose-400 to-red-600" },
-    { title: "Reminders Today", value: 9, icon: <Bell size={22} />, color: "from-indigo-400 to-indigo-600" },
+    {
+      title: "Total Projects",
+      onClick: () => navigate("/projects"),
+      value: 128,
+      icon: <Briefcase size={22} />,
+      color: "from-blue-400 to-blue-600",
+    },
+    {
+      title: "Active Projects",
+      onClick: () => navigate("/projects?status=active"),
+      value: 76,
+      icon: <PlayCircle size={22} />,
+      color: "from-green-400 to-green-600",
+    },
+    {
+      title: "Leads Count",
+      onClick: () => navigate("/leads"),
+      value: 54,
+      icon: <Users size={22} />,
+      color: "from-yellow-400 to-yellow-600",
+    },
+    {
+      title: "Outstanding Amount",
+      onClick: () => navigate("/invoices"),
+      value: 452300,
+      isCurrency: true,
+      icon: <IndianRupee size={22} />,
+      color: "from-rose-400 to-red-600",
+    },
+    {
+      title: "Reminders Today",
+      onClick: () => navigate("/reminders"),
+      value: 9,
+      icon: <Bell size={22} />,
+      color: "from-indigo-400 to-indigo-600",
+    },
   ];
 
+  // Quick Actions with routing
   const quickActions = [
-    { icon: <UserPlus size={18} />, label: "Add Lead" },
-    { icon: <FileText size={18} />, label: "Create Invoice" },
-    { icon: <AlarmClock size={18} />, label: "Set Reminder" },
-    { icon: <PieIcon size={18} />, label: "View Reports" },
+    { icon: <UserPlus size={18} />, label: "Add Lead", onClick: () => navigate("/leads") },
+    { icon: <FileText size={18} />, label: "Create Invoice", onClick: () => navigate("/invoices") },
+    { icon: <AlarmClock size={18} />, label: "Set Reminder", onClick: () => navigate("/reminders") },
+    { icon: <PieIcon size={18} />, label: "View Reports", onClick: () => navigate("/reports") },
   ];
 
   const revenueData = [
@@ -125,7 +161,8 @@ export default function Dashboard() {
               y: -5,
               boxShadow: "0 12px 25px rgba(0,0,0,0.1)",
             }}
-            className={`p-4 sm:p-5 rounded-2xl bg-gradient-to-r ${item.color} text-white shadow-md flex justify-between items-center`}
+            onClick={item.onClick}
+            className={`cursor-pointer p-4 sm:p-5 rounded-2xl bg-gradient-to-r ${item.color} text-white shadow-md flex justify-between items-center hover:opacity-95 transition`}
           >
             <div>
               <p className="text-xs sm:text-sm uppercase font-medium opacity-90">
@@ -143,7 +180,7 @@ export default function Dashboard() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-10"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-32"
       >
         {/* Revenue Chart */}
         <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
@@ -199,11 +236,12 @@ export default function Dashboard() {
         </div>
       </motion.div>
 
-      {/* ⚡ Quick Actions */}
+      {/* ⚡ Quick Actions - Floating Panel */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
+        className="sticky bottom-6 z-50 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-gray-200"
       >
         <h2 className="text-lg md:text-xl font-semibold text-gray-700 mb-4 flex items-center gap-2">
           Quick Actions ⚡
@@ -212,6 +250,7 @@ export default function Dashboard() {
           {quickActions.map((action, i) => (
             <motion.button
               key={i}
+              onClick={action.onClick}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 200 }}

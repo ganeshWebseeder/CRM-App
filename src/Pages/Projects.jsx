@@ -5,7 +5,7 @@ import ProjectModal from "../components/ProjectModal";
 export default function Projects() {
   const navigate = useNavigate();
 
-  // 🧠 States
+  // 🧠 State
   const [showModal, setShowModal] = useState(false);
   const [editProject, setEditProject] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -56,9 +56,9 @@ export default function Projects() {
 
   // 🔍 Filters
   const filteredProjects = projects.filter((p) => {
+    const q = searchTerm.toLowerCase();
     const matchesSearch =
-      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.client.toLowerCase().includes(searchTerm.toLowerCase());
+      p.name.toLowerCase().includes(q) || p.client.toLowerCase().includes(q);
     const matchesStatus = statusFilter === "All" || p.status === statusFilter;
     const matchesClient = clientFilter === "All" || p.client === clientFilter;
     return matchesSearch && matchesStatus && matchesClient;
@@ -91,7 +91,7 @@ export default function Projects() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="px-4 sm:px-6 lg:px-10 py-6 space-y-6 bg-gray-50 min-h-screen overflow-x-hidden">
       {/* 🏷 Page Header */}
       <div>
         <h1 className="text-2xl font-semibold text-gray-800">Projects</h1>
@@ -101,48 +101,52 @@ export default function Projects() {
       </div>
 
       {/* 📊 Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg shadow text-center">
-          <p className="text-gray-500 text-xs">Total Projects</p>
-          <h2 className="text-xl font-semibold text-gray-800">
-            {projects.length}
-          </h2>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow text-center">
-          <p className="text-gray-500 text-xs">Active</p>
-          <h2 className="text-xl font-semibold text-green-600">
-            {projects.filter((p) => p.status === "Active").length}
-          </h2>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow text-center">
-          <p className="text-gray-500 text-xs">Completed</p>
-          <h2 className="text-xl font-semibold text-indigo-600">
-            {projects.filter((p) => p.status === "Completed").length}
-          </h2>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow text-center">
-          <p className="text-gray-500 text-xs">On Hold</p>
-          <h2 className="text-xl font-semibold text-yellow-600">
-            {projects.filter((p) => p.status === "On Hold").length}
-          </h2>
-        </div>
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { label: "Total Projects", value: projects.length, color: "text-gray-800" },
+          {
+            label: "Active",
+            value: projects.filter((p) => p.status === "Active").length,
+            color: "text-green-600",
+          },
+          {
+            label: "Completed",
+            value: projects.filter((p) => p.status === "Completed").length,
+            color: "text-indigo-600",
+          },
+          {
+            label: "On Hold",
+            value: projects.filter((p) => p.status === "On Hold").length,
+            color: "text-yellow-600",
+          },
+        ].map((card, idx) => (
+          <div
+            key={idx}
+            className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition text-center"
+          >
+            <p className="text-gray-500 text-xs">{card.label}</p>
+            <h2 className={`text-xl font-semibold ${card.color}`}>
+              {card.value}
+            </h2>
+          </div>
+        ))}
       </div>
 
       {/* 🔍 Search & Filters */}
-      <div className="flex flex-wrap justify-between items-center gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-lg shadow-sm">
         <input
           type="text"
           placeholder="Search by name or client..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="border border-gray-300 rounded-md px-3 py-1 text-sm w-64 focus:ring-1 focus:ring-indigo-400"
+          className="border border-gray-300 rounded-md px-3 py-2 text-sm w-full md:w-64 focus:ring-1 focus:ring-indigo-500"
         />
 
-        <div className="flex space-x-2">
+        <div className="flex flex-wrap gap-2">
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:ring-1 focus:ring-indigo-400"
+            className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-indigo-500"
           >
             <option value="All">All Status</option>
             <option value="Active">Active</option>
@@ -153,31 +157,31 @@ export default function Projects() {
           <select
             value={clientFilter}
             onChange={(e) => setClientFilter(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-1 text-sm focus:ring-1 focus:ring-indigo-400"
+            className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-indigo-500"
           >
-            {uniqueClients.map((client, index) => (
-              <option key={index} value={client}>
+            {uniqueClients.map((client, i) => (
+              <option key={i} value={client}>
                 {client}
               </option>
             ))}
           </select>
-        </div>
 
-        <button
-          onClick={() => {
-            setEditProject(null);
-            setShowModal(true);
-          }}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-md transition"
-        >
-          + Add Project
-        </button>
+          <button
+            onClick={() => {
+              setEditProject(null);
+              setShowModal(true);
+            }}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-md transition"
+          >
+            + Add Project
+          </button>
+        </div>
       </div>
 
       {/* 📋 Projects Table */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow">
-        <table className="min-w-full text-xs text-gray-700">
-          <thead className="bg-gray-100 text-gray-600 uppercase">
+      <div className="overflow-x-auto bg-white rounded-lg shadow-sm">
+        <table className="min-w-full text-sm text-gray-700">
+          <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
             <tr>
               <th className="p-3 text-left">Project Name</th>
               <th className="p-3 text-left">Client</th>
@@ -191,10 +195,10 @@ export default function Projects() {
             {filteredProjects.length > 0 ? (
               filteredProjects.map((p) => (
                 <tr key={p.id} className="border-t hover:bg-gray-50 transition">
-                  <td className="p-3">{p.name}</td>
+                  <td className="p-3 font-medium text-gray-800">{p.name}</td>
                   <td className="p-3">{p.client}</td>
                   <td
-                    className={`p-3 font-medium ${
+                    className={`p-3 font-semibold ${
                       p.status === "Active"
                         ? "text-green-600"
                         : p.status === "Completed"
@@ -214,22 +218,19 @@ export default function Projects() {
                       View Project Details
                     </button>
                     <i
-    className="ri-edit-line text-indigo-600 cursor-pointer"
-    onClick={() => handleEdit(p)}
-  ></i>
-  <i
-    className="ri-delete-bin-line text-red-500 cursor-pointer"
-    onClick={() => handleDelete(p.id)}
-  ></i>
-</td>
+                      className="ri-edit-line text-indigo-600 cursor-pointer hover:text-indigo-800"
+                      onClick={() => handleEdit(p)}
+                    ></i>
+                    <i
+                      className="ri-delete-bin-line text-red-500 cursor-pointer hover:text-red-700"
+                      onClick={() => handleDelete(p.id)}
+                    ></i>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-center text-gray-500 py-4 text-sm"
-                >
+                <td colSpan="6" className="text-center text-gray-500 py-6">
                   No projects found.
                 </td>
               </tr>

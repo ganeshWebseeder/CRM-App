@@ -123,6 +123,7 @@ export default function Sidebar() {
           </AnimatePresence>
         </div>
       </div>
+      
     </div>
   );
 }
