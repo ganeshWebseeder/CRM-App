@@ -1,18 +1,22 @@
 import { useState, useEffect, useRef } from "react";
-
 import { PlusSquare } from "lucide-react";
+import { useNavigate } from "react-router-dom"; // ✅ Added for navigation
 
 export default function Navbar() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate(); // ✅ Hook to redirect user
 
   // 🕒 Live Time Update
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      const time = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      const time = now.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
       const date = now.toLocaleDateString([], {
         weekday: "short",
         month: "short",
@@ -47,6 +51,12 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // 🚪 Handle Sign Out
+  const handleSignOut = () => {
+    localStorage.clear(); // ✅ Clears stored data (optional)
+    navigate("/"); // ✅ Redirect to Login page
+  };
+
   return (
     <div className="flex justify-between items-center px-6 py-3 bg-white border border-gray-200 shadow-sm rounded-lg mb-6">
       {/* LEFT SIDE — Breadcrumb & Time */}
@@ -55,7 +65,9 @@ export default function Navbar() {
           <i className="ri-dashboard-line text-lg text-indigo-500"></i>
           <p className="text-sm">
             Dashboard /{" "}
-            <span className="font-semibold text-indigo-600">Project Overview</span>
+            <span className="font-semibold text-indigo-600">
+              Project Overview
+            </span>
           </p>
         </div>
 
@@ -86,19 +98,23 @@ export default function Navbar() {
         >
           <i
             className={`${
-              isFullscreen ? "ri-fullscreen-exit-line" : "ri-fullscreen-line"
+              isFullscreen
+                ? "ri-fullscreen-exit-line"
+                : "ri-fullscreen-line"
             } text-lg text-gray-600`}
           ></i>
         </button>
 
+        {/* New Lead */}
+        <button
+          title="Create"
+          className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm transition"
+        >
+          <PlusSquare size={14} />
+          <span>New Lead</span>
+        </button>
+
         {/* Notifications */}
-          <button
-              title="Create"
-              className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm transition"
-            >
-              <PlusSquare size={14} />
-              <span>New Lead</span>
-            </button>
         <button
           title="Reminders / Notifications"
           className="relative hover:bg-gray-100 p-2 rounded-md transition"
@@ -121,7 +137,9 @@ export default function Navbar() {
             </div>
             <div className="flex items-center">
               <div className="text-left">
-                <p className="text-xs font-semibold text-gray-800">Ganesh Borole</p>
+                <p className="text-xs font-semibold text-gray-800">
+                  Ganesh Borole
+                </p>
                 <p className="text-[10px] text-gray-500">Admin</p>
               </div>
               <i
@@ -141,10 +159,15 @@ export default function Navbar() {
                   <i className="ri-user-3-line text-indigo-600 text-lg"></i>
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-800 text-sm">Ganesh Borole</p>
-                  <p className="text-gray-500 text-[11px]">admin@crmapp.com</p>
+                  <p className="font-semibold text-gray-800 text-sm">
+                    Ganesh Borole
+                  </p>
+                  <p className="text-gray-500 text-[11px]">
+                    admin@crmapp.com
+                  </p>
                   <div className="flex items-center text-[10px] text-gray-400">
-                    <i className="ri-shield-user-line mr-1 text-indigo-400"></i> Super Admin
+                    <i className="ri-shield-user-line mr-1 text-indigo-400"></i>{" "}
+                    Super Admin
                   </div>
                 </div>
               </div>
@@ -161,12 +184,18 @@ export default function Navbar() {
                     key={i}
                     className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-2 transition"
                   >
-                    <i className={`${item.icon} text-gray-600`}></i> <span>{item.label}</span>
+                    <i className={`${item.icon} text-gray-600`}></i>{" "}
+                    <span>{item.label}</span>
                   </li>
                 ))}
                 <hr className="my-1 border-gray-200" />
-                <li className="px-4 py-2 hover:bg-red-500 hover:text-white cursor-pointer flex items-center space-x-2 text-red-600 transition">
-                  <i className="ri-logout-box-r-line"></i> <span>Sign Out</span>
+                {/* 🚪 Logout Button */}
+                <li
+                  onClick={handleSignOut}
+                  className="px-4 py-2 hover:bg-red-500 hover:text-white cursor-pointer flex items-center space-x-2 text-red-600 transition"
+                >
+                  <i className="ri-logout-box-r-line"></i>{" "}
+                  <span>Sign Out</span>
                 </li>
               </ul>
             </div>
