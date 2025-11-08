@@ -1,12 +1,11 @@
-
-
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Pages/Login";
 import Dashboard from "./Pages/Dashboard";
-
 import MainLayout from "./components/layouts/MainLayout";
 import Projects from "./Pages/Projects";
 import LeadManagementPage from "./Pages/Leads";
+import ProjectDetails from "./Pages/ProjectDetails";
+import ExpenseManagement from "./Pages/ExpenseManagement";
 
 function App() {
   return (
@@ -31,6 +30,15 @@ function App() {
             </MainLayout>
           }
         />
+         <Route
+          path="/expenses"
+          element={
+            <MainLayout>
+              <ExpenseManagement />
+              
+            </MainLayout>
+          }
+        />
         <Route
           path="/leads"
           element={
@@ -40,7 +48,15 @@ function App() {
             </MainLayout>
           }
         />
-        
+         {/* 📄 Project Details (Dynamic Route) */}
+        <Route
+          path="/projects/:id"
+          element={
+            <MainLayout>
+              <ProjectDetails />
+            </MainLayout>
+          }
+        />
       </Routes>
    
 
