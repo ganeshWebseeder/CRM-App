@@ -6,6 +6,8 @@ import Projects from "./Pages/Projects";
 import LeadManagementPage from "./Pages/Leads";
 import ProjectDetails from "./Pages/ProjectDetails";
 import ExpenseManagement from "./Pages/ExpenseManagement";
+import InvoiceCreation from "./Pages/InvoiceCreation";
+import ReminderManagement from "./Pages/ReminderManagement";
 
 function App() {
   return (
@@ -54,6 +56,22 @@ function App() {
           element={
             <MainLayout>
               <ProjectDetails />
+            </MainLayout>
+          }
+        />
+         <Route
+          path="/invoices/"
+          element={
+            <MainLayout>
+              <InvoiceCreation />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/reminders"
+          element={
+            <MainLayout>
+              <ReminderManagement />
             </MainLayout>
           }
         />
