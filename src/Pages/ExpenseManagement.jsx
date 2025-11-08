@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
-import ExpenseModal from "../components/ExpenseModal";
-import ExpenseTable from "../components/ExpenseTable";
+import ExpenseModal from "../components/expenses/ExpenseModal";
+import ExpenseTable from "../components/expenses/ExpenseTable";
 
 export default function ExpenseManagement() {
   // 🧠 States
