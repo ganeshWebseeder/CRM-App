@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 import { PlusSquare } from "lucide-react";
 
@@ -7,6 +9,7 @@ export default function Navbar() {
   const [currentTime, setCurrentTime] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+    const navigate = useNavigate();
 
   // 🕒 Live Time Update
   useEffect(() => {
@@ -93,8 +96,9 @@ export default function Navbar() {
 
         {/* Notifications */}
           <button
+          onClick={()=>navigate('/leads')}
               title="Create"
-              className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm transition"
+              className=" cursor-pointer hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm transition"
             >
               <PlusSquare size={14} />
               <span>New Lead</span>
@@ -153,9 +157,9 @@ export default function Navbar() {
               <ul className="py-1">
                 {[
                   { icon: "ri-user-line", label: "My Profile" },
-                  { icon: "ri-settings-3-line", label: "Account Settings" },
-                  { icon: "ri-question-line", label: "Help & Support" },
-                  { icon: "ri-translate-2", label: "Language" },
+                
+               
+                 
                 ].map((item, i) => (
                   <li
                     key={i}
