@@ -100,7 +100,7 @@ export default function ProjectOverviewTab({ id }) {
           {!editMode && (
             <button
               onClick={() => setEditMode(true)}
-              className="text-indigo-600 text-xs hover:underline"
+              className="text-indigo-600 text-xs hover:underline border-1 p-2 rounded-md hover:bg-blue-700 hover:text-black"
             >
               Edit
             </button>
