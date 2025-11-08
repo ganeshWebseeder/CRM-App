@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import ProjectModal from "../components/ProjectModal";
+import { Eye } from "lucide-react";
 
 export default function Projects() {
   const navigate = useNavigate();
@@ -64,20 +65,20 @@ export default function Projects() {
     return matchesSearch && matchesStatus && matchesClient;
   });
 
-  // ✏️ Edit Project
+  //  Edit 
   const handleEdit = (project) => {
     setEditProject(project);
     setShowModal(true);
   };
 
-  // ❌ Delete Project
+  //  Delete 
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this project?")) {
       setProjects((prev) => prev.filter((p) => p.id !== id));
     }
   };
 
-  // 💾 Save Project (from Modal)
+  // Save Project
   const handleSave = (project) => {
     if (editProject) {
       setProjects((prev) =>
@@ -211,14 +212,25 @@ export default function Projects() {
                   <td className="p-3">{p.start}</td>
                   <td className="p-3">{p.end}</td>
                   <td className="p-3 text-center space-x-2">
-                    <button
-                      onClick={() => navigate(`/projects/${p.id}`)}
-                      className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1 rounded-md transition"
-                    >
-                      View Project Details
-                    </button>
+
+
+                  <div className="relative group inline-block">
+  <button
+    onClick={() => navigate(`/projects/${p.id}`)}
+    className="flex items-center gap-1 text-gray-700 hover:text-blue-600 text-xs rounded-md transition"
+  >
+    <Eye className="w-4 h-4 group-hover:text-blue-600" />
+    <span></span>
+  </button>
+
+  {/* Tooltip on hover */}
+  <span className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-gray-800 text-white text-[10px] rounded py-1 px-2 whitespace-nowrap transition">
+    Click to see full project details
+  </span>
+</div>
+
                     <i
-                      className="ri-edit-line text-indigo-600 cursor-pointer hover:text-indigo-800"
+                      className="ri-edit-line text-indigo-600 cursor-pointer hover:text-indigo-800 "
                       onClick={() => handleEdit(p)}
                     ></i>
                     <i

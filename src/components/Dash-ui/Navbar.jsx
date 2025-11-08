@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { PlusSquare } from "lucide-react";
-import { useNavigate } from "react-router-dom"; // ✅ Added for navigation
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -53,7 +53,7 @@ export default function Navbar() {
 
   // 🚪 Handle Sign Out
   const handleSignOut = () => {
-    localStorage.clear(); // ✅ Clears stored data (optional)
+    localStorage.clear(); // ✅ Clears stored data
     navigate("/"); // ✅ Redirect to Login page
   };
 
@@ -105,9 +105,10 @@ export default function Navbar() {
           ></i>
         </button>
 
-        {/* New Lead */}
+        {/* New Lead Button — navigates to /leads */}
         <button
-          title="Create"
+          onClick={() => navigate("/leads")}
+          title="Create New Lead"
           className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm transition"
         >
           <PlusSquare size={14} />
@@ -174,20 +175,11 @@ export default function Navbar() {
 
               {/* Menu Options */}
               <ul className="py-1">
-                {[
-                  { icon: "ri-user-line", label: "My Profile" },
-                  { icon: "ri-settings-3-line", label: "Account Settings" },
-                  { icon: "ri-question-line", label: "Help & Support" },
-                  { icon: "ri-translate-2", label: "Language" },
-                ].map((item, i) => (
-                  <li
-                    key={i}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-2 transition"
-                  >
-                    <i className={`${item.icon} text-gray-600`}></i>{" "}
-                    <span>{item.label}</span>
-                  </li>
-                ))}
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-2 transition">
+                  <i className="ri-user-line text-gray-600"></i>{" "}
+                  <span>My Profile</span>
+                </li>
+
                 <hr className="my-1 border-gray-200" />
                 {/* 🚪 Logout Button */}
                 <li
