@@ -11,7 +11,7 @@ import ReminderManagement from "./Pages/ReminderManagement";
 
 function App() {
   return (
-    <BrowserRouter>
+   
       <Routes>
         {/* 🔐 Login Page */}
         <Route path="/" element={<Login />} />
@@ -86,7 +86,7 @@ function App() {
           }
         />
       </Routes>
-    </BrowserRouter>
+  
   );
 }
 
