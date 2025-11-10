@@ -8,6 +8,7 @@ import ExpenseManagement from "./Pages/ExpenseManagement";
 import ProjectDetails from "./Pages/ProjectDetails";
 import InvoiceCreation from "./Pages/InvoiceCreation";
 import ReminderManagement from "./Pages/ReminderManagement";
+import Reports from "./Pages/Reports";
 
 function App() {
   return (
@@ -82,6 +83,14 @@ function App() {
           element={
             <MainLayout>
               <ReminderManagement />
+            </MainLayout>
+          }
+        />
+        <Route
+          path="/reports"
+          element={
+            <MainLayout>
+              <Reports />
             </MainLayout>
           }
         />
