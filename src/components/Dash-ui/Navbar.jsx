@@ -2,12 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import { PlusSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export default function Navbar() {
+export default function Navbar({ onMenuClick }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
-  const navigate = useNavigate(); // ✅ Hook to redirect user
+  const navigate = useNavigate();
 
   // 🕒 Live Time Update
   useEffect(() => {
@@ -53,17 +53,26 @@ export default function Navbar() {
 
   // 🚪 Handle Sign Out
   const handleSignOut = () => {
-    localStorage.clear(); // ✅ Clears stored data
-    navigate("/"); // ✅ Redirect to Login page
+    localStorage.clear();
+    navigate("/");
   };
 
   return (
-    <div className="flex justify-between items-center px-6 py-3 bg-white border border-gray-200 shadow-sm rounded-lg mb-6">
-      {/* LEFT SIDE — Breadcrumb & Time */}
-      <div className="flex items-center space-x-6">
+    <div className="flex justify-between items-center px-4 sm:px-6 py-3 bg-white border-b border-gray-200 shadow-sm">
+      {/* LEFT SIDE — Hamburger + Breadcrumb + Time */}
+      <div className="flex items-center space-x-4">
+        {/* 🍔 Hamburger Menu (Mobile Only) */}
+        <button
+          onClick={onMenuClick}
+          className="md:hidden p-2 rounded-md hover:bg-gray-100 text-gray-700 focus:outline-none"
+        >
+          <i className="ri-menu-line text-2xl"></i>
+        </button>
+
+        {/* 📊 Breadcrumb */}
         <div className="flex items-center space-x-2 text-gray-700">
           <i className="ri-dashboard-line text-lg text-indigo-500"></i>
-          <p className="text-sm">
+          <p className="text-sm hidden sm:block">
             Dashboard /{" "}
             <span className="font-semibold text-indigo-600">
               Project Overview
@@ -71,15 +80,15 @@ export default function Navbar() {
           </p>
         </div>
 
-        {/* Live Time */}
-        <div className="hidden md:flex items-center text-xs text-gray-500">
+        {/* 🕒 Live Time */}
+        <div className="hidden lg:flex items-center text-xs text-gray-500">
           <i className="ri-time-line mr-2 text-base text-indigo-500"></i>
           {currentTime}
         </div>
       </div>
 
-      {/* CENTER — Search */}
-      <div className="relative w-[20rem] md:w-[28rem]">
+      {/* CENTER — Search Box */}
+      <div className="hidden sm:block relative w-[14rem] md:w-[20rem] lg:w-[28rem]">
         <i className="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base"></i>
         <input
           type="text"
@@ -88,8 +97,8 @@ export default function Navbar() {
         />
       </div>
 
-      {/* RIGHT SIDE — Icons & User */}
-      <div className="flex items-center space-x-4" ref={dropdownRef}>
+      {/* RIGHT SIDE — Buttons, Notifications & Profile */}
+      <div className="flex items-center space-x-3 sm:space-x-4" ref={dropdownRef}>
         {/* Fullscreen */}
         <button
           title="Toggle Fullscreen"
@@ -105,17 +114,17 @@ export default function Navbar() {
           ></i>
         </button>
 
-        {/* New Lead Button — navigates to /leads */}
+        {/* ➕ New Lead Button */}
         <button
           onClick={() => navigate("/leads")}
           title="Create New Lead"
-          className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm transition"
+          className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm transition"
         >
           <PlusSquare size={14} />
           <span>New Lead</span>
         </button>
 
-        {/* Notifications */}
+        {/* 🔔 Notifications */}
         <button
           title="Reminders / Notifications"
           className="relative hover:bg-gray-100 p-2 rounded-md transition"
@@ -125,9 +134,9 @@ export default function Navbar() {
         </button>
 
         {/* Divider */}
-        <div className="w-px h-6 bg-gray-300"></div>
+        <div className="hidden sm:block w-px h-6 bg-gray-300"></div>
 
-        {/* User Dropdown */}
+        {/* 👤 User Dropdown */}
         <div className="relative">
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -136,7 +145,7 @@ export default function Navbar() {
             <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
               <i className="ri-user-3-line text-indigo-600 text-base"></i>
             </div>
-            <div className="flex items-center">
+            <div className="hidden sm:flex items-center">
               <div className="text-left">
                 <p className="text-xs font-semibold text-gray-800">
                   Ganesh Borole
@@ -167,7 +176,7 @@ export default function Navbar() {
                     admin@crmapp.com
                   </p>
                   <div className="flex items-center text-[10px] text-gray-400">
-                    <i className="ri-shield-user-line mr-1 text-indigo-400"></i>{" "}
+                    <i className="ri-shield-user-line mr-1 text-indigo-400"></i>
                     Super Admin
                   </div>
                 </div>
@@ -176,17 +185,18 @@ export default function Navbar() {
               {/* Menu Options */}
               <ul className="py-1">
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-2 transition">
-                  <i className="ri-user-line text-gray-600"></i>{" "}
+                  <i className="ri-user-line text-gray-600"></i>
                   <span>My Profile</span>
                 </li>
 
                 <hr className="my-1 border-gray-200" />
+
                 {/* 🚪 Logout Button */}
                 <li
                   onClick={handleSignOut}
                   className="px-4 py-2 hover:bg-red-500 hover:text-white cursor-pointer flex items-center space-x-2 text-red-600 transition"
                 >
-                  <i className="ri-logout-box-r-line"></i>{" "}
+                  <i className="ri-logout-box-r-line"></i>
                   <span>Sign Out</span>
                 </li>
               </ul>
