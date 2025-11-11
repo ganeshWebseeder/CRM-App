@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Icon } from "lucide-react";
-import { label } from "framer-motion/client";
 
 export default function Sidebar() {
   const [isHovered, setIsHovered] = useState(false);
@@ -20,36 +18,37 @@ export default function Sidebar() {
     { icon: "ri-settings-3-line", label: "Settings", path: "/settings" },
   ];
 
-  const handleLogout = () => {
-    navigate("/");
-  };
+  const handleLogout = () => navigate("/");
 
   return (
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`bg-white text-gray-700 shadow-md border-r border-gray-200 flex flex-col justify-between transition-all duration-300 ease-in-out overflow-y-auto h-screen
-        ${isHovered ? "w-56 fixed left-0 top-0 z-50" : "w-16"}
+      className={`h-screen bg-white text-gray-700 shadow-md border-r border-gray-200 flex flex-col justify-between transition-all duration-300 ease-in-out overflow-y-auto
+        ${isHovered ? "w-50" : "w-16"}
       `}
     >
-      {/* ---------- Logo + Title ---------- */}
+      {/* ---------- Logo Section ---------- */}
       <div className="flex flex-col items-center px-2 pt-4">
         <div className="flex items-center justify-center">
-          <div className="text-indigo-500 text-2xl font-bold">📊</div>
-          <AnimatePresence>
-            {isHovered && (
-              <motion.span
-                key="logoText"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-                className="ml-2 font-semibold text-sm whitespace-nowrap text-gray-800"
-              >
-                Welcome !
-              </motion.span>
-            )}
-          </AnimatePresence>
+          <img
+            src="./WebSeeder Logo.jpeg"
+            alt="WebSeeder Logo"
+            className={`transition-all duration-300 rounded-full shadow-md ${
+              isHovered ? "w-14 h-14" : "w-16 h-16"
+            }`}
+          />
+          {isHovered && (
+            <motion.span
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="ml-2 font-semibold text-sm whitespace-nowrap text-gray-800"
+            >
+              WebSeeder
+            </motion.span>
+          )}
         </div>
         <div className="w-full border-t border-gray-200 mt-3"></div>
       </div>
@@ -62,7 +61,7 @@ export default function Sidebar() {
             <div
               key={index}
               onClick={() => navigate(item.path)}
-              className={`flex items-center py-2 rounded-md cursor-pointer transition-all duration-150
+              className={`flex items-center py-2 rounded-md cursor-pointer transition-all duration-200
                 ${isHovered ? "justify-start px-4" : "justify-center"}
                 ${
                   isActive
@@ -77,22 +76,19 @@ export default function Sidebar() {
                 }`}
               ></i>
 
-              <AnimatePresence>
-                {isHovered && (
-                  <motion.span
-                    key={item.label}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.25 }}
-                    className={`ml-3 truncate ${
-                      isActive ? "text-indigo-700 font-medium" : "text-gray-700"
-                    }`}
-                  >
-                    {item.label}
-                  </motion.span>
-                )}
-              </AnimatePresence>
+              {/* Smooth text fade-in only (no lag on exit) */}
+              {isHovered && (
+                <motion.span
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className={`ml-3 truncate ${
+                    isActive ? "text-indigo-700 font-medium" : "text-gray-700"
+                  }`}
+                >
+                  {item.label}
+                </motion.span>
+              )}
             </div>
           );
         })}
@@ -107,23 +103,18 @@ export default function Sidebar() {
             hover:bg-red-500 hover:text-white`}
         >
           <i className="ri-logout-box-r-line text-lg text-red-500"></i>
-          <AnimatePresence>
-            {isHovered && (
-              <motion.span
-                key="logoutText"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.25 }}
-                className="ml-2 text-sm font-medium"
-              >
-                Logout
-              </motion.span>
-            )}
-          </AnimatePresence>
+          {isHovered && (
+            <motion.span
+              initial={{ opacity: 0, x: -6 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.2 }}
+              className="ml-2 text-sm font-medium"
+            >
+              Logout
+            </motion.span>
+          )}
         </div>
       </div>
-      
     </div>
   );
 }
