@@ -9,15 +9,21 @@ import ProjectDetails from "./Pages/ProjectDetails";
 import InvoiceCreation from "./Pages/InvoiceCreation";
 import ReminderManagement from "./Pages/ReminderManagement";
 import Reports from "./Pages/Reports";
+import { div } from "framer-motion/client";
 
 function App() {
+
+ 
   return (
+
+    
+    
    
       <Routes>
-        {/* 🔐 Login Page */}
+        {/*  Login Page */}
         <Route path="/" element={<Login />} />
 
-        {/* 📊 Dashboard */}
+        {/* Dashboard */}
         <Route
           path="/dashboard"
           element={
@@ -27,7 +33,7 @@ function App() {
           }
         />
 
-        {/* 📁 Projects */}
+        {/* Projects */}
         <Route
           path="/projects"
           element={
@@ -37,7 +43,7 @@ function App() {
           }
         />
 
-        {/* 👤 Leads */}
+        {/*  Leads */}
         <Route
           path="/leads"
           element={
@@ -47,7 +53,7 @@ function App() {
           }
         />
 
-        {/* 💸 Expenses */}
+        {/*  Expenses */}
         <Route
           path="/expenses"
           element={
@@ -57,7 +63,7 @@ function App() {
           }
         />
 
-        {/* 📋 Project Details (Dynamic ID) */}
+        {/*  Project Details (Dynamic ID) */}
         <Route
           path="/projects/:id"
           element={
@@ -67,7 +73,7 @@ function App() {
           }
         />
 
-        {/* 🧾 Invoice Creation */}
+        {/*  Invoice Creation */}
         <Route
           path="/invoices"
           element={
@@ -77,7 +83,7 @@ function App() {
           }
         />
 
-        {/* ⏰ Reminder Management */}
+        {/* ⏰Reminder Management */}
         <Route
           path="/reminders"
           element={
@@ -95,6 +101,7 @@ function App() {
           }
         />
       </Routes>
+   
   
   );
 }

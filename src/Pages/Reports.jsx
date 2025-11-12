@@ -41,11 +41,11 @@ export default function Reports() {
   ];
 
   return (
-    <div className="p-6 space-y-6">
+    <div className=" p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-semibold text-gray-800">📊 Reports</h1>
-        <p className="text-gray-500 text-sm">
+    
+        <p className=" ml-2 text-gray-500 text-sm">
           Export system-wide reports including projects, expenses, invoices, and more.
         </p>
       </div>

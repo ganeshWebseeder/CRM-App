@@ -19,7 +19,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen">
+    <div className="flex flex-col md:flex-row h-screen z-10">
       {/* ---------- LEFT SIDE ---------- */}
       <div className="hidden md:flex w-1/2 relative items-center justify-center overflow-hidden">
         <img

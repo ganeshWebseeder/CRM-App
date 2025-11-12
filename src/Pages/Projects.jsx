@@ -92,10 +92,10 @@ export default function Projects() {
   };
 
   return (
-    <div className="px-4 sm:px-6 lg:px-10 py-6 space-y-6 bg-gray-50 min-h-screen overflow-x-hidden">
+    <div className=" px-4 sm:px-6 lg:px-10 py-6 space-y-6 bg-gray-50 min-h-screen overflow-x-hidden">
       {/* 🏷 Page Header */}
       <div>
-        <h1 className="text-2xl font-semibold text-gray-800">Projects</h1>
+       
         <p className="text-gray-500 text-sm">
           Manage, search, filter, and view all active and completed projects.
         </p>
