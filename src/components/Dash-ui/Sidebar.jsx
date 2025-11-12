@@ -26,7 +26,7 @@ export default function Sidebar() {
                  z-50"
     >
       {/* ---------- Logo Section ---------- */}
-      <div className="flex flex-col items-center px-3 pt-4">
+      <div className="flex flex-col items-center px-3 pt-0.5">
         <div className="flex items-center justify-center">
           <img
             src="./WebSeeder Logo.jpeg"
@@ -37,7 +37,7 @@ export default function Sidebar() {
             initial={{ opacity: 0, x: -8 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.15 }}
-            className="ml-2 font-semibold text-sm whitespace-nowrap text-gray-800"
+            className="ml-2 pt-2 font-semibold text-sm whitespace-nowrap text-gray-800"
           >
             WebSeeder
           </motion.span>
