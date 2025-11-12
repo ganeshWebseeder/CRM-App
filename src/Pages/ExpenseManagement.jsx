@@ -100,19 +100,17 @@ export default function ExpenseManagement() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className=" p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-semibold text-gray-800">
-          Expense Management
-        </h1>
+     
         <p className="text-gray-500 text-sm">
           Track, filter, and export all project-related expenses.
         </p>
       </div>
 
       {/* Filters Section */}
-      <div className="bg-gray-50 p-4 rounded-lg shadow-sm border flex flex-wrap items-end gap-4">
+      <div className="bg-gray-50 p-4 rounded-lg shadow-sm flex flex-wrap items-end gap-4">
         {/* Search */}
         <input
           type="text"

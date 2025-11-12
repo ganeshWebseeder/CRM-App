@@ -66,13 +66,11 @@ export default function InvoiceCreation() {
   };
 
   return (
-    <div className="p-6 space-y-8 bg-gradient-to-b from-gray-50 to-white min-h-screen">
+    <div className="  p-6 space-y-8 bg-gradient-to-b from-gray-50 to-white min-h-screen">
       {/* 🧾 Header Section */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-semibold text-gray-800 tracking-tight">
-            🧾 Invoice Creation
-          </h1>
+        
           <p className="text-gray-500 text-sm">
             Manage and generate new invoices with version control & GST support.
           </p>

@@ -87,12 +87,10 @@ export default function LeadManagementPage() {
   };
 
   return (
-    <div className="p-4 sm:p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-semibold mb-6 text-gray-800 text-center">
-        Lead Management Dashboard
-      </h1>
+    <div className=" p-4 sm:p-6 bg-gray-100 min-h-screen">
+      
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className=" gap-6">
         {/* Left Side - Form */}
         <motion.form
           onSubmit={handleSubmit}

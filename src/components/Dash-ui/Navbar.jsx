@@ -58,10 +58,14 @@ export default function Navbar({ onMenuClick }) {
   };
 
   return (
-    <div className="flex justify-between items-center px-4 sm:px-6 py-3 bg-white border-b border-gray-200 shadow-sm">
-      {/* LEFT SIDE — Hamburger + Breadcrumb + Time */}
+    <div
+      className="sticky top-0 z-40 flex justify-between items-center 
+                 px-4 sm:px-6 py-3 bg-white border-b border-gray-200 
+                 shadow-sm  transition-all duration-300"
+    >
+      {/* LEFT SIDE — Breadcrumb + Time */}
       <div className="flex items-center space-x-4">
-        {/* 🍔 Hamburger Menu (Mobile Only) */}
+       
         <button
           onClick={onMenuClick}
           className="md:hidden p-2 rounded-md hover:bg-gray-100 text-gray-700 focus:outline-none"
@@ -93,11 +97,12 @@ export default function Navbar({ onMenuClick }) {
         <input
           type="text"
           placeholder="Search projects, leads, invoices..."
-          className="w-full pl-10 pr-4 py-2 text-sm rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
+          className="w-full pl-10 pr-4 py-2 text-sm rounded-md border border-gray-300 
+                     focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition"
         />
       </div>
 
-      {/* RIGHT SIDE — Buttons, Notifications & Profile */}
+      {/* RIGHT SIDE — Buttons & Profile */}
       <div className="flex items-center space-x-3 sm:space-x-4" ref={dropdownRef}>
         {/* Fullscreen */}
         <button
@@ -118,7 +123,8 @@ export default function Navbar({ onMenuClick }) {
         <button
           onClick={() => navigate("/leads")}
           title="Create New Lead"
-          className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm transition"
+          className="hidden sm:inline-flex items-center gap-2 px-2 py-1 rounded-md 
+                     bg-indigo-600 hover:bg-indigo-700 text-white text-sm transition"
         >
           <PlusSquare size={14} />
           <span>New Lead</span>
@@ -132,9 +138,6 @@ export default function Navbar({ onMenuClick }) {
           <i className="ri-notification-2-line text-lg text-gray-600"></i>
           <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border border-white"></span>
         </button>
-
-        {/* Divider */}
-        <div className="hidden sm:block w-px h-6 bg-gray-300"></div>
 
         {/* 👤 User Dropdown */}
         <div className="relative">
@@ -163,7 +166,6 @@ export default function Navbar({ onMenuClick }) {
           {/* Dropdown Menu */}
           {isDropdownOpen && (
             <div className="absolute right-0 mt-2 w-56 bg-white text-gray-700 border border-gray-200 rounded-md shadow-lg text-xs z-50 animate-fadeIn">
-              {/* User Info */}
               <div className="px-4 py-3 border-b border-gray-200 flex items-center space-x-3">
                 <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
                   <i className="ri-user-3-line text-indigo-600 text-lg"></i>
@@ -172,9 +174,7 @@ export default function Navbar({ onMenuClick }) {
                   <p className="font-semibold text-gray-800 text-sm">
                     Ganesh Borole
                   </p>
-                  <p className="text-gray-500 text-[11px]">
-                    admin@crmapp.com
-                  </p>
+                  <p className="text-gray-500 text-[11px]">admin@crmapp.com</p>
                   <div className="flex items-center text-[10px] text-gray-400">
                     <i className="ri-shield-user-line mr-1 text-indigo-400"></i>
                     Super Admin
@@ -182,16 +182,12 @@ export default function Navbar({ onMenuClick }) {
                 </div>
               </div>
 
-              {/* Menu Options */}
               <ul className="py-1">
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-2 transition">
                   <i className="ri-user-line text-gray-600"></i>
                   <span>My Profile</span>
                 </li>
-
                 <hr className="my-1 border-gray-200" />
-
-                {/* 🚪 Logout Button */}
                 <li
                   onClick={handleSignOut}
                   className="px-4 py-2 hover:bg-red-500 hover:text-white cursor-pointer flex items-center space-x-2 text-red-600 transition"
