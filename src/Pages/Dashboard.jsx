@@ -239,7 +239,7 @@ export default function Dashboard() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="sticky bottom-6 z-50 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-gray-200"
+        className=" bottom-6 z-50 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-gray-200"
       >
         <h2 className="text-lg md:text-xl font-semibold text-gray-700 mb-4 flex items-center gap-2">
           Quick Actions ⚡

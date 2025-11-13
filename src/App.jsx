@@ -10,6 +10,7 @@ import InvoiceCreation from "./Pages/InvoiceCreation";
 import ReminderManagement from "./Pages/ReminderManagement";
 import Reports from "./Pages/Reports";
 import { div } from "framer-motion/client";
+import { LeadsProvider } from "./context/LeadsContext";
 
 function App() {
 
@@ -17,7 +18,7 @@ function App() {
   return (
 
     
-    
+      <LeadsProvider>
    
       <Routes>
         {/*  Login Page */}
@@ -101,7 +102,7 @@ function App() {
           }
         />
       </Routes>
-   
+   </LeadsProvider>
   
   );
 }
