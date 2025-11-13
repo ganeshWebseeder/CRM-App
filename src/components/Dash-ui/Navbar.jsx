@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { PlusSquare, X } from "lucide-react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import { useLeads } from "../../context/LeadsContext"
+import { useNavigate, useLocation } from "react-router-dom";
+import { useLeads } from "../../context/LeadsContext";
+
 export default function Navbar({ onMenuClick }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
@@ -10,19 +11,25 @@ export default function Navbar({ onMenuClick }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   // ✅ Context API — get addLead function
   const { addLead } = useLeads();
 
-  // Lead form state
-  const [newLead, setNewLead] = useState({
-    clientName: "",
-    phone: "",
-    mail: "",
-    status: "New",
-    source: "",
-    notes: "",
-  });
+  // 🧭 Dynamic icon + label based on route
+  const pathMap = {
+    "/dashboard": { icon: "ri-dashboard-line", label: "Dashboard" },
+    "/projects": { icon: "ri-briefcase-line", label: "Projects" },
+    "/expenses": { icon: "ri-money-dollar-circle-line", label: "Expenses" },
+    "/leads": { icon: "ri-user-star-line", label: "Leads" },
+    "/invoices": { icon: "ri-file-list-3-line", label: "Invoices" },
+    "/reminders": { icon: "ri-notification-3-line", label: "Reminders" },
+    "/reports": { icon: "ri-bar-chart-2-line", label: "Reports" },
+    "/settings": { icon: "ri-settings-3-line", label: "Settings" },
+  };
+
+  const currentPath = location.pathname;
+  const { icon, label } = pathMap[currentPath] || pathMap["/dashboard"];
 
   // 🕒 Live Time Update
   useEffect(() => {
@@ -73,9 +80,18 @@ export default function Navbar({ onMenuClick }) {
   };
 
   // 💾 Handle Lead Form Submit (via Context API)
+  const [newLead, setNewLead] = useState({
+    clientName: "",
+    phone: "",
+    mail: "",
+    status: "New",
+    source: "",
+    notes: "",
+  });
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    addLead(newLead); // ✅ directly call context function
+    addLead(newLead);
     setNewLead({
       clientName: "",
       phone: "",
@@ -85,13 +101,18 @@ export default function Navbar({ onMenuClick }) {
       notes: "",
     });
     setIsModalOpen(false);
+    navigate("/leads");
   };
 
   return (
     <>
       {/* NAVBAR */}
-      <div className="sticky top-0 z-40 flex justify-between items-center px-4 sm:px-6 py-3 bg-white border-b border-gray-200 shadow-sm">
-        {/* LEFT SIDE */}
+      <div
+        className="sticky top-0 z-40 flex justify-between items-center 
+                   px-4 sm:px-6 py-3 bg-white border-b border-gray-200 
+                   shadow-sm transition-all duration-300"
+      >
+        {/* LEFT SIDE — Breadcrumb + Time */}
         <div className="flex items-center space-x-4">
           <button
             onClick={onMenuClick}
@@ -100,13 +121,12 @@ export default function Navbar({ onMenuClick }) {
             <i className="ri-menu-line text-2xl"></i>
           </button>
 
+          {/* 🧭 Dynamic Breadcrumb */}
           <div className="flex items-center space-x-2 text-gray-700">
-            <i className="ri-dashboard-line text-lg text-indigo-500"></i>
+            <i className={`${icon} text-lg text-indigo-500`}></i>
             <p className="text-sm hidden sm:block">
-              Dashboard /{" "}
-              <span className="font-semibold text-indigo-600">
-                Project Overview
-              </span>
+              {label} /{" "}
+              <span className="font-semibold text-indigo-600">Overview</span>
             </p>
           </div>
 
@@ -308,7 +328,6 @@ export default function Navbar({ onMenuClick }) {
                 className="border p-2 rounded-lg sm:col-span-2 focus:ring-2 focus:ring-indigo-500"
               />
               <button
-              onClick={()=> navigate('/Leads')}
                 type="submit"
                 className="sm:col-span-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
               >
