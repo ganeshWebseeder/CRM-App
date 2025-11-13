@@ -139,7 +139,7 @@ export default function Dashboard() {
       >
        
         <p className="text-gray-500 text-sm mt-2">
-          Track progress, revenue, and leads at a glance 🌤️
+          Track progress, revenue, and leads at a glance.
         </p>
       </motion.div>
 
@@ -183,7 +183,7 @@ export default function Dashboard() {
         {/* Revenue Chart */}
         <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
           <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-4">
-            📊 Revenue Overview (Last 6 Months)
+            Revenue Overview (Last 6 Months)
           </h2>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={revenueData}>
@@ -205,7 +205,7 @@ export default function Dashboard() {
         {/* Leads Chart */}
         <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
           <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-4">
-            🎯 Leads Distribution
+           Leads Distribution
           </h2>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
@@ -242,7 +242,7 @@ export default function Dashboard() {
         className="sticky bottom-6 z-50 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-gray-200"
       >
         <h2 className="text-lg md:text-xl font-semibold text-gray-700 mb-4 flex items-center gap-2">
-          Quick Actions ⚡
+          Quick Actions 
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
           {quickActions.map((action, i) => (

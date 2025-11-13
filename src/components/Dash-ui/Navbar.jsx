@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { PlusSquare } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Navbar({ onMenuClick }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -8,6 +8,7 @@ export default function Navbar({ onMenuClick }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   // 🕒 Live Time Update
   useEffect(() => {
@@ -57,15 +58,30 @@ export default function Navbar({ onMenuClick }) {
     navigate("/");
   };
 
+  // 🧭 Dynamic icon + label based on route
+  const pathMap = {
+    "/dashboard": { icon: "ri-dashboard-line", label: "Dashboard" },
+    "/projects": { icon: "ri-briefcase-line", label: "Projects" },
+    "/expenses": { icon: "ri-money-dollar-circle-line", label: "Expenses" },
+    "/leads": { icon: "ri-user-star-line", label: "Leads" },
+    "/invoices": { icon: "ri-file-list-3-line", label: "Invoices" },
+    "/reminders": { icon: "ri-notification-3-line", label: "Reminders" },
+    "/reports": { icon: "ri-bar-chart-2-line", label: "Reports" },
+    "/settings": { icon: "ri-settings-3-line", label: "Settings" },
+  };
+
+  const currentPath = location.pathname;
+  const { icon, label } = pathMap[currentPath] || pathMap["/dashboard"];
+
   return (
     <div
       className="sticky top-0 z-40 flex justify-between items-center 
                  px-4 sm:px-6 py-3 bg-white border-b border-gray-200 
-                 shadow-sm  transition-all duration-300"
+                 shadow-sm transition-all duration-300"
     >
       {/* LEFT SIDE — Breadcrumb + Time */}
       <div className="flex items-center space-x-4">
-       
+        {/* ☰ Mobile Menu Button */}
         <button
           onClick={onMenuClick}
           className="md:hidden p-2 rounded-md hover:bg-gray-100 text-gray-700 focus:outline-none"
@@ -73,13 +89,13 @@ export default function Navbar({ onMenuClick }) {
           <i className="ri-menu-line text-2xl"></i>
         </button>
 
-        {/* 📊 Breadcrumb */}
+        {/* 🧭 Dynamic Breadcrumb */}
         <div className="flex items-center space-x-2 text-gray-700">
-          <i className="ri-dashboard-line text-lg text-indigo-500"></i>
+          <i className={`${icon} text-lg text-indigo-500`}></i>
           <p className="text-sm hidden sm:block">
-            Dashboard /{" "}
+            {label} /{" "}
             <span className="font-semibold text-indigo-600">
-              Project Overview
+              Overview
             </span>
           </p>
         </div>
@@ -150,9 +166,7 @@ export default function Navbar({ onMenuClick }) {
             </div>
             <div className="hidden sm:flex items-center">
               <div className="text-left">
-                <p className="text-xs font-semibold text-gray-800">
-                  Ganesh Borole
-                </p>
+                <p className="text-xs font-semibold text-gray-800">Ganesh Borole</p>
                 <p className="text-[10px] text-gray-500">Admin</p>
               </div>
               <i
@@ -171,13 +185,10 @@ export default function Navbar({ onMenuClick }) {
                   <i className="ri-user-3-line text-indigo-600 text-lg"></i>
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-800 text-sm">
-                    Ganesh Borole
-                  </p>
+                  <p className="font-semibold text-gray-800 text-sm">Ganesh Borole</p>
                   <p className="text-gray-500 text-[11px]">admin@crmapp.com</p>
                   <div className="flex items-center text-[10px] text-gray-400">
-                    <i className="ri-shield-user-line mr-1 text-indigo-400"></i>
-                    Super Admin
+                    <i className="ri-shield-user-line mr-1 text-indigo-400"></i> Super Admin
                   </div>
                 </div>
               </div>
