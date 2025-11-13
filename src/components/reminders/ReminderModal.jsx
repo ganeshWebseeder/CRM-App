@@ -4,7 +4,7 @@ export default function ReminderModal({ show, onClose, onSave }) {
   const [form, setForm] = useState({
     title: "",
     project: "",
-    date: "",
+    datetime: "",   // store original datetime-local value
     status: "Pending",
   });
 
@@ -12,16 +12,29 @@ export default function ReminderModal({ show, onClose, onSave }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.title || !form.project || !form.date) {
+
+    if (!form.title || !form.project || !form.datetime) {
       alert("Please fill all fields!");
       return;
     }
+
+    // Split date and time separately
+    const [datePart, timePart] = form.datetime.split("T");
+
     onSave({
-      ...form,
       id: Date.now(),
-      date: new Date(form.date),
+      title: form.title,
+      project: form.project,
+      status: form.status,
+
+      // Calendar date → usable for day matching
+      date: new Date(datePart),
+
+      // Store time separately (useful for display)
+      time: timePart,
     });
-    onClose();
+
+    onClose(); // close modal
   };
 
   return (
@@ -30,6 +43,7 @@ export default function ReminderModal({ show, onClose, onSave }) {
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
           Add Reminder
         </h2>
+
         <form onSubmit={handleSubmit} className="space-y-3">
           {/* Title */}
           <div>
@@ -38,7 +52,7 @@ export default function ReminderModal({ show, onClose, onSave }) {
               type="text"
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
-              placeholder="e.g., Call client for update"
+              placeholder="e.g., Call client"
               className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:ring-1 focus:ring-indigo-400"
             />
           </div>
@@ -50,18 +64,18 @@ export default function ReminderModal({ show, onClose, onSave }) {
               type="text"
               value={form.project}
               onChange={(e) => setForm({ ...form, project: e.target.value })}
-              placeholder="e.g., CRM Revamp"
+              placeholder="e.g., CRM System"
               className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:ring-1 focus:ring-indigo-400"
             />
           </div>
 
-          {/* Date */}
+          {/* Date & Time */}
           <div>
             <label className="text-sm text-gray-600">Date & Time</label>
             <input
               type="datetime-local"
-              value={form.date}
-              onChange={(e) => setForm({ ...form, date: e.target.value })}
+              value={form.datetime}
+              onChange={(e) => setForm({ ...form, datetime: e.target.value })}
               className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:ring-1 focus:ring-indigo-400"
             />
           </div>
@@ -88,6 +102,7 @@ export default function ReminderModal({ show, onClose, onSave }) {
             >
               Cancel
             </button>
+
             <button
               type="submit"
               className="px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-md"
@@ -95,6 +110,7 @@ export default function ReminderModal({ show, onClose, onSave }) {
               Save Reminder
             </button>
           </div>
+
         </form>
       </div>
     </div>
