@@ -1,19 +1,18 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import ProjectModal from "../components/ProjectModal";
-import { Eye } from "lucide-react";
 
 export default function Projects() {
   const navigate = useNavigate();
 
-  // 🧠 State
+  // State
   const [showModal, setShowModal] = useState(false);
   const [editProject, setEditProject] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [clientFilter, setClientFilter] = useState("All");
 
-  // 📋 Sample Data
+  // Sample Data
   const [projects, setProjects] = useState([
     {
       id: 1,
@@ -49,36 +48,37 @@ export default function Projects() {
     },
   ]);
 
-  // 🧮 Unique Clients
+  // Unique Clients
   const uniqueClients = useMemo(
     () => ["All", ...new Set(projects.map((p) => p.client))],
     [projects]
   );
 
-  // 🔍 Filters
+  // Filtered List
   const filteredProjects = projects.filter((p) => {
     const q = searchTerm.toLowerCase();
     const matchesSearch =
       p.name.toLowerCase().includes(q) || p.client.toLowerCase().includes(q);
     const matchesStatus = statusFilter === "All" || p.status === statusFilter;
     const matchesClient = clientFilter === "All" || p.client === clientFilter;
+
     return matchesSearch && matchesStatus && matchesClient;
   });
 
-  //  Edit 
+  // Edit project
   const handleEdit = (project) => {
     setEditProject(project);
     setShowModal(true);
   };
 
-  //  Delete 
+  // Delete project
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this project?")) {
       setProjects((prev) => prev.filter((p) => p.id !== id));
     }
   };
 
-  // Save Project
+  // Save project
   const handleSave = (project) => {
     if (editProject) {
       setProjects((prev) =>
@@ -87,21 +87,21 @@ export default function Projects() {
     } else {
       setProjects((prev) => [...prev, { ...project, id: Date.now() }]);
     }
+
     setShowModal(false);
     setEditProject(null);
   };
 
   return (
-    <div className=" px-4 sm:px-6 lg:px-10 py-6 space-y-6 bg-gray-50 min-h-screen overflow-x-hidden">
-      {/* 🏷 Page Header */}
+    <div className="px-4 sm:px-6 lg:px-10 py-6 space-y-6 bg-gray-50 min-h-screen">
+      {/* Page Header */}
       <div>
-       
         <p className="text-gray-500 text-sm">
           Manage, search, filter, and view all active and completed projects.
         </p>
       </div>
 
-      {/* 📊 Summary Cards */}
+      {/* Summary Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: "Total Projects", value: projects.length, color: "text-gray-800" },
@@ -126,15 +126,13 @@ export default function Projects() {
             className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition text-center"
           >
             <p className="text-gray-500 text-xs">{card.label}</p>
-            <h2 className={`text-xl font-semibold ${card.color}`}>
-              {card.value}
-            </h2>
+            <h2 className={`text-xl font-semibold ${card.color}`}>{card.value}</h2>
           </div>
         ))}
       </div>
 
-      {/* 🔍 Search & Filters */}
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-lg shadow-sm">
+      {/* Search + Filters */}
+      <div className="bg-white p-4 rounded-lg shadow-sm flex flex-col md:flex-row gap-4 justify-between">
         <input
           type="text"
           placeholder="Search by name or client..."
@@ -147,7 +145,7 @@ export default function Projects() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-indigo-500"
+            className="border border-gray-300 rounded-md px-3 py-2 text-sm"
           >
             <option value="All">All Status</option>
             <option value="Active">Active</option>
@@ -158,7 +156,7 @@ export default function Projects() {
           <select
             value={clientFilter}
             onChange={(e) => setClientFilter(e.target.value)}
-            className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-1 focus:ring-indigo-500"
+            className="border border-gray-300 rounded-md px-3 py-2 text-sm"
           >
             {uniqueClients.map((client, i) => (
               <option key={i} value={client}>
@@ -172,14 +170,14 @@ export default function Projects() {
               setEditProject(null);
               setShowModal(true);
             }}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-md transition"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-md"
           >
             + Add Project
           </button>
         </div>
       </div>
 
-      {/* 📋 Projects Table */}
+      {/* Projects Table */}
       <div className="overflow-x-auto bg-white rounded-lg shadow-sm">
         <table className="min-w-full text-sm text-gray-700">
           <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
@@ -192,10 +190,20 @@ export default function Projects() {
               <th className="p-3 text-center">Actions</th>
             </tr>
           </thead>
+
           <tbody>
             {filteredProjects.length > 0 ? (
               filteredProjects.map((p) => (
-                <tr key={p.id} className="border-t hover:bg-gray-50 transition">
+                <tr
+                  key={p.id}
+                  className="border-t hover:bg-gray-50 transition cursor-pointer"
+                  onClick={(e) => {
+                    // Don’t trigger row navigation when clicking inside icons
+                    if (e.target.closest(".action-btn")) return;
+
+                    navigate(`/projects/${p.id}`);
+                  }}
+                >
                   <td className="p-3 font-medium text-gray-800">{p.name}</td>
                   <td className="p-3">{p.client}</td>
                   <td
@@ -211,30 +219,16 @@ export default function Projects() {
                   </td>
                   <td className="p-3">{p.start}</td>
                   <td className="p-3">{p.end}</td>
-                  <td className="p-3 text-center space-x-2">
 
-
-                  <div className="relative group inline-block">
-  <button
-    onClick={() => navigate(`/projects/${p.id}`)}
-    className="flex items-center gap-1 text-gray-700 hover:text-blue-600 text-xs rounded-md transition"
-  >
-    <Eye className="w-4 h-4 group-hover:text-blue-600" />
-    <span></span>
-  </button>
-
-  {/* Tooltip on hover */}
-  <span className="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-gray-800 text-white text-[10px] rounded py-1 px-2 whitespace-nowrap transition">
-    Click to see full project details
-  </span>
-</div>
-
+                  {/* Actions */}
+                  <td className="p-3 text-center space-x-3">
                     <i
-                      className="ri-edit-line text-indigo-600 cursor-pointer hover:text-indigo-800 "
+                      className="ri-edit-line action-btn text-indigo-600 cursor-pointer hover:text-indigo-800"
                       onClick={() => handleEdit(p)}
                     ></i>
+
                     <i
-                      className="ri-delete-bin-line text-red-500 cursor-pointer hover:text-red-700"
+                      className="ri-delete-bin-line action-btn text-red-500 cursor-pointer hover:text-red-700"
                       onClick={() => handleDelete(p.id)}
                     ></i>
                   </td>
@@ -251,7 +245,7 @@ export default function Projects() {
         </table>
       </div>
 
-      {/* ➕ Modal */}
+      {/* Modal */}
       {showModal && (
         <ProjectModal
           show={showModal}

@@ -5,14 +5,15 @@ import ReminderModal from "../components/reminders/ReminderModal";
 export default function ReminderManagement() {
   const [reminders, setReminders] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
 
-  // 🧠 Load from localStorage on mount
+  // 🧠 Load reminders from localStorage
   useEffect(() => {
     const stored = localStorage.getItem("reminders");
     if (stored) setReminders(JSON.parse(stored));
   }, []);
 
-  // 💾 Save to localStorage whenever reminders change
+  // 💾 Save to localStorage
   useEffect(() => {
     localStorage.setItem("reminders", JSON.stringify(reminders));
   }, [reminders]);
@@ -27,35 +28,37 @@ export default function ReminderManagement() {
     setReminders(reminders.filter((r) => r.id !== id));
   };
 
+  // 📅 When a date is clicked, open the modal
+  const handleDateClick = (date) => {
+    setSelectedDate(date);
+    setShowModal(true);
+  };
+
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className=" flex justify-between items-center">
-        <div>
-         
-          <p className="text-gray-500 text-sm">
-            View and manage reminders from all projects in calendar view.
-          </p>
-        </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md shadow transition"
-        >
-          + Add Reminder
-        </button>
+      <div>
+        <p className="text-gray-500 text-sm">
+          View and manage reminders from all projects in calendar view.
+        </p>
       </div>
 
-      {/* Calendar Section */}
+      {/* Calendar */}
       <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100">
-        <ReminderCalendar reminders={reminders} onDelete={handleDelete} />
+        <ReminderCalendar
+          reminders={reminders}
+          onDelete={handleDelete}
+          onDateClick={handleDateClick} // ✅ Pass new handler
+        />
       </div>
 
-      {/* Modal for Adding Reminder */}
+      {/* Reminder Modal */}
       {showModal && (
         <ReminderModal
           show={showModal}
           onClose={() => setShowModal(false)}
           onSave={handleSave}
+          defaultDate={selectedDate}
         />
       )}
     </div>

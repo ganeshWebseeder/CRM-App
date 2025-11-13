@@ -6,7 +6,7 @@ import InvoiceActions from "../components/invoices/InvoiceActions";
 export default function InvoiceCreation() {
   const [invoice, setInvoice] = useState({
     type: "Proforma",
-    items: [{ id: 1, description: "", qty: 1, price: 0 }],
+    items: [{ id: 1, description: "", qty: 1, price: 1 }],
     gstEnabled: false,
     version: 1,
     status: "Draft",
@@ -26,7 +26,7 @@ export default function InvoiceCreation() {
       ...invoice,
       items: [
         ...invoice.items,
-        { id: Date.now(), description: "", qty: 1, price: 0 },
+        { id: Date.now(), description: "", qty: 1, price: 1 },
       ],
     });
   };

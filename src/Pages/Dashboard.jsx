@@ -61,21 +61,21 @@ export default function Dashboard() {
       onClick: () => navigate("/projects"),
       value: 128,
       icon: <Briefcase size={22} />,
-      color: "from-blue-400 to-blue-600",
+      color: "from-blue-300 to-blue-400",
     },
     {
       title: "Active Projects",
       onClick: () => navigate("/projects?status=active"),
       value: 76,
       icon: <PlayCircle size={22} />,
-      color: "from-green-400 to-green-600",
+      color: "from-green-300 to-green-400",
     },
     {
       title: "Leads Count",
       onClick: () => navigate("/leads"),
       value: 54,
       icon: <Users size={22} />,
-      color: "from-yellow-400 to-yellow-600",
+      color: "from-yellow-300 to-yellow-400",
     },
     {
       title: "Outstanding Amount",
@@ -83,14 +83,14 @@ export default function Dashboard() {
       value: 452300,
       isCurrency: true,
       icon: <IndianRupee size={22} />,
-      color: "from-rose-400 to-red-600",
+      color: "from-rose-300 to-red-400",
     },
     {
       title: "Reminders Today",
       onClick: () => navigate("/reminders"),
       value: 9,
       icon: <Bell size={22} />,
-      color: "from-indigo-400 to-indigo-600",
+      color: "from-indigo-300 to-indigo-400",
     },
   ];
 
