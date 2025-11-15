@@ -1,5 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+
 import ProjectModal from "../components/ProjectModal";
 
 export default function Projects() {
@@ -178,72 +180,83 @@ export default function Projects() {
       </div>
 
       {/* Projects Table */}
-      <div className="overflow-x-auto bg-white rounded-lg shadow-sm">
-        <table className="min-w-full text-sm text-gray-700">
-          <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
-            <tr>
-              <th className="p-3 text-left">Project Name</th>
-              <th className="p-3 text-left">Client</th>
-              <th className="p-3 text-left">Status</th>
-              <th className="p-3 text-left">Start Date</th>
-              <th className="p-3 text-left">End Date</th>
-              <th className="p-3 text-center">Actions</th>
-            </tr>
-          </thead>
+      {/* Projects Table */}
+<motion.div
+  className="overflow-x-auto bg-white rounded-lg shadow-md border border-gray-200 p-6"
+  initial={{ opacity: 0, x: 20 }}
+  animate={{ opacity: 1, x: 0 }}
+>
+  <table className="min-w-full text-sm text-gray-700">
+    <thead className="bg-gray-100 text-gray-600 uppercase ">
+      <tr className="bg-indigo-100 text-gray-700">
+        <th className="p-3 text-left">Project Name</th>
+        <th className="p-3 text-left">Client</th>
+        <th className="p-3 text-left">Status</th>
+        <th className="p-3 text-left">Start Date</th>
+        <th className="p-3 text-left">End Date</th>
+        <th className="p-3 text-center">Actions</th>
+      </tr>
+    </thead>
 
-          <tbody>
-            {filteredProjects.length > 0 ? (
-              filteredProjects.map((p) => (
-                <tr
-                  key={p.id}
-                  className="border-t hover:bg-gray-50 transition cursor-pointer"
-                  onClick={(e) => {
-                    // Don’t trigger row navigation when clicking inside icons
-                    if (e.target.closest(".action-btn")) return;
+    <tbody>
+      {filteredProjects.length > 0 ? (
+        filteredProjects.map((p, index) => (
+          <motion.tr
+            key={p.id}
+            className="border-b hover:bg-gray-50 transition cursor-pointer"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: index * 0.05 }} // small stagger effect like leads
+            onClick={(e) => {
+              if (e.target.closest(".action-btn")) return;
+              navigate(`/projects/${p.id}`);
+            }}
+          >
+            <td className="p-3 font-medium text-gray-800">{p.name}</td>
+            <td className="p-3">{p.client}</td>
 
-                    navigate(`/projects/${p.id}`);
-                  }}
-                >
-                  <td className="p-3 font-medium text-gray-800">{p.name}</td>
-                  <td className="p-3">{p.client}</td>
-                  <td
-                    className={`p-3 font-semibold ${
-                      p.status === "Active"
-                        ? "text-green-600"
-                        : p.status === "Completed"
-                        ? "text-indigo-600"
-                        : "text-yellow-600"
-                    }`}
-                  >
-                    {p.status}
-                  </td>
-                  <td className="p-3">{p.start}</td>
-                  <td className="p-3">{p.end}</td>
+            <td
+              className={`p-3 font-semibold ${
+                p.status === "Active"
+                  ? "text-green-600"
+                  : p.status === "Completed"
+                  ? "text-indigo-600"
+                  : "text-yellow-600"
+              }`}
+            >
+              {p.status}
+            </td>
 
-                  {/* Actions */}
-                  <td className="p-3 text-center space-x-3">
-                    <i
-                      className="ri-edit-line action-btn text-indigo-600 cursor-pointer hover:text-indigo-800"
-                      onClick={() => handleEdit(p)}
-                    ></i>
+            <td className="p-3">{p.start}</td>
+            <td className="p-3">{p.end}</td>
 
-                    <i
-                      className="ri-delete-bin-line action-btn text-red-500 cursor-pointer hover:text-red-700"
-                      onClick={() => handleDelete(p.id)}
-                    ></i>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="text-center text-gray-500 py-6">
-                  No projects found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+            <td className="p-3">
+              <div className="flex justify-center gap-4">
+                <i
+                  className="ri-edit-line action-btn text-indigo-600 cursor-pointer hover:text-indigo-800"
+                  onClick={() => handleEdit(p)}
+                ></i>
+
+                <i
+                  className="ri-delete-bin-line action-btn text-red-500 cursor-pointer hover:text-red-700"
+                  onClick={() => handleDelete(p.id)}
+                ></i>
+              </div>
+            </td>
+          </motion.tr>
+        ))
+      ) : (
+        <tr>
+          <td colSpan="6" className="text-center text-gray-500 py-6">
+            No projects found.
+          </td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</motion.div>
+
+
 
       {/* Modal */}
       {showModal && (

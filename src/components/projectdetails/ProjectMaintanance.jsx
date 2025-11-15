@@ -136,7 +136,7 @@ export default function ProjectMaintenanceTab() {
       <div className="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
         <table className="min-w-full text-sm text-gray-700">
           <thead className="bg-gray-100 text-gray-600 uppercase">
-            <tr>
+            <tr className="bg-indigo-100 text-gray-700">
               <th className="p-3 text-left">Visit Date</th>
               <th className="p-3 text-left">Notes</th>
               <th className="p-3 text-left">Next Visit</th>
@@ -146,7 +146,7 @@ export default function ProjectMaintenanceTab() {
           <tbody>
             {visits.length > 0 ? (
               visits.map((visit) => (
-                <tr key={visit.id} className="border-t hover:bg-gray-50 transition">
+                <tr key={visit.id} className="border-b hover:bg-gray-50 transition">
                   <td className="p-3 font-medium text-gray-800">{visit.visitDate}</td>
                   <td className="p-3">{visit.notes}</td>
                   <td className="p-3 text-gray-500">

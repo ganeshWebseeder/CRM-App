@@ -125,7 +125,7 @@ export default function ProjectRemindersTab() {
       <div className="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
         <table className="min-w-full text-sm text-gray-700">
           <thead className="bg-gray-100 text-gray-600 uppercase">
-            <tr>
+            <tr className="bg-indigo-100 text-gray-700">
               <th className="p-3 text-left">Title</th>
               <th className="p-3 text-left">Date</th>
               <th className="p-3 text-left">Time</th>
@@ -137,7 +137,7 @@ export default function ProjectRemindersTab() {
           <tbody>
             {sorted.length ? (
               sorted.map((r) => (
-                <tr key={r.id} className="border-t hover:bg-gray-50 transition">
+                <tr key={r.id} className="border-b hover:bg-gray-50 transition">
                   <td className="p-3">{r.title}</td>
                   <td className="p-3">{r.date}</td>
                   <td className="p-3">{r.time || "—"}</td>

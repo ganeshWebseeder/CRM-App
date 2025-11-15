@@ -120,7 +120,7 @@ export default function ProjectDocumentsTab() {
       <div className="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
         <table className="min-w-full text-sm text-gray-700">
           <thead className="bg-gray-100 text-gray-600 uppercase">
-            <tr>
+            <tr className="bg-indigo-100 text-gray-700">
               <th className="p-3 text-left">Title</th>
               <th className="p-3 text-left">Type</th>
               <th className="p-3 text-left">File Name</th>
@@ -132,7 +132,7 @@ export default function ProjectDocumentsTab() {
           <tbody>
             {documents.length > 0 ? (
               documents.map((doc) => (
-                <tr key={doc.id} className="border-t hover:bg-gray-50 transition">
+                <tr key={doc.id} className="border-b hover:bg-gray-50 transition">
                   <td className="p-3">{doc.title}</td>
                   <td className="p-3">{doc.type}</td>
                   <td className="p-3">{doc.fileName}</td>

@@ -1,11 +1,17 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 export default function ExpenseTable({ expenses, onEdit, onDelete }) {
   return (
-    <div className="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}   // ⬅️ SAME as Projects Table
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.4 }}
+      className="overflow-x-auto bg-white rounded-lg shadow-md border border-gray-200 p-6"
+    >
       <table className="min-w-full text-sm text-gray-700">
         <thead className="bg-gray-100 text-gray-600 uppercase">
-          <tr>
+          <tr className="bg-indigo-100 text-gray-700">
             <th className="p-3 text-left">Expense Type</th>
             <th className="p-3 text-left">Project</th>
             <th className="p-3 text-left">Amount</th>
@@ -19,53 +25,56 @@ export default function ExpenseTable({ expenses, onEdit, onDelete }) {
 
         <tbody>
           {expenses.length ? (
-            expenses.map((e) => (
-              <tr
+            expenses.map((e, index) => (
+              <motion.tr
                 key={e.id}
-                className="border-t hover:bg-gray-50 transition duration-150"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: index * 0.05 }}  // same stagger as projects
+                className="border-b hover:bg-gray-50 transition duration-150"
               >
                 <td className="p-3">{e.type}</td>
                 <td className="p-3">{e.project}</td>
+
                 <td className="p-3 text-indigo-600 font-medium">
                   ₹{e.amount.toLocaleString()}
                 </td>
+
                 <td className="p-3">{e.date}</td>
                 <td className="p-3">{e.paidTo}</td>
                 <td className="p-3">{e.mode}</td>
-                <td className="p-3">{e.remarks}</td>
-                <td className="p-3 text-center flex justify-center gap-4">
-                  {/* Edit Button */}
-                  <button
-                    onClick={() => onEdit(e)}
-                    className="text-indigo-600 hover:text-indigo-800"
-                    title="Edit"
-                  >
-                    <i className="ri-edit-2-fill text-lg"></i>
-                  </button>
+                <td className="p-3">{e.remarks || "-"}</td>
 
-                  {/* Delete Button */}
-                  <button
-                    onClick={() => onDelete(e.id)}
-                    className="text-red-500 hover:text-red-700"
-                    title="Delete"
-                  >
-                    <i className="ri-delete-bin-6-line text-lg"></i>
-                  </button>
+                <td className="p-3">
+                  <div className="flex justify-center gap-4">
+                    <button
+                      onClick={() => onEdit(e)}
+                      className="text-indigo-600 hover:text-indigo-800"
+                      title="Edit"
+                    >
+                      <i className="ri-edit-2-fill text-lg"></i>
+                    </button>
+
+                    <button
+                      onClick={() => onDelete(e.id)}
+                      className="text-red-500 hover:text-red-700"
+                      title="Delete"
+                    >
+                      <i className="ri-delete-bin-6-line text-lg"></i>
+                    </button>
+                  </div>
                 </td>
-              </tr>
+              </motion.tr>
             ))
           ) : (
             <tr>
-              <td
-                colSpan="8"
-                className="text-center text-gray-500 py-4 text-sm"
-              >
+              <td colSpan="8" className="text-center text-gray-500 py-4 text-sm">
                 No matching expenses found.
               </td>
             </tr>
           )}
         </tbody>
       </table>
-    </div>
+    </motion.div>
   );
 }

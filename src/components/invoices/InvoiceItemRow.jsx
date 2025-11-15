@@ -1,9 +1,14 @@
-import React from "react";
+import { motion } from "framer-motion";
 
-export default function InvoiceItemRow({ item, onUpdate, onDelete, isFinalized }) {
+export default function InvoiceItemRow({ item, onUpdate, onDelete, isFinalized, index }) {
   return (
-    <tr className="border-t hover:bg-gray-50 transition">
-      <td className="p-2">
+    <motion.tr
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
+      className="border-b hover:bg-gray-50 transition"
+    >
+      <td className="p-2 w-1/2">
         <input
           type="text"
           value={item.description}
@@ -13,7 +18,8 @@ export default function InvoiceItemRow({ item, onUpdate, onDelete, isFinalized }
           className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-1 focus:ring-indigo-400"
         />
       </td>
-      <td className="p-2 text-center">
+
+      <td className="p-2 text-center w-20">
         <input
           type="number"
           min="1"
@@ -23,7 +29,8 @@ export default function InvoiceItemRow({ item, onUpdate, onDelete, isFinalized }
           className="w-16 text-center border border-gray-300 rounded-md px-2 py-1 focus:ring-1 focus:ring-indigo-400"
         />
       </td>
-      <td className="p-2 text-center">
+
+      <td className="p-2 text-center w-28">
         <input
           type="number"
           min="0"
@@ -33,10 +40,12 @@ export default function InvoiceItemRow({ item, onUpdate, onDelete, isFinalized }
           className="w-24 text-center border border-gray-300 rounded-md px-2 py-1 focus:ring-1 focus:ring-indigo-400"
         />
       </td>
-      <td className="p-2 text-center text-indigo-600 font-medium">
+
+      <td className="p-2 text-center w-28 text-indigo-600 font-medium">
         ₹{(item.qty * item.price).toFixed(2)}
       </td>
-      <td className="p-2 text-center">
+
+      <td className="p-2 text-center w-16">
         {!isFinalized && (
           <i
             className="ri-delete-bin-line text-red-500 hover:text-red-700 cursor-pointer text-lg"
@@ -44,6 +53,6 @@ export default function InvoiceItemRow({ item, onUpdate, onDelete, isFinalized }
           ></i>
         )}
       </td>
-    </tr>
+    </motion.tr>
   );
 }
