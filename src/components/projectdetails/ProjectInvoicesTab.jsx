@@ -160,7 +160,7 @@ export default function ProjectInvoicesTab() {
       <div className="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
         <table className="min-w-full text-sm text-gray-700">
           <thead className="bg-gray-100 text-gray-600 uppercase">
-            <tr>
+            <tr className="bg-indigo-100 text-gray-700">
               <th className="p-3 text-left">Invoice #</th>
               <th className="p-3 text-left">Client Email</th>
               <th className="p-3 text-left">Amount</th>
@@ -175,7 +175,7 @@ export default function ProjectInvoicesTab() {
               invoices.map((invoice) => (
                 <tr
                   key={invoice.id}
-                  className="border-t hover:bg-gray-50 transition"
+                  className="border-b hover:bg-gray-50 transition"
                 >
                   <td className="p-3 font-medium text-gray-800">
                     {invoice.invoiceNumber}

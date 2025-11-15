@@ -187,7 +187,7 @@ export default function ProjectLedgerTab() {
       <div className="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
         <table className="min-w-full text-sm text-gray-700">
           <thead className="bg-gray-100 text-gray-600 uppercase">
-            <tr>
+            <tr className="bg-indigo-100 text-gray-700">
               <th className="p-3 text-left">Type</th>
               <th className="p-3 text-left">Amount</th>
               <th className="p-3 text-left">Description</th>
@@ -199,7 +199,7 @@ export default function ProjectLedgerTab() {
           <tbody>
             {entries.length > 0 ? (
               entries.map((e) => (
-                <tr key={e.id} className="border-t hover:bg-gray-50 transition">
+                <tr key={e.id} className="border-b hover:bg-gray-50 transition">
                   <td
                     className={`p-3 font-medium ${
                       e.type === "Credit" ? "text-green-600" : "text-red-600"

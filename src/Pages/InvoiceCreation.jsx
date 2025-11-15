@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import InvoiceItemRow from "../components/invoices/InvoiceItemRow";
 import InvoiceSummary from "../components/invoices/InvoiceSummary";
 import InvoiceActions from "../components/invoices/InvoiceActions";
+import { motion } from "framer-motion";
 
 export default function InvoiceCreation() {
   const [invoice, setInvoice] = useState({
@@ -127,45 +128,55 @@ export default function InvoiceCreation() {
         </div>
       </div>
 
-      {/* 📋 Items Table */}
-      <div className="bg-white border border-gray-100 rounded-xl shadow-md overflow-hidden">
-        <div className="flex justify-between items-center px-6 py-4 bg-indigo-50 border-b border-gray-200">
-          <h2 className="text-sm font-semibold text-gray-800 tracking-wide">
-            Invoice Items
-          </h2>
-          {!invoice.status.includes("Finalized") && (
-            <button
-              onClick={handleAddItem}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded-md transition"
-            >
-              + Add Item
-            </button>
-          )}
-        </div>
+      
+<motion.div
+  initial={{ opacity: 0, x: 20 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.4 }}
+  className="bg-white rounded-2xl shadow-md p-6 overflow-x-auto"
+>
+  <div className="flex justify-between items-center px-6 py-4  border-b border-gray-200">
+    <h2 className="text-sm font-semibold text-gray-800 tracking-wide">
+      Invoice Items
+    </h2>
 
-        <table className="w-full text-sm text-gray-700">
-          <thead className="bg-gray-100 text-gray-600 uppercase text-xs tracking-wider">
-            <tr>
-              <th className="p-3 text-left">Description</th>
-              <th className="p-3 text-center">Qty</th>
-              <th className="p-3 text-center">Price (₹)</th>
-              <th className="p-3 text-center">Subtotal</th>
-              <th className="p-3 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {invoice.items.map((item) => (
-              <InvoiceItemRow
-                key={item.id}
-                item={item}
-                onUpdate={handleUpdateItem}
-                onDelete={handleDeleteItem}
-                isFinalized={invoice.status === "Finalized"}
-              />
-            ))}
-          </tbody>
-        </table>
-      </div>
+    {!invoice.status.includes("Finalized") && (
+      <button
+        onClick={handleAddItem}
+        className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded-md transition"
+      >
+        + Add Item
+      </button>
+    )}
+  </div>
+
+  <table className="w-full  text-gray-700">
+    <thead className="bg-gray-100 text-gray-600 uppercase text-xs tracking-wider">
+      <tr className="bg-indigo-100 text-gray-700">
+        <th className="p-3 text-left">Description</th>
+        <th className="p-3 text-center">Qty</th>
+        <th className="p-3 text-center">Price (₹)</th>
+        <th className="p-3 text-center">Subtotal</th>
+        <th className="p-3 text-center">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {invoice.items.map((item, index) => (
+        <InvoiceItemRow
+          key={item.id}
+          item={item}
+          index={index}
+          onUpdate={handleUpdateItem}
+          onDelete={handleDeleteItem}
+          isFinalized={invoice.status === "Finalized"}
+        />
+      ))}
+    </tbody>
+  </table>
+</motion.div>
+
+
 
       {/* 💰 Totals Section */}
       <div className="flex flex-col md:flex-row justify-between gap-8">

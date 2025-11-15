@@ -200,7 +200,7 @@ export default function ProjectExpensesTab() {
       <div className="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
         <table className="min-w-full text-sm text-gray-700">
           <thead className="bg-gray-100 text-gray-600 uppercase">
-            <tr>
+            <tr className="bg-indigo-100 text-gray-700">
               <th className="p-3 text-left">Title</th>
               <th className="p-3 text-left">Amount</th>
               <th className="p-3 text-left">Date</th>
@@ -213,7 +213,7 @@ export default function ProjectExpensesTab() {
               filteredExpenses.map((exp) => (
                 <tr
                   key={exp.id}
-                  className="border-t hover:bg-gray-50 transition"
+                  className="border-b hover:bg-gray-50 transition"
                 >
                   <td className="p-3">{exp.title}</td>
                   <td className="p-3 text-indigo-600 font-semibold">
