@@ -4,7 +4,7 @@ export default function ReportCard({ report, onClick }) {
   return (
     <div
       onClick={onClick}
-      className="cursor-pointer bg-white border border-gray-200 rounded-lg shadow-sm p-5 hover:shadow-md hover:border-indigo-400 transition transform hover:-translate-y-1"
+      className="cursor-pointer bg-white border border-gray-200 rounded-lg shadow-sm p-5 hover:shadow-md hover:border-indigo-100 transition transform "
     >
       <div className="flex items-center space-x-3">
         <i className={`${report.icon} text-2xl text-indigo-600`}></i>
