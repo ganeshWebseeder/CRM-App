@@ -6,19 +6,25 @@ export default function ReminderCalendar({ reminders, onDelete, onDateClick }) {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
-  // Start of month
+  // Start of month (0 = Sun)
   const firstDay = new Date(year, month, 1).getDay();
   // Total days in month
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  // Build calendar grid
+  // Build grid
   const calendarDays = [];
   for (let i = 0; i < firstDay; i++) calendarDays.push(null);
   for (let d = 1; d <= daysInMonth; d++) calendarDays.push(d);
 
-  // Helper: Check if reminder exists for date
-  const hasReminder = (day) => {
-    return reminders.some(
+  // Convert stored reminder dates into real Date objects
+  const normalizedReminders = reminders.map((r) => ({
+    ...r,
+    date: new Date(r.date),
+  }));
+
+  // Check if a day has reminders
+  const remindersForDay = (day) => {
+    return normalizedReminders.filter(
       (r) =>
         r.date.getFullYear() === year &&
         r.date.getMonth() === month &&
@@ -32,9 +38,7 @@ export default function ReminderCalendar({ reminders, onDelete, onDateClick }) {
       {/* Month Header */}
       <div className="flex items-center justify-between mb-4">
         <button
-          onClick={() =>
-            setCurrentDate(new Date(year, month - 1, 1))
-          }
+          onClick={() => setCurrentDate(new Date(year, month - 1, 1))}
           className="p-2 rounded hover:bg-gray-100"
         >
           <i className="ri-arrow-left-s-line text-xl"></i>
@@ -45,9 +49,7 @@ export default function ReminderCalendar({ reminders, onDelete, onDateClick }) {
         </h2>
 
         <button
-          onClick={() =>
-            setCurrentDate(new Date(year, month + 1, 1))
-          }
+          onClick={() => setCurrentDate(new Date(year, month + 1, 1))}
           className="p-2 rounded hover:bg-gray-100"
         >
           <i className="ri-arrow-right-s-line text-xl"></i>
@@ -66,34 +68,39 @@ export default function ReminderCalendar({ reminders, onDelete, onDateClick }) {
       {/* Calendar Days */}
       <div className="grid grid-cols-7 gap-2 text-center">
         {calendarDays.map((day, index) => {
-          if (!day)
-            return <div key={index} className="h-16"></div>;
+          if (!day) return <div key={index} className="h-16"></div>;
 
-          const isHighlighted = hasReminder(day);
+          const dayReminders = remindersForDay(day);
+          const hasReminder = dayReminders.length > 0;
 
           return (
             <div
               key={index}
-              onClick={() => onDateClick(day)}
-              className={`h-16 flex flex-col items-center justify-start p-2 cursor-pointer rounded-md border 
-              ${
-                isHighlighted
-                  ? "bg-indigo-50 border-indigo-200"
-                  : "bg-white border-gray-200 hover:bg-gray-50"
-              } transition`}
+              onClick={() => onDateClick(new Date(year, month, day))}
+              className={`h-16 flex flex-col items-center justify-start p-2 cursor-pointer rounded-md border transition
+                ${
+                  hasReminder
+                    ? "bg-indigo-50 border-indigo-300"
+                    : "bg-white border-gray-200 hover:bg-gray-50"
+                }`}
             >
               {/* DATE NUMBER */}
               <p
                 className={`text-sm font-medium ${
-                  isHighlighted ? "text-indigo-700" : "text-gray-700"
+                  hasReminder ? "text-indigo-700" : "text-gray-700"
                 }`}
               >
                 {day}
               </p>
 
-              {/* DOT INDICATOR */}
-              {isHighlighted && (
-                <span className="mt-1 w-2 h-2 rounded-full bg-indigo-500"></span>
+              {/* SHOW SMALL INDICATOR + COUNT */}
+              {hasReminder && (
+                <div className="mt-1 flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-indigo-600"></span>
+                  <span className="text-[10px] text-indigo-700 font-medium">
+                    {dayReminders.length}
+                  </span>
+                </div>
               )}
             </div>
           );
