@@ -1,9 +1,13 @@
-    import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function ProjectOverviewTab({ id }) {
   const [project, setProject] = useState(null);
   const [notes, setNotes] = useState("");
   const [editMode, setEditMode] = useState(false);
+
+  // NEW STATE: For editing progress
+  const [progressEdit, setProgressEdit] = useState(null);
+  const [progressEditMode, setProgressEditMode] = useState(false);
 
   // 🧠 Temporary Demo Data (Simulate API)
   useEffect(() => {
@@ -19,13 +23,21 @@ export default function ProjectOverviewTab({ id }) {
       notes:
         "The project involves a full redesign of the CRM platform for improved performance and UI enhancements.",
     };
+
     setProject(demoData);
     setNotes(demoData.notes);
+    setProgressEdit(demoData.progress);
   }, [id]);
 
   const handleSaveNotes = () => {
     setEditMode(false);
     alert("Notes updated successfully!");
+  };
+
+  const handleSaveProgress = () => {
+    setProject((prev) => ({ ...prev, progress: progressEdit }));
+    setProgressEditMode(false);
+    alert("Progress updated successfully!");
   };
 
   if (!project) {
@@ -79,18 +91,68 @@ export default function ProjectOverviewTab({ id }) {
         </div>
       </div>
 
-      {/* 📊 Progress Bar */}
-      <div className="bg-white rounded-lg shadow p-4">
-        <p className="text-sm text-gray-600 mb-2">Project Progress</p>
+      {/* 📊 Progress Section */}
+      <div className="bg-white rounded-lg shadow p-4 space-y-2">
+        <div className="flex justify-between items-center">
+          <p className="text-sm text-gray-600">Project Progress</p>
+
+          {!progressEditMode && (
+            <button
+              onClick={() => setProgressEditMode(true)}
+              className="text-indigo-600 text-xs hover:underline"
+            >
+              Edit
+            </button>
+          )}
+        </div>
+
+        {/* Live Preview Progress Bar */}
         <div className="w-full bg-gray-200 rounded-full h-3">
           <div
             className="bg-indigo-600 h-3 rounded-full transition-all duration-500"
-            style={{ width: `${project.progress}%` }}
+            style={{ width: `${progressEdit}%` }}
           ></div>
         </div>
-        <p className="text-right text-xs text-gray-500 mt-1">
-          {project.progress}% completed
+
+        <p className="text-right text-xs text-gray-500">
+          {progressEdit}% completed
         </p>
+
+        {/* Editable Input */}
+        {progressEditMode && (
+          <div className="flex items-center justify-between mt-3">
+            <input
+              type="number"
+              min="0"
+              max="100"
+              value={progressEdit}
+              onChange={(e) => {
+                const val = Math.max(0, Math.min(100, Number(e.target.value)));
+                setProgressEdit(val);
+              }}
+              className="border px-3 py-1 rounded-md text-sm w-24"
+            />
+
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  setProgressEditMode(false);
+                  setProgressEdit(project.progress);
+                }}
+                className="px-3 py-1 text-xs border rounded-md hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleSaveProgress}
+                className="px-3 py-1 text-xs bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 📝 Notes Section */}
@@ -100,7 +162,7 @@ export default function ProjectOverviewTab({ id }) {
           {!editMode && (
             <button
               onClick={() => setEditMode(true)}
-              className="text-indigo-600 text-xs hover:underline border-1 p-2 rounded-md hover:bg-blue-700 hover:text-black"
+              className="text-indigo-600 text-xs hover:underline"
             >
               Edit
             </button>
@@ -121,7 +183,7 @@ export default function ProjectOverviewTab({ id }) {
                   setEditMode(false);
                   setNotes(project.notes);
                 }}
-                className="px-3 py-1 text-xs border rounded-md hover:bg-gray-100 text-gray-600"
+                className="px-3 py-1 text-xs border rounded-md hover:bg-gray-100"
               >
                 Cancel
               </button>

@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 
 export default function Sidebar() {
@@ -26,18 +26,18 @@ export default function Sidebar() {
         bg-white text-gray-700 shadow-md border-r border-gray-200 
         flex flex-col justify-between z-50
 
-        w-16 md:w-52   /* ⬅ MOBILE: only icons | DESKTOP: full sidebar */
+        w-16 md:w-52   /* MOBILE: only icons | DESKTOP: full sidebar */
       "
     >
       {/* ---------- Logo Section ---------- */}
       <div className="flex flex-col items-center px-3 pt-3">
         <div className="flex items-center justify-center">
           <img
-            src='./WebSeeder Logo.jpeg'
+            src="./WebSeeder Logo.jpeg"
             alt="WebSeeder Logo"
             className="
               rounded-full shadow-md 
-              w-10 h-10 md:w-14 md:h-14   /* ⬅ small on mobile */
+              w-10 h-10 md:w-14 md:h-14   /* small on mobile */
             "
           />
 
@@ -46,7 +46,7 @@ export default function Sidebar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="
-              hidden md:inline-block   /* ⬅ hides on mobile */
+              hidden md:inline-block   /* hides on mobile */
               ml-2 pt-2 font-semibold text-sm whitespace-nowrap text-gray-800
             "
           >
@@ -54,6 +54,7 @@ export default function Sidebar() {
           </motion.span>
         </div>
 
+        {/* Divider desktop-only */}
         <div className="w-full border-t border-gray-200 mt-3 hidden md:block"></div>
       </div>
 
@@ -70,7 +71,7 @@ export default function Sidebar() {
                 py-3 md:py-2 
                 rounded-md cursor-pointer transition-all duration-200
                 ${isActive ? "bg-indigo-100 text-indigo-700 font-medium" : "hover:bg-gray-100"}
-                justify-center md:justify-start   /* ⬅ center on mobile */
+                justify-center md:justify-start   /* center on mobile */
               `}
             >
               {/* Icon always visible */}
@@ -85,7 +86,7 @@ export default function Sidebar() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className={`
-                  hidden md:inline-block   /* ⬅ hides on mobile */
+                  hidden md:inline-block   /* hides on mobile */
                   ml-3 truncate ${
                     isActive ? "text-indigo-700 font-medium" : "text-gray-700"
                   }
@@ -98,7 +99,7 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* ---------- Logout Button ---------- */}
+      {/* ---------- Logout Button (Desktop) ---------- */}
       <div className="border-t border-gray-200 p-3 hidden md:block">
         <div
           onClick={handleLogout}
@@ -118,7 +119,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* Mobile logout icon only */}
+      {/* ---------- Mobile Logout Icon ---------- */}
       <div
         onClick={handleLogout}
         className="
