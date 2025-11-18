@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   motion,
   useMotionValue,
@@ -15,7 +15,10 @@ import {
   FileText,
   AlarmClock,
   PieChart as PieIcon,
+  ChevronUp,
+  ChevronDown
 } from "lucide-react";
+
 import {
   BarChart,
   Bar,
@@ -28,9 +31,12 @@ import {
   Cell,
   PieChart,
 } from "recharts";
+
 import { useNavigate } from "react-router-dom";
 
-// 🎯 Animated Counter
+/* ----------------------------------------
+   Animated Counter Component
+---------------------------------------- */
 function AnimatedCounter({ value, isCurrency = false }) {
   const count = useMotionValue(0);
   const rounded = useTransform(count, (latest) =>
@@ -51,31 +57,35 @@ function AnimatedCounter({ value, isCurrency = false }) {
   );
 }
 
+/* ----------------------------------------
+   MAIN DASHBOARD COMPONENT
+---------------------------------------- */
 export default function Dashboard() {
   const navigate = useNavigate();
+  const [isQuickOpen, setIsQuickOpen] = useState(false);
 
-  // Summary cards
+  // Summary Cards
   const summary = [
     {
       title: "Total Projects",
       onClick: () => navigate("/projects"),
       value: 128,
       icon: <Briefcase size={22} />,
-      color: "from-blue-300 to-blue-400",
+      color: "from-blue-200 to-blue-200",
     },
     {
       title: "Active Projects",
       onClick: () => navigate("/projects?status=active"),
       value: 76,
       icon: <PlayCircle size={22} />,
-      color: "from-green-300 to-green-400",
+      color: "from-green-200 to-green-200",
     },
     {
       title: "Leads Count",
       onClick: () => navigate("/leads"),
       value: 54,
       icon: <Users size={22} />,
-      color: "from-yellow-300 to-yellow-400",
+      color: "from-yellow-200 to-yellow-200",
     },
     {
       title: "Outstanding Amount",
@@ -83,18 +93,18 @@ export default function Dashboard() {
       value: 452300,
       isCurrency: true,
       icon: <IndianRupee size={22} />,
-      color: "from-rose-300 to-red-400",
+      color: "from-rose-200 to-red-200",
     },
     {
       title: "Reminders Today",
       onClick: () => navigate("/reminders"),
       value: 9,
       icon: <Bell size={22} />,
-      color: "from-indigo-300 to-indigo-400",
+      color: "from-indigo-200 to-indigo-200",
     },
   ];
 
-  // Quick Actions with routing
+  // Quick Actions
   const quickActions = [
     { icon: <UserPlus size={18} />, label: "Add Lead", onClick: () => navigate("/leads") },
     { icon: <FileText size={18} />, label: "Create Invoice", onClick: () => navigate("/invoices") },
@@ -102,6 +112,7 @@ export default function Dashboard() {
     { icon: <PieIcon size={18} />, label: "View Reports", onClick: () => navigate("/reports") },
   ];
 
+  // Chart Data
   const revenueData = [
     { month: "Jan", revenue: 40000 },
     { month: "Feb", revenue: 52000 },
@@ -129,17 +140,15 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 min-h-screen bg-gradient-to-br from-white via-blue-50 to-gray-100">
-      {/* 🌟 Header */}
+    <div className="p-4 sm:p-6 md:p-8 min-h-screen pb-40 bg-gradient-to-br from-white via-blue-50 to-gray-100">
+
+      {/* 🌟 Header (from main) */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="mb-8 text-center"
-      >
-       
-       
-      </motion.div>
+      ></motion.div>
 
       {/* 🧩 Summary Cards */}
       <motion.div
@@ -161,22 +170,22 @@ export default function Dashboard() {
             className={`cursor-pointer p-4 sm:p-5 rounded-2xl bg-gradient-to-r ${item.color} text-white shadow-md flex justify-between items-center hover:opacity-95 transition`}
           >
             <div>
-              <p className="text-xs sm:text-sm uppercase font-medium opacity-90">
+              <p className="text-base sm:text-lg font-semibold text-gray-700 mb-4">
                 {item.title}
               </p>
               <AnimatedCounter value={item.value} isCurrency={item.isCurrency} />
             </div>
-            <div className="bg-white/30 p-2 sm:p-3 rounded-full">{item.icon}</div>
+            <div className="bg-black/30 p-2 sm:p-3 rounded-full">{item.icon}</div>
           </motion.div>
         ))}
       </motion.div>
 
-      {/* 📊 Charts Section */}
+      {/* 📊 Charts */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-32"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 mb-10"
       >
         {/* Revenue Chart */}
         <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
@@ -189,13 +198,7 @@ export default function Dashboard() {
               <XAxis dataKey="month" stroke="#6B7280" />
               <YAxis stroke="#6B7280" />
               <Tooltip />
-              <Bar dataKey="revenue" fill="url(#colorRevenue)" radius={[8, 8, 0, 0]} />
-              <defs>
-                <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#60A5FA" stopOpacity={0.9} />
-                  <stop offset="95%" stopColor="#93C5FD" stopOpacity={0.5} />
-                </linearGradient>
-              </defs>
+              <Bar dataKey="revenue" fill="#60A5FA" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -203,7 +206,7 @@ export default function Dashboard() {
         {/* Leads Chart */}
         <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
           <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-4">
-           Leads Distribution
+            Leads Distribution
           </h2>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
@@ -211,19 +214,14 @@ export default function Dashboard() {
                 data={leadData}
                 cx="50%"
                 cy="50%"
-                labelLine={false}
+                outerRadius={90}
                 label={({ name, percent }) =>
                   `${name}: ${(percent * 100).toFixed(0)}%`
                 }
-                outerRadius={90}
-                fill="#8884d8"
                 dataKey="value"
               >
                 {leadData.map((_, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
+                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
                 ))}
               </Pie>
               <Tooltip />
@@ -232,32 +230,37 @@ export default function Dashboard() {
         </div>
       </motion.div>
 
-      {/* ⚡ Quick Actions - Floating Panel */}
+      {/* ⚡ Quick Actions */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 25 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className=" bottom-6 z-50 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-gray-200"
+        className="fixed bottom-4 right-4 bg-white shadow-lg border border-gray-200 rounded-xl w-60"
       >
-        <h2 className="text-lg md:text-xl font-semibold text-gray-700 mb-4 flex items-center gap-2">
-          Quick Actions 
-        </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4">
-          {quickActions.map((action, i) => (
-            <motion.button
-              key={i}
-              onClick={action.onClick}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 200 }}
-              className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-3 rounded-xl shadow hover:shadow-lg transition text-xs sm:text-sm font-medium"
-            >
-              {action.icon}
-              {action.label}
-            </motion.button>
-          ))}
-        </div>
+        <button
+          onClick={() => setIsQuickOpen(!isQuickOpen)}
+          className="w-full flex justify-between items-center px-4 py-3 text-gray-700 font-medium border-b"
+        >
+          Quick Actions
+          {isQuickOpen ? <ChevronDown /> : <ChevronUp />}
+        </button>
+
+        {isQuickOpen && (
+          <div className="p-4 grid grid-cols-2 gap-3">
+            {quickActions.map((q, i) => (
+              <motion.button
+                key={i}
+                onClick={q.onClick}
+                whileHover={{ scale: 1.05 }}
+                className="flex flex-col items-center bg-indigo-50 text-indigo-700 p-3 rounded-lg shadow-sm"
+              >
+                {q.icon}
+                <span className="text-xs mt-1">{q.label}</span>
+              </motion.button>
+            ))}
+          </div>
+        )}
       </motion.div>
+
     </div>
   );
 }
