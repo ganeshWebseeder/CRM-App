@@ -106,11 +106,11 @@ export default function Projects() {
       {/* Summary Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "Total Projects", value: projects.length, color: "text-gray-800" },
+          { label: "Total Projects", value: projects.length, color: "text-gray-800", },
           {
             label: "Active",
             value: projects.filter((p) => p.status === "Active").length,
-            color: "text-green-600",
+            color: "text-green-600 ",
           },
           {
             label: "Completed",
@@ -198,61 +198,83 @@ export default function Projects() {
       </tr>
     </thead>
 
-    <tbody>
-      {filteredProjects.length > 0 ? (
-        filteredProjects.map((p, index) => (
-          <motion.tr
-            key={p.id}
-            className="border-b hover:bg-gray-50 transition cursor-pointer"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: index * 0.05 }} // small stagger effect like leads
-            onClick={(e) => {
-              if (e.target.closest(".action-btn")) return;
-              navigate(`/projects/${p.id}`);
-            }}
-          >
-            <td className="p-3 font-medium text-gray-800">{p.name}</td>
-            <td className="p-3">{p.client}</td>
+   <tbody>
+  {filteredProjects.length > 0 ? (
+    filteredProjects.map((p, index) => (
+      <motion.tr
+        key={p.id}
+        className="border-b hover:bg-gray-50 transition cursor-pointer"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: index * 0.05 }}
+        onClick={(e) => {
+          if (e.target.closest(".action-btn")) return;
+          navigate(`/projects/${p.id}`);
+        }}
+      >
+        <td className="p-3 font-medium text-gray-800">{p.name}</td>
 
-            <td
-              className={`p-3 font-semibold ${
-                p.status === "Active"
-                  ? "text-green-600"
-                  : p.status === "Completed"
-                  ? "text-indigo-600"
-                  : "text-yellow-600"
-              }`}
-            >
-              {p.status}
-            </td>
+        <td className="p-3">{p.client}</td>
 
-            <td className="p-3">{p.start}</td>
-            <td className="p-3">{p.end}</td>
+        {/* ⭐ STATUS DROPDOWN ADDED HERE ⭐ */}
+        <td className="p-3">
+  <select
+    value={p.status}
+    onClick={(e) => e.stopPropagation()}   // ✅ Stop row navigation
+    onChange={(e) => {
+      e.stopPropagation(); // extra safety
+      const newStatus = e.target.value;
 
-            <td className="p-3">
-              <div className="flex justify-center gap-4">
-                <i
-                  className="ri-edit-line action-btn text-indigo-600 cursor-pointer hover:text-indigo-800"
-                  onClick={() => handleEdit(p)}
-                ></i>
+      setProjects((prev) =>
+        prev.map((proj) =>
+          proj.id === p.id ? { ...proj, status: newStatus } : proj
+        )
+      );
+    }}
+    className={`px-3 py-1 rounded-md text-sm font-medium border 
+      ${
+        p.status === "Active"
+          ? "bg-green-100 text-green-700 border-green-300"
+          : p.status === "Completed"
+          ? "bg-indigo-100 text-indigo-700 "
+          : "bg-yellow-100 text-yellow-700 border-yellow-300"
+      }
+    `}
+  >
+    <option value="Active">Active</option>
+    <option value="Completed">Completed</option>
+    <option value="On Hold">On Hold</option>
+  </select>
+</td>
 
-                <i
-                  className="ri-delete-bin-line action-btn text-red-500 cursor-pointer hover:text-red-700"
-                  onClick={() => handleDelete(p.id)}
-                ></i>
-              </div>
-            </td>
-          </motion.tr>
-        ))
-      ) : (
-        <tr>
-          <td colSpan="6" className="text-center text-gray-500 py-6">
-            No projects found.
-          </td>
-        </tr>
-      )}
-    </tbody>
+
+        <td className="p-3">{p.start}</td>
+        <td className="p-3">{p.end}</td>
+
+        <td className="p-3">
+          <div className="flex justify-center gap-4">
+            <i
+              className="ri-edit-line action-btn text-indigo-600 cursor-pointer hover:text-indigo-800"
+              onClick={() => handleEdit(p)}
+            ></i>
+
+            <i
+              className="ri-delete-bin-line action-btn text-red-500 cursor-pointer hover:text-red-700"
+              onClick={() => handleDelete(p.id)}
+            ></i>
+          </div>
+        </td>
+      </motion.tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan="6" className="text-center text-gray-500 py-6">
+        No projects found.
+      </td>
+    </tr>
+  )}
+</tbody>
+
   </table>
 </motion.div>
 

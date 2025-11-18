@@ -141,7 +141,16 @@ export default function Dashboard() {
 
   return (
     <div className="p-4 sm:p-6 md:p-8 min-h-screen pb-40 bg-gradient-to-br from-white via-blue-50 to-gray-100">
-      {/* Summary Cards */}
+
+      {/* 🌟 Header (from main) */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="mb-8 text-center"
+      ></motion.div>
+
+      {/* 🧩 Summary Cards */}
       <motion.div
         initial="hidden"
         animate="show"
@@ -171,7 +180,7 @@ export default function Dashboard() {
         ))}
       </motion.div>
 
-      {/* Charts Section */}
+      {/* 📊 Charts */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -221,13 +230,12 @@ export default function Dashboard() {
         </div>
       </motion.div>
 
-      {/* Quick Actions Dropdown */}
+      {/* ⚡ Quick Actions */}
       <motion.div
         initial={{ opacity: 0, y: 25 }}
         animate={{ opacity: 1, y: 0 }}
         className="fixed bottom-4 right-4 bg-white shadow-lg border border-gray-200 rounded-xl w-60"
       >
-        {/* Toggle Button */}
         <button
           onClick={() => setIsQuickOpen(!isQuickOpen)}
           className="w-full flex justify-between items-center px-4 py-3 text-gray-700 font-medium border-b"
@@ -236,7 +244,6 @@ export default function Dashboard() {
           {isQuickOpen ? <ChevronDown /> : <ChevronUp />}
         </button>
 
-        {/* Collapsible Content */}
         {isQuickOpen && (
           <div className="p-4 grid grid-cols-2 gap-3">
             {quickActions.map((q, i) => (
@@ -253,6 +260,7 @@ export default function Dashboard() {
           </div>
         )}
       </motion.div>
+
     </div>
   );
 }
