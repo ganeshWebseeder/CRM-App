@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import ProjectOverviewTab from "../components/projectdetails/ProjectOverviewTab";
 import ProjectDocumentsTab from "../components/projectdetails/ProjectDocumentTab";
 import ProjectInvoicesTab from "../components/projectdetails/ProjectInvoicesTab";
-//import ProjectExpensesTab from "../components/projectdetails/ProjectExpensesTab";
 import ProjectLedgerTab from "../components/projectdetails/ProjectLeaderTab";
 import ProjectMaintenanceTab from "../components/projectdetails/ProjectMaintanance";
 import ProjectRemindersTab from "../components/projectdetails/ProjectReminderTab";
@@ -49,7 +48,6 @@ export default function ProjectDetails() {
         {activeTab === "overview" && <ProjectOverviewTab id={id} />}
         {activeTab === "documents" && <ProjectDocumentsTab id={id} />}
         {activeTab === "invoices" && <ProjectInvoicesTab id={id} />}
-        {/* {activeTab === "expenses" && <ProjectExpensesTab id={id} />} */}
         {activeTab === "ledger" && <ProjectLedgerTab id={id} />}
         {activeTab === "maintenance" && <ProjectMaintenanceTab id={id} />}
         {activeTab === "reminders" && <ProjectRemindersTab id={id} />}
