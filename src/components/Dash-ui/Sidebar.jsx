@@ -33,7 +33,7 @@ export default function Sidebar() {
       <div className="flex flex-col items-center px-3 pt-3">
         <div className="flex items-center justify-center">
           <img
-            src="./WebSeeder Logo.jpeg"
+            src="./WebSeederLogo.jpeg"
             alt="WebSeeder Logo"
             className="
               rounded-full shadow-md 

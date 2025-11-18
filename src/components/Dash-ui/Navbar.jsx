@@ -17,10 +17,16 @@ export default function Navbar({ onMenuClick }) {
 
   const { addLead } = useLeads();
 
-  // ---------- Dynamic Navbar Title ----------
-  const pathMap = {
+  // -------------------------------
+  // 📌 Dynamic Navbar Breadcrumb Logic
+  // -------------------------------
+  const pathname = location.pathname;
+
+  // Base mapping for static routes
+  const basePathMap = {
     "/dashboard": { icon: "ri-dashboard-line", label: "Dashboard" },
     "/projects": { icon: "ri-briefcase-line", label: "Projects" },
+    "/projects/details": { icon: "ri-briefcase-line", label: "Project Details" },
     "/expenses": { icon: "ri-money-dollar-circle-line", label: "Expenses" },
     "/leads": { icon: "ri-user-star-line", label: "Leads" },
     "/invoices": { icon: "ri-file-list-3-line", label: "Invoices" },
@@ -29,17 +35,29 @@ export default function Navbar({ onMenuClick }) {
     "/settings": { icon: "ri-settings-3-line", label: "Settings" },
   };
 
-  const currentPath = location.pathname;
-  const { icon, label } = pathMap[currentPath] || pathMap["/dashboard"];
+  // Detect dynamic project detail routes (example: /projects/4)
+  let resolvedPath = pathname;
+  let subLabel = "Overview";
 
-  // ---------- Time Update ----------
+  if (pathname.startsWith("/projects/") && pathname !== "/projects") {
+    resolvedPath = "/projects/details";
+
+    // Optional: detect sub-route segments like /projects/4/tasks
+    const segments = pathname.split("/").filter(Boolean);
+    if (segments.length > 2) {
+      subLabel = segments[2].charAt(0).toUpperCase() + segments[2].slice(1);
+    }
+  }
+
+  const { icon, label } = basePathMap[resolvedPath] || basePathMap["/dashboard"];
+
+  // -------------------------------
+  // 🕒 Live Time
+  // -------------------------------
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      const time = now.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
+      const time = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
       const date = now.toLocaleDateString([], {
         weekday: "short",
         month: "short",
@@ -47,12 +65,16 @@ export default function Navbar({ onMenuClick }) {
       });
       setCurrentTime(`${time} · ${date}`);
     };
+
     updateTime();
     const timer = setInterval(updateTime, 1000);
+
     return () => clearInterval(timer);
   }, []);
 
-  // ---------- Fullscreen ----------
+  // -------------------------------
+  // Fullscreen toggle
+  // -------------------------------
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();
@@ -63,7 +85,9 @@ export default function Navbar({ onMenuClick }) {
     }
   };
 
-  // ---------- Close dropdowns if outside clicked ----------
+  // -------------------------------
+  // Close dropdowns if clicked outside
+  // -------------------------------
   useEffect(() => {
     const handler = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -75,12 +99,14 @@ export default function Navbar({ onMenuClick }) {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // ---------- Read Reminders From LocalStorage ----------
+  // -------------------------------
+  // Read Reminders
+  // -------------------------------
   const allReminders = JSON.parse(localStorage.getItem("reminders") || "[]").map(
     (r) => ({ ...r, date: new Date(r.date) })
   );
 
-  // ---------- Track Dismissed Notifications ----------
+  // Dismissed reminders
   const [dismissed, setDismissed] = useState(
     JSON.parse(localStorage.getItem("dismissedReminders") || "[]")
   );
@@ -91,7 +117,6 @@ export default function Navbar({ onMenuClick }) {
     localStorage.setItem("dismissedReminders", JSON.stringify(updated));
   };
 
-  // ---------- Filter Upcoming Reminders ----------
   const upcomingReminders = allReminders.filter(
     (r) =>
       r.status !== "Done" &&
@@ -99,13 +124,17 @@ export default function Navbar({ onMenuClick }) {
       !dismissed.includes(r.id)
   );
 
-  // ---------- Sign Out ----------
+  // -------------------------------
+  // Sign Out
+  // -------------------------------
   const handleSignOut = () => {
     localStorage.clear();
     navigate("/");
   };
 
-  // ---------- Lead Modal Logic ----------
+  // -------------------------------
+  // Lead Modal Form
+  // -------------------------------
   const [newLead, setNewLead] = useState({
     clientName: "",
     phone: "",
@@ -118,6 +147,16 @@ export default function Navbar({ onMenuClick }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     addLead(newLead);
+
+    setNewLead({
+      clientName: "",
+      phone: "",
+      mail: "",
+      status: "New",
+      source: "",
+      notes: "",
+    });
+
     setIsModalOpen(false);
     navigate("/leads");
   };
@@ -126,8 +165,9 @@ export default function Navbar({ onMenuClick }) {
     <>
       {/* NAVBAR */}
       <div className="sticky top-0 z-40 flex justify-between items-center px-4 sm:px-6 py-3 bg-white border-b border-gray-200 shadow-sm">
-        {/* LEFT - MENU + BREADCRUMB */}
+        {/* LEFT SIDE */}
         <div className="flex items-center space-x-4">
+          {/* ☰ Mobile menu */}
           <button
             onClick={onMenuClick}
             className="md:hidden p-2 rounded-md hover:bg-gray-100"
@@ -135,20 +175,25 @@ export default function Navbar({ onMenuClick }) {
             <i className="ri-menu-line text-2xl"></i>
           </button>
 
+          {/* Breadcrumb */}
           <div className="flex items-center space-x-2 text-gray-700">
             <i className={`${icon} text-lg text-indigo-500`}></i>
             <p className="text-sm hidden sm:block">
-              {label} / <span className="font-semibold text-indigo-600">Overview</span>
+              {label} /{" "}
+              <span className="font-semibold text-indigo-600">
+                {subLabel}
+              </span>
             </p>
           </div>
 
+          {/* Time */}
           <div className="hidden lg:flex items-center text-xs text-gray-500">
             <i className="ri-time-line mr-2 text-base text-indigo-500"></i>
             {currentTime}
           </div>
         </div>
 
-        {/* SEARCH */}
+        {/* SEARCH BAR */}
         <div className="hidden sm:block relative w-[14rem] md:w-[20rem] lg:w-[28rem]">
           <i className="ri-search-line absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
           <input
@@ -160,7 +205,7 @@ export default function Navbar({ onMenuClick }) {
 
         {/* RIGHT SIDE */}
         <div className="flex items-center space-x-3 sm:space-x-4" ref={dropdownRef}>
-          {/* FULLSCREEN */}
+          {/* Fullscreen */}
           <button onClick={toggleFullscreen} className="hover:bg-gray-100 p-2 rounded-md">
             <i
               className={`${
@@ -169,7 +214,7 @@ export default function Navbar({ onMenuClick }) {
             ></i>
           </button>
 
-          {/* ADD LEAD */}
+          {/* Add Lead button */}
           <button
             onClick={() => setIsModalOpen(true)}
             className="hidden sm:inline-flex items-center gap-2 px-2 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
@@ -190,60 +235,54 @@ export default function Navbar({ onMenuClick }) {
               )}
             </button>
 
-            {/* NOTIFICATION DROPDOWN */}
-          {showNotifications && (
-  <div className="fixed top-14 right-4 w-72 bg-white border border-gray-200 
-                  rounded-md shadow-lg p-3 z-[9999]">
+            {showNotifications && (
+              <div className="fixed top-14 right-4 w-72 bg-white border border-gray-200 rounded-md shadow-lg p-3 z-[9999]">
+                <button
+                  onClick={() => setShowNotifications(false)}
+                  className="absolute top-2 right-2 text-gray-400 hover:text-red-500"
+                >
+                  <i className="ri-close-line text-lg"></i>
+                </button>
 
-    {/* Close Entire Dropdown */}
-    <button
-      onClick={() => setShowNotifications(false)}
-      className="absolute top-2 right-2 text-gray-400 hover:text-red-500"
-    >
-      <i className="ri-close-line text-lg"></i>
-    </button>
+                <p className="font-semibold text-gray-700 text-sm mb-3 pr-6">
+                  Upcoming Reminders
+                </p>
 
-    <p className="font-semibold text-gray-700 text-sm mb-3 pr-6">
-      Upcoming Reminders
-    </p>
+                {upcomingReminders.length === 0 ? (
+                  <p className="text-gray-500 text-xs text-center py-2">
+                    No upcoming reminders.
+                  </p>
+                ) : (
+                  upcomingReminders.map((rem) => (
+                    <div
+                      key={rem.id}
+                      className="p-2 mb-2 rounded-md border bg-white relative hover:bg-indigo-50 transition"
+                    >
+                      <button
+                        onClick={() => dismissReminder(rem.id)}
+                        className="absolute top-1 right-1 text-gray-400 hover:text-red-500"
+                      >
+                        <i className="ri-close-line text-sm"></i>
+                      </button>
 
-    {upcomingReminders.length === 0 ? (
-      <p className="text-gray-500 text-xs text-center py-2">
-        No upcoming reminders.
-      </p>
-    ) : (
-      upcomingReminders.map((rem) => (
-        <div
-          key={rem.id}
-          className="p-2 mb-2 rounded-md border bg-white relative hover:bg-indigo-50 transition"
-        >
-          {/* dismiss single reminder */}
-          <button
-            onClick={() => dismissReminder(rem.id)}
-            className="absolute top-1 right-1 text-gray-400 hover:text-red-500"
-          >
-            <i className="ri-close-line text-sm"></i>
-          </button>
-
-          <div
-            onClick={() => {
-              navigate("/reminders", { state: { date: rem.date } });
-              setShowNotifications(false);
-            }}
-            className="cursor-pointer"
-          >
-            <p className="text-sm font-semibold">{rem.title}</p>
-            <p className="text-xs text-gray-500">{rem.project}</p>
-            <p className="text-xs text-indigo-600 mt-1">
-              {new Date(rem.date).toLocaleString()}
-            </p>
-          </div>
-        </div>
-      ))
-    )}
-  </div>
-)}
-
+                      <div
+                        onClick={() => {
+                          navigate("/reminders", { state: { date: rem.date } });
+                          setShowNotifications(false);
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <p className="text-sm font-semibold">{rem.title}</p>
+                        <p className="text-xs text-gray-500">{rem.project}</p>
+                        <p className="text-xs text-indigo-600 mt-1">
+                          {new Date(rem.date).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
           </div>
 
           {/* USER DROPDOWN */}
@@ -304,7 +343,10 @@ export default function Navbar({ onMenuClick }) {
               Add New Lead
             </h2>
 
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <form
+              onSubmit={handleSubmit}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            >
               <input
                 type="text"
                 placeholder="Client Name"
@@ -315,11 +357,14 @@ export default function Navbar({ onMenuClick }) {
                 className="border p-2 rounded"
                 required
               />
+
               <input
                 type="text"
                 placeholder="Phone"
                 value={newLead.phone}
-                onChange={(e) => setNewLead({ ...newLead, phone: e.target.value })}
+                onChange={(e) =>
+                  setNewLead({ ...newLead, phone: e.target.value })
+                }
                 className="border p-2 rounded"
                 required
               />
@@ -328,14 +373,18 @@ export default function Navbar({ onMenuClick }) {
                 type="email"
                 placeholder="Email"
                 value={newLead.mail}
-                onChange={(e) => setNewLead({ ...newLead, mail: e.target.value })}
+                onChange={(e) =>
+                  setNewLead({ ...newLead, mail: e.target.value })
+                }
                 className="border p-2 rounded"
                 required
               />
 
               <select
                 value={newLead.status}
-                onChange={(e) => setNewLead({ ...newLead, status: e.target.value })}
+                onChange={(e) =>
+                  setNewLead({ ...newLead, status: e.target.value })
+                }
                 className="border p-2 rounded"
               >
                 <option>New</option>
@@ -347,14 +396,18 @@ export default function Navbar({ onMenuClick }) {
                 type="text"
                 placeholder="Source"
                 value={newLead.source}
-                onChange={(e) => setNewLead({ ...newLead, source: e.target.value })}
+                onChange={(e) =>
+                  setNewLead({ ...newLead, source: e.target.value })
+                }
                 className="border p-2 rounded"
               />
 
               <textarea
                 placeholder="Notes"
                 value={newLead.notes}
-                onChange={(e) => setNewLead({ ...newLead, notes: e.target.value })}
+                onChange={(e) =>
+                  setNewLead({ ...newLead, notes: e.target.value })
+                }
                 className="border p-2 rounded sm:col-span-2"
               />
 

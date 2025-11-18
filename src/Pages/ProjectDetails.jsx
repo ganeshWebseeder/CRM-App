@@ -22,9 +22,7 @@ export default function ProjectDetails() {
 
   return (
     <div className="p-6 space-y-4">
-      <h1 className="text-2xl font-semibold text-gray-800">
-        Project Details 
-      </h1>
+      
 
       {/* Tabs Header */}
       <div className="flex space-x-4 border-b border-gray-200">
