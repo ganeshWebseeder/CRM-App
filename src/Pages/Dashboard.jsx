@@ -138,9 +138,7 @@ export default function Dashboard() {
         className="mb-8 text-center"
       >
        
-        <p className="text-gray-500 text-sm mt-2">
-          Track progress, revenue, and leads at a glance.
-        </p>
+       
       </motion.div>
 
       {/* 🧩 Summary Cards */}
@@ -183,7 +181,7 @@ export default function Dashboard() {
         {/* Revenue Chart */}
         <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
           <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-4">
-            Revenue Overview (Last 6 Months)
+            Revenue Overview
           </h2>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={revenueData}>
