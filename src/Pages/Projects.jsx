@@ -104,34 +104,65 @@ export default function Projects() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          { label: "Total Projects", value: projects.length, color: "text-gray-800", },
-          {
-            label: "Active",
-            value: projects.filter((p) => p.status === "Active").length,
-            color: "text-green-600 ",
-          },
-          {
-            label: "Completed",
-            value: projects.filter((p) => p.status === "Completed").length,
-            color: "text-indigo-600",
-          },
-          {
-            label: "On Hold",
-            value: projects.filter((p) => p.status === "On Hold").length,
-            color: "text-yellow-600",
-          },
-        ].map((card, idx) => (
-          <div
-            key={idx}
-            className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition text-center"
-          >
-            <p className="text-gray-500 text-xs">{card.label}</p>
-            <h2 className={`text-xl font-semibold ${card.color}`}>{card.value}</h2>
-          </div>
-        ))}
-      </div>
+      {/* Summary Cards (Dashboard Style Hover Animation) */}
+<motion.div
+  initial="hidden"
+  animate="show"
+  className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+>
+  {[
+    {
+      label: "Total Projects",
+      value: projects.length,
+      icon: "ri-briefcase-line",
+      color: "from-blue-200 to-blue-200",
+      text: "text-blue-700",
+    },
+    {
+      label: "Active",
+      value: projects.filter((p) => p.status === "Active").length,
+      icon: "ri-play-circle-line",
+      color: "from-green-200 to-green-200",
+      text: "text-green-700",
+    },
+    {
+      label: "Completed",
+      value: projects.filter((p) => p.status === "Completed").length,
+      icon: "ri-checkbox-circle-line",
+      color: "from-yellow-200 to-yellow-200",
+      text: "text-indigo-700",
+    },
+    {
+      label: "On Hold",
+      value: projects.filter((p) => p.status === "On Hold").length,
+      icon: "ri-time-line",
+      color: "from-rose-200 to-rose-200",
+      text: "text-yellow-700",
+    },
+  ].map((card, i) => (
+    <motion.div
+      key={i}
+      whileHover={{
+        scale: 1.05,
+        y: -5,
+        boxShadow: "0 12px 25px rgba(0,0,0,0.1)",
+      }}
+      transition={{ type: "spring", stiffness: 120 }}
+      className={`cursor-pointer p-4 sm:p-5 rounded-xl bg-gradient-to-r 
+        ${card.color} shadow-md text-center flex flex-col items-center`}
+    >
+      <i className={`${card.icon} text-2xl mb-2 ${card.text}`}></i>
+
+      <p className="text-gray-700 text-sm font-medium">{card.label}</p>
+
+      <h2 className={`text-2xl font-semibold ${card.text}`}>
+        {card.value}
+      </h2>
+    </motion.div>
+  ))}
+</motion.div>
+
+
 
       {/* Search + Filters */}
       <div className="bg-white p-4 rounded-lg shadow-sm flex flex-col md:flex-row gap-4 justify-between">

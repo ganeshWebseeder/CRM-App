@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import ProjectOverviewTab from "../components/projectdetails/ProjectOverviewTab";
 import ProjectDocumentsTab from "../components/projectdetails/ProjectDocumentTab";
 import ProjectInvoicesTab from "../components/projectdetails/ProjectInvoicesTab";
-import ProjectExpensesTab from "../components/projectdetails/ProjectExpensesTab";
 import ProjectLedgerTab from "../components/projectdetails/ProjectLeaderTab";
 import ProjectMaintenanceTab from "../components/projectdetails/ProjectMaintanance";
 import ProjectRemindersTab from "../components/projectdetails/ProjectReminderTab";
@@ -16,7 +15,6 @@ export default function ProjectDetails() {
     { key: "overview", label: "Overview" },
     { key: "documents", label: "Documents" },
     { key: "invoices", label: "Invoices" },
-    { key: "expenses", label: "Expenses" },
     { key: "ledger", label: "Ledger" },
     { key: "maintenance", label: "Maintenance" },
     { key: "reminders", label: "Reminders" },
@@ -24,9 +22,7 @@ export default function ProjectDetails() {
 
   return (
     <div className="p-6 space-y-4">
-      <h1 className="text-2xl font-semibold text-gray-800">
-        Project Details 
-      </h1>
+      
 
       {/* Tabs Header */}
       <div className="flex space-x-4 border-b border-gray-200">
@@ -50,7 +46,6 @@ export default function ProjectDetails() {
         {activeTab === "overview" && <ProjectOverviewTab id={id} />}
         {activeTab === "documents" && <ProjectDocumentsTab id={id} />}
         {activeTab === "invoices" && <ProjectInvoicesTab id={id} />}
-        {activeTab === "expenses" && <ProjectExpensesTab id={id} />}
         {activeTab === "ledger" && <ProjectLedgerTab id={id} />}
         {activeTab === "maintenance" && <ProjectMaintenanceTab id={id} />}
         {activeTab === "reminders" && <ProjectRemindersTab id={id} />}
