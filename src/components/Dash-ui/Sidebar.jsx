@@ -58,7 +58,7 @@ export default function Sidebar() {
         <div className="w-full border-t border-gray-200 mt-3 hidden md:block"></div>
       </div>
 
-<<<<<<< HEAD
+
       {/* Menu Items */}
      {/* Menu Items */}
 <nav className="flex-1 flex flex-col text-sm space-y-1 mt-4 px-3 overflow-y-auto">
@@ -99,48 +99,6 @@ export default function Sidebar() {
   ))}
 </nav>
 
-=======
-      {/* ---------- Menu Items ---------- */}
-      <nav className="flex-1 flex flex-col text-sm space-y-1 mt-4 px-1 md:px-3 overflow-y-auto">
-        {menuItems.map((item, index) => {
-          const isActive = location.pathname === item.path;
-          return (
-            <div
-              key={index}
-              onClick={() => navigate(item.path)}
-              className={`
-                flex items-center 
-                py-3 md:py-2 
-                rounded-md cursor-pointer transition-all duration-200
-                ${isActive ? "bg-indigo-100 text-indigo-700 font-medium" : "hover:bg-gray-100"}
-                justify-center md:justify-start   /* center on mobile */
-              `}
-            >
-              {/* Icon always visible */}
-              <i
-                className={`${item.icon} text-xl md:text-lg ${
-                  isActive ? "text-indigo-700" : "text-indigo-600"
-                }`}
-              ></i>
-
-              {/* Label visible ONLY on desktop */}
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className={`
-                  hidden md:inline-block   /* hides on mobile */
-                  ml-3 truncate ${
-                    isActive ? "text-indigo-700 font-medium" : "text-gray-700"
-                  }
-                `}
-              >
-                {item.label}
-              </motion.span>
-            </div>
-          );
-        })}
-      </nav>
->>>>>>> f7be27cb0699c49ffdb4a5a3e9e17aef1ec208b0
 
       {/* ---------- Logout Button (Desktop) ---------- */}
       <div className="border-t border-gray-200 p-3 hidden md:block">
