@@ -3,17 +3,23 @@ import InvoiceItemRow from "../components/invoices/InvoiceItemRow";
 import InvoiceSummary from "../components/invoices/InvoiceSummary";
 import InvoiceActions from "../components/invoices/InvoiceActions";
 import { motion } from "framer-motion";
+import { X } from "lucide-react";
 
 export default function InvoiceCreation() {
   const [invoice, setInvoice] = useState({
     type: "Proforma",
     items: [{ id: 1, description: "", qty: 1, price: 1 }],
     gstEnabled: false,
-    version: 1,
+   
     status: "Draft",
+    number: "",
+    clientEmail: "",
+    amount: "",
   });
 
-  // 🧮 Calculations
+  const [showBasicForm, setShowBasicForm] = useState(false);
+
+  // Totals
   const subtotal = invoice.items.reduce(
     (sum, item) => sum + item.qty * item.price,
     0
@@ -21,7 +27,7 @@ export default function InvoiceCreation() {
   const gst = invoice.gstEnabled ? subtotal * 0.18 : 0;
   const total = subtotal + gst;
 
-  // ➕ Add Item
+  // Add Item
   const handleAddItem = () => {
     setInvoice({
       ...invoice,
@@ -32,7 +38,7 @@ export default function InvoiceCreation() {
     });
   };
 
-  // ✏️ Update Item
+  // Update item
   const handleUpdateItem = (id, field, value) => {
     setInvoice({
       ...invoice,
@@ -42,7 +48,7 @@ export default function InvoiceCreation() {
     });
   };
 
-  // ❌ Delete Item
+  // Delete item
   const handleDeleteItem = (id) => {
     setInvoice({
       ...invoice,
@@ -50,138 +56,203 @@ export default function InvoiceCreation() {
     });
   };
 
-  // 💾 Save Draft
+  // Save draft
   const handleSaveDraft = () => {
     localStorage.setItem("invoiceDraft", JSON.stringify(invoice));
-    alert("✅ Invoice draft saved successfully!");
+    alert("Invoice draft saved!");
   };
 
-  // ✅ Finalize Invoice
+  // Finalize
   const handleFinalize = () => {
     setInvoice((prev) => ({
       ...prev,
       status: "Finalized",
       version: prev.version + 1,
     }));
-    alert("🎉 Invoice finalized successfully!");
+    alert("Invoice finalized!");
   };
 
   return (
-    <div className="  p-6 space-y-8 bg-gradient-to-b from-gray-50 to-white min-h-screen">
-      {/* 🧾 Header Section */}
+    <div className="p-6 space-y-8 bg-gradient-to-b from-gray-50 to-white min-h-screen">
+
+      {/* HEADER */}
       <div className="flex justify-between items-center">
-        <div>
-        
-          <p className="text-gray-500 text-sm">
-            Manage and generate new invoices with version control & GST support.
-          </p>
-        </div>
-        <div className="bg-indigo-50 border border-indigo-200 px-4 py-2 rounded-md">
-          <p className="text-xs text-gray-600">Current Version</p>
-          <p className="text-lg font-semibold text-indigo-700">
-            #{invoice.version}
-          </p>
-        </div>
+        <p className="text-gray-500 text-sm">
+          Manage & generate invoices with version control.
+        </p>
+
+     
       </div>
 
-      {/* 💼 Invoice Meta Section */}
-      <div className="bg-white p-5 rounded-xl shadow-md border border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Type Selector */}
-        <div>
-          <label className="block text-sm font-medium text-gray-600 mb-1">
-            Invoice Type
-          </label>
-          <select
-            value={invoice.type}
-            onChange={(e) => setInvoice({ ...invoice, type: e.target.value })}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          >
-            <option value="Proforma">Proforma Invoice</option>
-            <option value="Tax">Tax Invoice</option>
-          </select>
-        </div>
-
-        {/* Status */}
-        <div>
-          <label className="block text-sm font-medium text-gray-600 mb-1">
-            Status
-          </label>
-          <span
-            className={`px-3 py-2 text-xs font-medium rounded-md inline-block text-center ${
-              invoice.status === "Finalized"
-                ? "bg-green-100 text-green-700 border border-green-200"
-                : "bg-yellow-50 text-yellow-700 border border-yellow-200"
-            }`}
-          >
-            {invoice.status}
-          </span>
-        </div>
-
-        {/* Version Info */}
-        <div>
-          <label className="block text-sm font-medium text-gray-600 mb-1">
-            Invoice Date
-          </label>
-          <p className="text-sm text-gray-700">
-            {new Date().toLocaleDateString()}
-          </p>
-        </div>
+      {/* 🔵 Create Invoice Button */}
+      <div className="flex justify-end">
+        <button
+          onClick={() => setShowBasicForm(true)}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm shadow"
+        >
+          + Create Invoice
+        </button>
       </div>
 
-      
-<motion.div
-  initial={{ opacity: 0, x: 20 }}
-  animate={{ opacity: 1, x: 0 }}
-  transition={{ duration: 0.4 }}
-  className="bg-white rounded-2xl shadow-md p-6 overflow-x-auto"
->
-  <div className="flex justify-between items-center px-6 py-4  border-b border-gray-200">
-    <h2 className="text-sm font-semibold text-gray-800 tracking-wide">
-      Invoice Items
-    </h2>
+      {/* POPUP MODAL */}
+      {showBasicForm && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
+          <motion.div
+            initial={{ scale: 0.85, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white p-6 rounded-2xl shadow-xl max-w-2xl w-full relative"
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setShowBasicForm(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-black"
+            >
+              <X size={20} />
+            </button>
 
-    {!invoice.status.includes("Finalized") && (
-      <button
-        onClick={handleAddItem}
-        className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded-md transition"
+            <h2 className="text-lg font-semibold text-indigo-600 mb-4">
+              Invoice Basic Details
+            </h2>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setShowBasicForm(false);
+              }}
+              className="space-y-4"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                {/* Number */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                    Invoice Number
+                  </label>
+                  <input
+                    type="text"
+                    value={invoice.number}
+                    onChange={(e) =>
+                      setInvoice({ ...invoice, number: e.target.value })
+                    }
+                    placeholder="INV-001"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  />
+                </div>
+
+                {/* Email */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                    Client Email
+                  </label>
+                  <input
+                    type="email"
+                    value={invoice.clientEmail}
+                    onChange={(e) =>
+                      setInvoice({ ...invoice, clientEmail: e.target.value })
+                    }
+                    placeholder="client@example.com"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  />
+                </div>
+
+                {/* Amount */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                    Amount (₹)
+                  </label>
+                  <input
+                    type="number"
+                    value={invoice.amount}
+                    onChange={(e) =>
+                      setInvoice({ ...invoice, amount: e.target.value })
+                    }
+                    placeholder="Enter amount"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  />
+                </div>
+
+                {/* Status */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                    Status
+                  </label>
+                  <select
+                    value={invoice.status}
+                    onChange={(e) =>
+                      setInvoice({ ...invoice, status: e.target.value })
+                    }
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                  >
+                    <option value="Draft">Draft</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Overdue">Overdue</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm"
+                >
+                  Save Details
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      )}
+
+      {/* ITEMS TABLE */}
+      <motion.div
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="bg-white rounded-2xl shadow-md p-6 overflow-x-auto"
       >
-        + Add Item
-      </button>
-    )}
-  </div>
+        <div className="flex justify-between items-center px-6 py-4 border-b">
+          <h2 className="text-sm font-semibold text-gray-800">Invoice Items</h2>
 
-  <table className="w-full  text-gray-700">
-    <thead className="bg-gray-100 text-gray-600 uppercase text-xs tracking-wider">
-      <tr className="bg-indigo-100 text-gray-700">
-        <th className="p-3 text-left">Description</th>
-        <th className="p-3 text-center">Qty</th>
-        <th className="p-3 text-center">Price (₹)</th>
-        <th className="p-3 text-center">Subtotal</th>
-        <th className="p-3 text-center">Actions</th>
-      </tr>
-    </thead>
+          {invoice.status !== "Finalized" && (
+            <button
+              onClick={handleAddItem}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded-md"
+            >
+              + Add Item
+            </button>
+          )}
+        </div>
 
-    <tbody>
-      {invoice.items.map((item, index) => (
-        <InvoiceItemRow
-          key={item.id}
-          item={item}
-          index={index}
-          onUpdate={handleUpdateItem}
-          onDelete={handleDeleteItem}
-          isFinalized={invoice.status === "Finalized"}
-        />
-      ))}
-    </tbody>
-  </table>
-</motion.div>
+        <table className="w-full text-gray-700">
+          <thead className="bg-indigo-100 text-gray-700 text-xs uppercase">
+            <tr>
+              <th className="p-3 text-left">Description</th>
+              <th className="p-3 text-center">Qty</th>
+              <th className="p-3 text-center">Price (₹)</th>
+              <th className="p-3 text-center">Subtotal</th>
+              <th className="p-3 text-center">Actions</th>
+            </tr>
+          </thead>
 
+          <tbody>
+            {invoice.items.map((item, index) => (
+              <InvoiceItemRow
+                key={item.id}
+                item={item}
+                index={index}
+                onUpdate={handleUpdateItem}
+                onDelete={handleDeleteItem}
+                isFinalized={invoice.status === "Finalized"}
+              />
+            ))}
+          </tbody>
+        </table>
+      </motion.div>
 
-
-      {/* 💰 Totals Section */}
+      {/* TOTALS */}
       <div className="flex flex-col md:flex-row justify-between gap-8">
         <div className="w-full md:w-1/2"></div>
-        <div className="w-full md:w-1/2 bg-white rounded-xl shadow-md border border-gray-100 p-6">
+        <div className="w-full md:w-1/2 bg-white rounded-xl shadow-md p-6 border">
           <InvoiceSummary
             subtotal={subtotal}
             gst={gst}
@@ -194,7 +265,7 @@ export default function InvoiceCreation() {
         </div>
       </div>
 
-      {/* 🎯 Action Buttons */}
+      {/* ACTION BUTTONS */}
       <div className="flex justify-end">
         <InvoiceActions
           onSaveDraft={handleSaveDraft}
