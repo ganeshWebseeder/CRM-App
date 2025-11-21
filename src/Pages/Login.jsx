@@ -64,7 +64,7 @@ export default function LoginPage() {
 
         {/* Logo watermark at corner */}
         <img
-          src="./WebSeeder Logo.jpeg"
+          src="./WebSeederLogo.jpeg"
           alt="Watermark"
           className="absolute bottom-6 right-6 w-16 h-16 opacity-60 rounded-full"
         />
@@ -75,7 +75,7 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           <div className="text-center mb-6">
             <img
-              src="./WebSeeder Logo.jpeg"
+              src="./WebSeederLogo.jpeg"
               alt="Logo"
               className="w-24 h-24 mx-auto rounded-full shadow-md mb-3"
             />

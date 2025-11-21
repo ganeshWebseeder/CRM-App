@@ -1,105 +1,117 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
-export default function ReminderModal({ selectedDate, reminders, onSave, onClose }) {
-  const formattedDate = selectedDate.toDateString();
+export default function ReminderModal({ show, onClose, onSave }) {
+  const [form, setForm] = useState({
+    title: "",
+    project: "",
+    datetime: "",   // store original datetime-local value
+    status: "Pending",
+  });
 
-  const existing = reminders[formattedDate] || [];
+  if (!show) return null;
 
-  const [mode, setMode] = useState(existing.length > 0 ? "view" : "add");
-  const [newReminder, setNewReminder] = useState({ time: "", text: "" });
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  const saveReminder = () => {
-    if (!newReminder.time || !newReminder.text) return;
+    if (!form.title || !form.project || !form.datetime) {
+      alert("Please fill all fields!");
+      return;
+    }
 
-    onSave(selectedDate, newReminder);
-    setNewReminder({ time: "", text: "" });
-    setMode("view");
+    // Split date and time separately
+    const [datePart, timePart] = form.datetime.split("T");
+
+    onSave({
+      id: Date.now(),
+      title: form.title,
+      project: form.project,
+      status: form.status,
+
+      // Calendar date → usable for day matching
+      date: new Date(datePart),
+
+      // Store time separately (useful for display)
+      time: timePart,
+    });
+
+    onClose(); // close modal
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-xl w-[420px] shadow-xl relative z-50">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl shadow-lg w-96 p-6">
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+          Add Reminder
+        </h2>
 
-        {/* Header */}
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">
-            Reminders for {formattedDate}
-          </h2>
-
-          {mode === "view" && (
-            <button
-              className="px-3 py-1 bg-blue-600 text-white rounded-md"
-              onClick={() => setMode("add")}
-            >
-              Add New Reminder
-            </button>
-          )}
-        </div>
-
-        {/* View Mode */}
-        {mode === "view" && (
+        <form onSubmit={handleSubmit} className="space-y-3">
+          {/* Title */}
           <div>
-            {existing.length === 0 ? (
-              <p className="text-gray-500 text-sm">No reminders set for this date.</p>
-            ) : (
-              <ul className="space-y-3">
-                {existing.map((r, idx) => (
-                  <li key={idx} className="border p-3 rounded-md bg-gray-50 shadow-sm">
-                    <p className="text-sm font-medium">⏰ {r.time}</p>
-                    <p className="text-gray-600">{r.text}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            <button
-              className="mt-5 w-full py-2 bg-gray-700 text-white rounded-md"
-              onClick={onClose}
-            >
-              Close
-            </button>
+            <label className="text-sm text-gray-600">Title</label>
+            <input
+              type="text"
+              value={form.title}
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
+              placeholder="e.g., Call client"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:ring-1 focus:ring-indigo-400"
+            />
           </div>
-        )}
 
-        {/* Add Mode */}
-        {mode === "add" && (
+          {/* Project */}
           <div>
-            <div className="mb-3">
-              <label className="text-sm">Time</label>
-              <input
-                type="time"
-                className="w-full border rounded-md px-2 py-1"
-                value={newReminder.time}
-                onChange={(e) => setNewReminder({ ...newReminder, time: e.target.value })}
-              />
-            </div>
+            <label className="text-sm text-gray-600">Project</label>
+            <input
+              type="text"
+              value={form.project}
+              onChange={(e) => setForm({ ...form, project: e.target.value })}
+              placeholder="e.g., CRM System"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:ring-1 focus:ring-indigo-400"
+            />
+          </div>
 
-            <div className="mb-3">
-              <label className="text-sm">Reminder Message</label>
-              <textarea
-                className="w-full border rounded-md px-2 py-1"
-                rows={3}
-                value={newReminder.text}
-                onChange={(e) => setNewReminder({ ...newReminder, text: e.target.value })}
-              />
-            </div>
+          {/* Date & Time */}
+          <div>
+            <label className="text-sm text-gray-600">Date & Time</label>
+            <input
+              type="datetime-local"
+              value={form.datetime}
+              onChange={(e) => setForm({ ...form, datetime: e.target.value })}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:ring-1 focus:ring-indigo-400"
+            />
+          </div>
+
+          {/* Status */}
+          <div>
+            <label className="text-sm text-gray-600">Status</label>
+            <select
+              value={form.status}
+              onChange={(e) => setForm({ ...form, status: e.target.value })}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:ring-1 focus:ring-indigo-400"
+            >
+              <option value="Pending">Pending</option>
+              <option value="Done">Done</option>
+            </select>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex justify-end gap-3 pt-3">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-md"
+            >
+              Cancel
+            </button>
 
             <button
-              className="w-full py-2 bg-green-600 text-white rounded-md mb-2"
-              onClick={saveReminder}
+              type="submit"
+              className="px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-md"
             >
               Save Reminder
             </button>
-
-            <button
-              className="w-full py-2 bg-gray-600 text-white rounded-md"
-              onClick={() => setMode("view")}
-            >
-              Back
-            </button>
           </div>
-        )}
 
+        </form>
       </div>
     </div>
   );
