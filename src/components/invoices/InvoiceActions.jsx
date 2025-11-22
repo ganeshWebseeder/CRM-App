@@ -9,13 +9,13 @@ export default function InvoiceActions({ onSaveDraft, onFinalize, isFinalized })
             onClick={onSaveDraft}
             className="bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm px-4 py-2 rounded-md"
           >
-            💾 Save Draft
+          Save Draft
           </button>
           <button
             onClick={onFinalize}
             className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-md"
           >
-            ✅ Finalize Invoice
+             Finalize Invoice
           </button>
         </>
       )}

@@ -102,9 +102,22 @@ export default function Navbar({ onMenuClick }) {
   // -------------------------------
   // Read Reminders
   // -------------------------------
-  const allReminders = JSON.parse(localStorage.getItem("reminders") || "[]").map(
-    (r) => ({ ...r, date: new Date(r.date) })
-  );
+ let storedReminders;
+
+try {
+  storedReminders = JSON.parse(localStorage.getItem("reminders"));
+} catch (e) {
+  storedReminders = [];
+}
+
+if (!Array.isArray(storedReminders)) {
+  storedReminders = [];
+}
+
+const allReminders = storedReminders.map((r) => ({
+  ...r,
+  date: new Date(r.date),
+}));
 
   // Dismissed reminders
   const [dismissed, setDismissed] = useState(

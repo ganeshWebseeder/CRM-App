@@ -250,20 +250,29 @@ export default function InvoiceCreation() {
       </motion.div>
 
       {/* TOTALS */}
-      <div className="flex flex-col md:flex-row justify-between gap-8">
-        <div className="w-full md:w-1/2"></div>
-        <div className="w-full md:w-1/2 bg-white rounded-xl shadow-md p-6 border">
-          <InvoiceSummary
-            subtotal={subtotal}
-            gst={gst}
-            total={total}
-            gstEnabled={invoice.gstEnabled}
-            setGstEnabled={(value) =>
-              setInvoice({ ...invoice, gstEnabled: value })
-            }
-          />
-        </div>
-      </div>
+    <div className="flex flex-col md:flex-row justify-between mt-6">
+  {/* Left Section */}
+  <div className="w-full md:w-1/2">
+    {/* Add your left content here */}
+    
+  </div>
+
+  {/* Right Section */}
+  <div className="w-full md:w-1/2 ">
+    <div className="bg-white rounded-2xl shadow-lg  md:p-8">
+      <InvoiceSummary
+        subtotal={subtotal}
+        gst={gst}
+        total={total}
+        gstEnabled={invoice.gstEnabled}
+        setGstEnabled={(value) =>
+          setInvoice({ ...invoice, gstEnabled: value })
+        }
+      />
+    </div>
+  </div>
+</div>
+
 
       {/* ACTION BUTTONS */}
       <div className="flex justify-end">

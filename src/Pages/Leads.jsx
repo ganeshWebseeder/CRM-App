@@ -33,7 +33,7 @@ export default function LeadManagementPage() {
     <div className="p-4 sm:p-6 bg-gray-100 min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-indigo-600">
+        <h2 className="  text-gray-500 text-sm">
           Leads Overview
         </h2>
       </div>
