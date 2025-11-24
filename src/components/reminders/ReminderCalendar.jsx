@@ -6,23 +6,19 @@ export default function ReminderCalendar({ reminders, onDelete, onDateClick }) {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
-  // Start of month (0 = Sun)
   const firstDay = new Date(year, month, 1).getDay();
-  // Total days in month
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  // Build grid
   const calendarDays = [];
   for (let i = 0; i < firstDay; i++) calendarDays.push(null);
   for (let d = 1; d <= daysInMonth; d++) calendarDays.push(d);
 
-  // Convert stored reminder dates into real Date objects
+  // Normalize stored reminder dates safely
   const normalizedReminders = reminders.map((r) => ({
     ...r,
-    date: new Date(r.date),
+    date: new Date(r.date + "T00:00:00"),
   }));
 
-  // Check if a day has reminders
   const remindersForDay = (day) => {
     return normalizedReminders.filter(
       (r) =>
@@ -34,7 +30,6 @@ export default function ReminderCalendar({ reminders, onDelete, onDateClick }) {
 
   return (
     <div className="w-full">
-
       {/* Month Header */}
       <div className="flex items-center justify-between mb-4">
         <button
@@ -76,7 +71,11 @@ export default function ReminderCalendar({ reminders, onDelete, onDateClick }) {
           return (
             <div
               key={index}
-              onClick={() => onDateClick(new Date(year, month, day))}
+              onClick={() =>
+                onDateClick(
+                  `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+                )
+              }
               className={`h-16 flex flex-col items-center justify-start p-2 cursor-pointer rounded-md border transition
                 ${
                   hasReminder
@@ -84,7 +83,6 @@ export default function ReminderCalendar({ reminders, onDelete, onDateClick }) {
                     : "bg-white border-gray-200 hover:bg-gray-50"
                 }`}
             >
-              {/* DATE NUMBER */}
               <p
                 className={`text-sm font-medium ${
                   hasReminder ? "text-indigo-700" : "text-gray-700"
@@ -93,7 +91,6 @@ export default function ReminderCalendar({ reminders, onDelete, onDateClick }) {
                 {day}
               </p>
 
-              {/* SHOW SMALL INDICATOR + COUNT */}
               {hasReminder && (
                 <div className="mt-1 flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-indigo-600"></span>
