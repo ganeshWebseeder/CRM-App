@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import ReminderCalendar from "../components/reminders/ReminderCalendar";
 import ReminderModal from "../components/reminders/ReminderModal";
-import { ReminderListModal } from "../components/reminders/ReminderListModel";
+import ReminderListModal from "../components/reminders/ReminderListModal";
+
 
 export default function ReminderManagement() {
   const [reminders, setReminders] = useState([]);
@@ -81,15 +82,16 @@ export default function ReminderManagement() {
 
       {/* List Reminders */}
       <ReminderListModal
-        show={showListModal}
-        date={selectedDate}
-        reminders={reminders.filter((r) => r.date === selectedDate)}
-        onClose={() => setShowListModal(false)}
-        onAddNew={() => {
-          setShowListModal(false);
-          setShowAddModal(true);
-        }}
-      />
+  show={showListModal}
+  date={selectedDate}
+  reminders={reminders.filter((r) => r.date === selectedDate)}
+  onClose={() => setShowListModal(false)}
+  onAddNew={() => {
+    setShowListModal(false);   // close list modal
+    setShowAddModal(true);     // open add modal
+  }}
+/>
+
     </div>
   );
 }
