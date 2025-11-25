@@ -10,7 +10,6 @@ export default function InvoiceCreation() {
     type: "Proforma",
     items: [{ id: 1, description: "", qty: 1, price: 1 }],
     gstEnabled: false,
-   
     status: "Draft",
     number: "",
     clientEmail: "",
@@ -67,36 +66,33 @@ export default function InvoiceCreation() {
     setInvoice((prev) => ({
       ...prev,
       status: "Finalized",
-      version: prev.version + 1,
     }));
     alert("Invoice finalized!");
   };
 
   return (
-    <div className="p-6 space-y-8 bg-gradient-to-b from-gray-50 to-white min-h-screen">
+    <div className="p-6 space-y-8 bg-gradient-to-b from-gray-50 to-white min-h-screen relative">
 
-      {/* HEADER */}
-      <div className="flex justify-between items-center">
-        <p className="text-gray-500 text-sm">
-          Manage & generate invoices with version control.
-        </p>
-
-     
-      </div>
-
-      {/* 🔵 Create Invoice Button */}
-      <div className="flex justify-end">
+      {/* TOP RIGHT BUTTON */}
+      <div className="absolute top-6 right-6">
         <button
           onClick={() => setShowBasicForm(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm shadow"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md shadow text-sm"
         >
           + Create Invoice
         </button>
       </div>
 
+      {/* HEADER */}
+      <div className="pt-14">
+        <p className="text-gray-500 text-sm">
+          Manage & generate invoices with version control.
+        </p>
+      </div>
+
       {/* POPUP MODAL */}
       {showBasicForm && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-[9999]">
           <motion.div
             initial={{ scale: 0.85, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -123,7 +119,7 @@ export default function InvoiceCreation() {
             >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                {/* Number */}
+                {/* Invoice Number */}
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">
                     Invoice Number
@@ -139,7 +135,7 @@ export default function InvoiceCreation() {
                   />
                 </div>
 
-                {/* Email */}
+                {/* Client Email */}
                 <div>
                   <label className="block text-xs font-medium text-gray-600 mb-1">
                     Client Email
@@ -189,6 +185,7 @@ export default function InvoiceCreation() {
                     <option value="Overdue">Overdue</option>
                   </select>
                 </div>
+
               </div>
 
               <div className="flex justify-end">
@@ -249,39 +246,34 @@ export default function InvoiceCreation() {
         </table>
       </motion.div>
 
-      {/* TOTALS */}
-    <div className="flex flex-col md:flex-row justify-between mt-6">
-  {/* Left Section */}
-  <div className="w-full md:w-1/2">
-    {/* Add your left content here */}
-    
-  </div>
+      {/* TOTALS SECTION */}
+      <div className="flex flex-col md:flex-row justify-between mt-6">
+        <div className="w-full md:w-1/2"></div>
 
-  {/* Right Section */}
-  <div className="w-full md:w-1/2 ">
-    <div className="bg-white rounded-2xl shadow-lg  md:p-8">
-      <InvoiceSummary
-        subtotal={subtotal}
-        gst={gst}
-        total={total}
-        gstEnabled={invoice.gstEnabled}
-        setGstEnabled={(value) =>
-          setInvoice({ ...invoice, gstEnabled: value })
-        }
-      />
-    </div>
-  </div>
-</div>
-
+        <div className="w-full md:w-1/2">
+          <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+            <InvoiceSummary
+              subtotal={subtotal}
+              gst={gst}
+              total={total}
+              gstEnabled={invoice.gstEnabled}
+              setGstEnabled={(value) =>
+                setInvoice({ ...invoice, gstEnabled: value })
+              }
+            />
+          </div>
+        </div>
+      </div>
 
       {/* ACTION BUTTONS */}
-      <div className="flex justify-end">
+      <div className="flex justify-end mt-4">
         <InvoiceActions
           onSaveDraft={handleSaveDraft}
           onFinalize={handleFinalize}
           isFinalized={invoice.status === "Finalized"}
         />
       </div>
+
     </div>
   );
 }
