@@ -1,17 +1,12 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useReminder } from "../../context/ReminderContext";
 
-export default function ReminderListModal({
-  show,
-  date,
-  reminders = [],   // ✅ prevents undefined
-  onClose,
-  onAddNew,
-}) {
+export default function ReminderListModal({ show, date, onClose, onAddNew }) {
+  const { getRemindersByDate } = useReminder();
   if (!show) return null;
 
-  // Extra safety: always return an array
-  const safeReminders = Array.isArray(reminders) ? reminders : [];
+  const reminders = getRemindersByDate(date);
 
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-[9999]">
@@ -24,11 +19,11 @@ export default function ReminderListModal({
           Reminders on {date}
         </h2>
 
-        {safeReminders.length === 0 ? (
+        {reminders.length === 0 ? (
           <p className="text-gray-500 text-sm text-center">No reminders</p>
         ) : (
           <div className="space-y-3">
-            {safeReminders.map((r) => (
+            {reminders.map((r) => (
               <div
                 key={r.id}
                 className="border p-3 rounded-lg flex justify-between"
@@ -50,7 +45,6 @@ export default function ReminderListModal({
           >
             + Add New
           </button>
-
           <button
             onClick={onClose}
             className="bg-gray-300 px-4 py-2 rounded-md"

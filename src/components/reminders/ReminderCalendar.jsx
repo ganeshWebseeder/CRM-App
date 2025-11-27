@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useReminder } from "../../context/ReminderContext"; 
 
-export default function ReminderCalendar({ reminders = [], onDelete, onDateClick }) {
+export default function ReminderCalendar({ onDateClick }) {
+  const { reminders } = useReminder(); 
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const year = currentDate.getFullYear();
@@ -13,24 +15,24 @@ export default function ReminderCalendar({ reminders = [], onDelete, onDateClick
   for (let i = 0; i < firstDay; i++) calendarDays.push(null);
   for (let d = 1; d <= daysInMonth; d++) calendarDays.push(d);
 
-  // ✅ Safe normalization: works even if reminders is undefined or wrong type
-  const normalizedReminders = (Array.isArray(reminders) ? reminders : []).map((r) => ({
+  // Normalize reminders safely
+  const normalizedReminders = reminders?.map((r) => ({
     ...r,
-    // r.date is assumed "YYYY-MM-DD"
-    date: new Date(r.date + "T00:00:00"),
-  }));
+    dateObj: new Date(r.date + "T00:00:00"),
+  })) || [];
 
   const remindersForDay = (day) => {
     return normalizedReminders.filter(
       (r) =>
-        r.date.getFullYear() === year &&
-        r.date.getMonth() === month &&
-        r.date.getDate() === day
+        r.dateObj.getFullYear() === year &&
+        r.dateObj.getMonth() === month &&
+        r.dateObj.getDate() === day
     );
   };
 
   return (
     <div className="w-full">
+
       {/* Month Header */}
       <div className="flex items-center justify-between mb-4">
         <button
@@ -61,7 +63,7 @@ export default function ReminderCalendar({ reminders = [], onDelete, onDateClick
         ))}
       </div>
 
-      {/* Calendar Days */}
+      {/* Calendar */}
       <div className="grid grid-cols-7 gap-2 text-center">
         {calendarDays.map((day, index) => {
           if (!day) return <div key={index} className="h-16"></div>;
@@ -73,12 +75,11 @@ export default function ReminderCalendar({ reminders = [], onDelete, onDateClick
             <div
               key={index}
               onClick={() =>
-                onDateClick(
-                  `${year}-${String(month + 1).padStart(2, "0")}-${String(
-                    day
-                  ).padStart(2, "0")}`
-                )
-              }
+  onDateClick(
+    `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
+    dayReminders
+  )
+}
               className={`h-16 flex flex-col items-center justify-start p-2 cursor-pointer rounded-md border transition
                 ${
                   hasReminder

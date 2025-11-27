@@ -16,7 +16,7 @@ import {
   AlarmClock,
   PieChart as PieIcon,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
 } from "lucide-react";
 
 import {
@@ -33,10 +33,10 @@ import {
 } from "recharts";
 
 import { useNavigate } from "react-router-dom";
+import { useReminder } from "../context/ReminderContext";
+import ReminderModal from "../components/reminders/ReminderModal";
 
-/* ----------------------------------------
-   Animated Counter Component
----------------------------------------- */
+/* Animated Counter Component */
 function AnimatedCounter({ value, isCurrency = false }) {
   const count = useMotionValue(0);
   const rounded = useTransform(count, (latest) =>
@@ -57,14 +57,41 @@ function AnimatedCounter({ value, isCurrency = false }) {
   );
 }
 
-/* ----------------------------------------
-   MAIN DASHBOARD COMPONENT
----------------------------------------- */
+/* MAIN DASHBOARD COMPONENT */
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [isQuickOpen, setIsQuickOpen] = useState(false);
+  const { reminders: contextReminders } = useReminder();
 
-  // Summary Cards
+  const [reminders, setReminders] = useState([]);
+  const [isQuickOpen, setIsQuickOpen] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
+
+  /* Initialize reminders with default status */
+  useEffect(() => {
+    const normalized = contextReminders.map((r) => ({
+      ...r,
+      status: r.status || "pending",
+    }));
+    setReminders(normalized);
+  }, [contextReminders]);
+
+  /* Toggle Done / Pending */
+  const handleUpdateStatus = (id) => {
+    setReminders((prev) =>
+      prev.map((r) =>
+        r.id === id
+          ? { ...r, status: r.status === "done" ? "pending" : "done" }
+          : r
+      )
+    );
+  };
+
+  /* Delete reminder */
+  const handleDelete = (id) => {
+    setReminders((prev) => prev.filter((r) => r.id !== id));
+  };
+
+  /* Summary Cards */
   const summary = [
     {
       title: "Total Projects",
@@ -98,21 +125,23 @@ export default function Dashboard() {
     {
       title: "Reminders Today",
       onClick: () => navigate("/reminders"),
-      value: 9,
+      value: reminders.filter(
+        (r) => r.date === new Date().toISOString().split("T")[0]
+      ).length,
       icon: <Bell size={22} />,
       color: "from-indigo-200 to-indigo-200",
     },
   ];
 
-  // Quick Actions
+  /* Quick Actions */
   const quickActions = [
     { icon: <UserPlus size={18} />, label: "Add Lead", onClick: () => navigate("/leads") },
     { icon: <FileText size={18} />, label: "Create Invoice", onClick: () => navigate("/invoices") },
-    { icon: <AlarmClock size={18} />, label: "Set Reminder", onClick: () => navigate("/reminders") },
+    { icon: <AlarmClock size={18} />, label: "Set Reminder", onClick: () => setShowAdd(true) },
     { icon: <PieIcon size={18} />, label: "View Reports", onClick: () => navigate("/reports") },
   ];
 
-  // Chart Data
+  /* Charts Data */
   const revenueData = [
     { month: "Jan", revenue: 40000 },
     { month: "Feb", revenue: 52000 },
@@ -129,7 +158,6 @@ export default function Dashboard() {
   ];
 
   const COLORS = ["#60A5FA", "#34D399", "#FBBF24"];
-
   const cardVariant = {
     hidden: { opacity: 0, y: 50 },
     show: (i) => ({
@@ -141,16 +169,7 @@ export default function Dashboard() {
 
   return (
     <div className="p-4 sm:p-6 md:p-8 min-h-screen pb-40 bg-gradient-to-br from-white via-blue-50 to-gray-100">
-
-      {/* 🌟 Header (from main) */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="mb-8 text-center"
-      ></motion.div>
-
-      {/* 🧩 Summary Cards */}
+      {/* Summary Cards */}
       <motion.div
         initial="hidden"
         animate="show"
@@ -180,7 +199,7 @@ export default function Dashboard() {
         ))}
       </motion.div>
 
-      {/* 📊 Charts */}
+      {/* Charts */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -221,7 +240,7 @@ export default function Dashboard() {
                 dataKey="value"
               >
                 {leadData.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                  <Cell key={index} fill={COLORS[index]} />
                 ))}
               </Pie>
               <Tooltip />
@@ -230,37 +249,69 @@ export default function Dashboard() {
         </div>
       </motion.div>
 
-      {/* ⚡ Quick Actions */}
-      <motion.div
-        initial={{ opacity: 0, y: 25 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="fixed bottom-4 right-4 bg-white shadow-lg border border-gray-200 rounded-xl w-60"
-      >
-        <button
-          onClick={() => setIsQuickOpen(!isQuickOpen)}
-          className="w-full flex justify-between items-center px-4 py-3 text-gray-700 font-medium border-b"
-        >
-          Quick Actions
-          {isQuickOpen ? <ChevronDown /> : <ChevronUp />}
-        </button>
+      {/* Reminders Section */}
+      <div className="bg-white rounded-2xl p-6 shadow border border-gray-200 mb-20">
+        <h2 className="text-lg font-semibold text-gray-700 mb-4">Reminders</h2>
 
-        {isQuickOpen && (
-          <div className="p-4 grid grid-cols-2 gap-3">
-            {quickActions.map((q, i) => (
-              <motion.button
-                key={i}
-                onClick={q.onClick}
-                whileHover={{ scale: 1.05 }}
-                className="flex flex-col items-center bg-indigo-50 text-indigo-700 p-3 rounded-lg shadow-sm"
+        {reminders.length === 0 ? (
+          <p className="text-gray-500 text-sm">No reminders</p>
+        ) : (
+          <div className="space-y-3">
+            {reminders.map((r) => (
+              <div
+                key={r.id}
+                className="p-4 rounded-xl border hover:bg-gray-100 transition flex flex-col gap-2"
               >
-                {q.icon}
-                <span className="text-xs mt-1">{q.label}</span>
-              </motion.button>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="font-semibold text-gray-800">{r.title}</p>
+                    <p className="text-xs text-gray-600">
+                      {r.project} • {r.time}
+                    </p>
+                    <p
+                      className={`text-xs font-medium ${
+                        r.status === "done"
+                          ? "text-green-600"
+                          : "text-yellow-600"
+                      }`}
+                    >
+                      {r.date} • {r.status.toUpperCase()}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Buttons */}
+                <div className="flex gap-2 mt-2">
+                  <button
+                    onClick={() => handleUpdateStatus(r.id)}
+                    className={`px-2 py-1 text-xs rounded ${
+                      r.status === "done"
+                        ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
+                        : "bg-green-100 text-green-700 hover:bg-green-200"
+                    }`}
+                  >
+                    {r.status === "done" ? "Mark Pending" : "Mark Done"}
+                  </button>
+
+                  <button
+                    onClick={() => handleDelete(r.id)}
+                    className="px-2 py-1 text-xs rounded bg-red-100 text-red-700 hover:bg-red-200"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
             ))}
           </div>
         )}
-      </motion.div>
+      </div>
 
+      {/* Add Reminder Modal */}
+      <ReminderModal
+        show={showAdd}
+        onClose={() => setShowAdd(false)}
+        defaultDate={new Date().toISOString().split("T")[0]}
+      />
     </div>
   );
 }
