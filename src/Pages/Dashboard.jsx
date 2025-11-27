@@ -5,6 +5,7 @@ import {
   useTransform,
   animate,
 } from "framer-motion";
+
 import {
   Briefcase,
   PlayCircle,
@@ -15,8 +16,6 @@ import {
   FileText,
   AlarmClock,
   PieChart as PieIcon,
-  ChevronUp,
-  ChevronDown,
 } from "lucide-react";
 
 import {
@@ -36,8 +35,10 @@ import { useNavigate } from "react-router-dom";
 import { useReminder } from "../context/ReminderContext";
 import ReminderModal from "../components/reminders/ReminderModal";
 
-/* Animated Counter Component */
-function AnimatedCounter({ value, isCurrency = false }) {
+/* ----------------------------------------
+   Animated Counter Component
+---------------------------------------- */
+function AnimatedCounter({ value, isCurrency = false, className = "" }) {
   const count = useMotionValue(0);
   const rounded = useTransform(count, (latest) =>
     isCurrency
@@ -46,24 +47,25 @@ function AnimatedCounter({ value, isCurrency = false }) {
   );
 
   useEffect(() => {
-    const controls = animate(count, value, { duration: 2, ease: "easeOut" });
+    const controls = animate(count, value, { duration: 1.5, ease: "easeOut" });
     return controls.stop;
   }, [value]);
 
   return (
-    <motion.span className="text-2xl md:text-3xl font-semibold text-gray-800 tracking-tight">
+    <motion.span className={`tracking-tight ${className}`}>
       {rounded}
     </motion.span>
   );
 }
 
-/* MAIN DASHBOARD COMPONENT */
+/* ----------------------------------------
+   MAIN DASHBOARD COMPONENT
+---------------------------------------- */
 export default function Dashboard() {
   const navigate = useNavigate();
   const { reminders: contextReminders } = useReminder();
 
   const [reminders, setReminders] = useState([]);
-  const [isQuickOpen, setIsQuickOpen] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
 
   /* Initialize reminders with default status */
@@ -158,6 +160,7 @@ export default function Dashboard() {
   ];
 
   const COLORS = ["#60A5FA", "#34D399", "#FBBF24"];
+
   const cardVariant = {
     hidden: { opacity: 0, y: 50 },
     show: (i) => ({
@@ -169,6 +172,7 @@ export default function Dashboard() {
 
   return (
     <div className="p-4 sm:p-6 md:p-8 min-h-screen pb-40 bg-gradient-to-br from-white via-blue-50 to-gray-100">
+
       {/* Summary Cards */}
       <motion.div
         initial="hidden"
@@ -181,20 +185,24 @@ export default function Dashboard() {
             custom={i}
             variants={cardVariant}
             whileHover={{
-              scale: 1.05,
-              y: -5,
-              boxShadow: "0 12px 25px rgba(0,0,0,0.1)",
+              scale: 1.02,
+              y: -2,
+              boxShadow: "0 8px 15px rgba(0,0,0,0.05)",
             }}
             onClick={item.onClick}
-            className={`cursor-pointer p-4 sm:p-5 rounded-2xl bg-gradient-to-r ${item.color} text-white shadow-md flex justify-between items-center hover:opacity-95 transition`}
+            className={`cursor-pointer p-4 rounded-xl bg-gradient-to-r ${item.color} 
+                        shadow-sm flex justify-between items-center hover:opacity-95 transition`}
           >
             <div>
-              <p className="text-base sm:text-lg font-semibold text-gray-700 mb-4">
-                {item.title}
-              </p>
-              <AnimatedCounter value={item.value} isCurrency={item.isCurrency} />
+              <p className="text-lg text-gray-700 mb-2">{item.title}</p>
+              <AnimatedCounter
+                value={item.value}
+                isCurrency={item.isCurrency}
+                className="text-gray-700 text-lg font-semibold"
+              />
             </div>
-            <div className="bg-black/30 p-2 sm:p-3 rounded-full">{item.icon}</div>
+
+            <div className="bg-black/20 p-3 rounded-full">{item.icon}</div>
           </motion.div>
         ))}
       </motion.div>
@@ -262,25 +270,22 @@ export default function Dashboard() {
                 key={r.id}
                 className="p-4 rounded-xl border hover:bg-gray-100 transition flex flex-col gap-2"
               >
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p className="font-semibold text-gray-800">{r.title}</p>
-                    <p className="text-xs text-gray-600">
-                      {r.project} • {r.time}
-                    </p>
-                    <p
-                      className={`text-xs font-medium ${
-                        r.status === "done"
-                          ? "text-green-600"
-                          : "text-yellow-600"
-                      }`}
-                    >
-                      {r.date} • {r.status.toUpperCase()}
-                    </p>
-                  </div>
+                <div>
+                  <p className="font-semibold text-gray-800">{r.title}</p>
+                  <p className="text-xs text-gray-600">
+                    {r.project} • {r.time}
+                  </p>
+                  <p
+                    className={`text-xs font-medium ${
+                      r.status === "done"
+                        ? "text-green-600"
+                        : "text-yellow-600"
+                    }`}
+                  >
+                    {r.date} • {r.status.toUpperCase()}
+                  </p>
                 </div>
 
-                {/* Buttons */}
                 <div className="flex gap-2 mt-2">
                   <button
                     onClick={() => handleUpdateStatus(r.id)}
