@@ -37,7 +37,7 @@ import { useNavigate } from "react-router-dom";
 /* ----------------------------------------
    Animated Counter Component
 ---------------------------------------- */
-function AnimatedCounter({ value, isCurrency = false }) {
+function AnimatedCounter({ value, isCurrency = false, className = "" }) {
   const count = useMotionValue(0);
   const rounded = useTransform(count, (latest) =>
     isCurrency
@@ -46,16 +46,17 @@ function AnimatedCounter({ value, isCurrency = false }) {
   );
 
   useEffect(() => {
-    const controls = animate(count, value, { duration: 2, ease: "easeOut" });
+    const controls = animate(count, value, { duration: 1.5, ease: "easeOut" });
     return controls.stop;
   }, [value]);
 
   return (
-    <motion.span className="text-2xl md:text-3xl font-semibold text-gray-800 tracking-tight">
+    <motion.span className={`tracking-tight ${className}`}>
       {rounded}
     </motion.span>
   );
 }
+
 
 /* ----------------------------------------
    MAIN DASHBOARD COMPONENT
@@ -104,13 +105,6 @@ export default function Dashboard() {
     },
   ];
 
-  // Quick Actions
-  const quickActions = [
-    { icon: <UserPlus size={18} />, label: "Add Lead", onClick: () => navigate("/leads") },
-    { icon: <FileText size={18} />, label: "Create Invoice", onClick: () => navigate("/invoices") },
-    { icon: <AlarmClock size={18} />, label: "Set Reminder", onClick: () => navigate("/reminders") },
-    { icon: <PieIcon size={18} />, label: "View Reports", onClick: () => navigate("/reports") },
-  ];
 
   // Chart Data
   const revenueData = [
@@ -151,34 +145,45 @@ export default function Dashboard() {
       ></motion.div>
 
       {/* 🧩 Summary Cards */}
-      <motion.div
-        initial="hidden"
-        animate="show"
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 mb-10"
-      >
-        {summary.map((item, i) => (
-          <motion.div
-            key={i}
-            custom={i}
-            variants={cardVariant}
-            whileHover={{
-              scale: 1.05,
-              y: -5,
-              boxShadow: "0 12px 25px rgba(0,0,0,0.1)",
-            }}
-            onClick={item.onClick}
-            className={`cursor-pointer p-4 sm:p-5 rounded-2xl bg-gradient-to-r ${item.color} text-white shadow-md flex justify-between items-center hover:opacity-95 transition`}
-          >
-            <div>
-              <p className="text-base sm:text-lg font-semibold text-gray-700 mb-4">
-                {item.title}
-              </p>
-              <AnimatedCounter value={item.value} isCurrency={item.isCurrency} />
-            </div>
-            <div className="bg-black/30 p-2 sm:p-3 rounded-full">{item.icon}</div>
-          </motion.div>
-        ))}
-      </motion.div>
+   <motion.div
+  initial="hidden"
+  animate="show"
+  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 mb-10"
+>
+  {summary.map((item, i) => (
+    <motion.div
+      key={i}
+      custom={i}
+      variants={cardVariant}
+      whileHover={{
+        scale: 1.02,
+        y: -2,
+        boxShadow: "0 8px 15px rgba(0,0,0,0.05)",
+      }}
+      onClick={item.onClick}
+      className={`cursor-pointer p-4 rounded-xl bg-gradient-to-r ${item.color} 
+                  shadow-sm flex justify-between items-center hover:opacity-95 transition`}
+    >
+      <div>
+        {/* SIMPLE TITLE TEXT */}
+        <p className="text-lg text-gray-700 mb-2">{item.title}</p>
+
+        {/* SIMPLE VALUE TEXT */}
+        <AnimatedCounter
+          value={item.value}
+          isCurrency={item.isCurrency}
+          className="text-gray-700 text-lg font-semibold"
+        />
+      </div>
+
+      <div className="bg-black/20 p-3 rounded-full">
+        {item.icon}
+      </div>
+    </motion.div>
+  ))}
+</motion.div>
+
+
 
       {/* 📊 Charts */}
       <motion.div
@@ -230,36 +235,7 @@ export default function Dashboard() {
         </div>
       </motion.div>
 
-      {/* ⚡ Quick Actions */}
-      <motion.div
-        initial={{ opacity: 0, y: 25 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="fixed bottom-4 right-4 bg-white shadow-lg border border-gray-200 rounded-xl w-60"
-      >
-        <button
-          onClick={() => setIsQuickOpen(!isQuickOpen)}
-          className="w-full flex justify-between items-center px-4 py-3 text-gray-700 font-medium border-b"
-        >
-          Quick Actions
-          {isQuickOpen ? <ChevronDown /> : <ChevronUp />}
-        </button>
-
-        {isQuickOpen && (
-          <div className="p-4 grid grid-cols-2 gap-3">
-            {quickActions.map((q, i) => (
-              <motion.button
-                key={i}
-                onClick={q.onClick}
-                whileHover={{ scale: 1.05 }}
-                className="flex flex-col items-center bg-indigo-50 text-indigo-700 p-3 rounded-lg shadow-sm"
-              >
-                {q.icon}
-                <span className="text-xs mt-1">{q.label}</span>
-              </motion.button>
-            ))}
-          </div>
-        )}
-      </motion.div>
+      
 
     </div>
   );
