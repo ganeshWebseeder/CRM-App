@@ -11,6 +11,7 @@ import ReminderManagement from "./Pages/ReminderManagement";
 import Reports from "./Pages/Reports";
 import { div } from "framer-motion/client";
 import { LeadsProvider } from "./context/LeadsContext";
+import { ReminderProvider } from "./context/ReminderContext";
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
 
     
       <LeadsProvider>
+         <ReminderProvider>
    
       <Routes>
         {/*  Login Page */}
@@ -104,6 +106,7 @@ function App() {
         />
         
       </Routes>
+      </ReminderProvider>
    </LeadsProvider>
   
   );

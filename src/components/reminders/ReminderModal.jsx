@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useReminder } from "../../context/ReminderContext";
 
-export default function ReminderModal({ show, onClose, onSave, defaultDate }) {
+export default function ReminderModal({ show, onClose, defaultDate }) {
+  const { addReminder } = useReminder();
+
   if (!show) return null;
 
-  // Initialize reminder form
   const [form, setForm] = useState({
     title: "",
     project: "",
@@ -12,34 +14,20 @@ export default function ReminderModal({ show, onClose, onSave, defaultDate }) {
     time: "",
   });
 
-  // When defaultDate changes → update form date
   useEffect(() => {
-    setForm((prev) => ({
-      ...prev,
-      date: defaultDate || "",
-    }));
+    setForm((prev) => ({ ...prev, date: defaultDate || "" }));
   }, [defaultDate]);
 
-  // Handle all input changes
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Save reminder
   const handleSubmit = () => {
     if (!form.title || !form.project || !form.date || !form.time) {
-      alert("Please fill all the fields");
+      alert("Please fill all fields");
       return;
     }
-
-    onSave({
-      id: Date.now(),
-      ...form,
-    });
-
+    addReminder({ id: Date.now(), ...form });
     onClose();
   };
 
@@ -54,7 +42,6 @@ export default function ReminderModal({ show, onClose, onSave, defaultDate }) {
           Add New Reminder
         </h2>
 
-        {/* Title */}
         <input
           type="text"
           name="title"
@@ -63,8 +50,6 @@ export default function ReminderModal({ show, onClose, onSave, defaultDate }) {
           placeholder="Reminder Title"
           className="w-full border p-2 mb-3 rounded-md"
         />
-
-        {/* Project Name */}
         <input
           type="text"
           name="project"
@@ -73,8 +58,6 @@ export default function ReminderModal({ show, onClose, onSave, defaultDate }) {
           placeholder="Project Name"
           className="w-full border p-2 mb-3 rounded-md"
         />
-
-        {/* Date */}
         <input
           type="date"
           name="date"
@@ -82,8 +65,6 @@ export default function ReminderModal({ show, onClose, onSave, defaultDate }) {
           onChange={handleChange}
           className="w-full border p-2 mb-3 rounded-md"
         />
-
-        {/* Time */}
         <input
           type="time"
           name="time"
@@ -92,7 +73,6 @@ export default function ReminderModal({ show, onClose, onSave, defaultDate }) {
           className="w-full border p-2 mb-4 rounded-md"
         />
 
-        {/* Buttons */}
         <div className="flex justify-between mt-4">
           <button
             onClick={handleSubmit}
@@ -100,7 +80,6 @@ export default function ReminderModal({ show, onClose, onSave, defaultDate }) {
           >
             Save
           </button>
-
           <button
             onClick={onClose}
             className="bg-gray-300 px-4 py-2 rounded-md"

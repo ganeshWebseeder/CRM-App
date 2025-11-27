@@ -5,6 +5,7 @@ import {
   useTransform,
   animate,
 } from "framer-motion";
+
 import {
   Briefcase,
   PlayCircle,
@@ -15,8 +16,6 @@ import {
   FileText,
   AlarmClock,
   PieChart as PieIcon,
-  ChevronUp,
-  ChevronDown
 } from "lucide-react";
 
 import {
@@ -33,6 +32,8 @@ import {
 } from "recharts";
 
 import { useNavigate } from "react-router-dom";
+import { useReminder } from "../context/ReminderContext";
+import ReminderModal from "../components/reminders/ReminderModal";
 
 /* ----------------------------------------
    Animated Counter Component
@@ -57,15 +58,42 @@ function AnimatedCounter({ value, isCurrency = false, className = "" }) {
   );
 }
 
-
 /* ----------------------------------------
    MAIN DASHBOARD COMPONENT
 ---------------------------------------- */
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [isQuickOpen, setIsQuickOpen] = useState(false);
+  const { reminders: contextReminders } = useReminder();
 
-  // Summary Cards
+  const [reminders, setReminders] = useState([]);
+  const [showAdd, setShowAdd] = useState(false);
+
+  /* Initialize reminders with default status */
+  useEffect(() => {
+    const normalized = contextReminders.map((r) => ({
+      ...r,
+      status: r.status || "pending",
+    }));
+    setReminders(normalized);
+  }, [contextReminders]);
+
+  /* Toggle Done / Pending */
+  const handleUpdateStatus = (id) => {
+    setReminders((prev) =>
+      prev.map((r) =>
+        r.id === id
+          ? { ...r, status: r.status === "done" ? "pending" : "done" }
+          : r
+      )
+    );
+  };
+
+  /* Delete reminder */
+  const handleDelete = (id) => {
+    setReminders((prev) => prev.filter((r) => r.id !== id));
+  };
+
+  /* Summary Cards */
   const summary = [
     {
       title: "Total Projects",
@@ -99,14 +127,23 @@ export default function Dashboard() {
     {
       title: "Reminders Today",
       onClick: () => navigate("/reminders"),
-      value: 9,
+      value: reminders.filter(
+        (r) => r.date === new Date().toISOString().split("T")[0]
+      ).length,
       icon: <Bell size={22} />,
       color: "from-indigo-200 to-indigo-200",
     },
   ];
 
+  /* Quick Actions */
+  const quickActions = [
+    { icon: <UserPlus size={18} />, label: "Add Lead", onClick: () => navigate("/leads") },
+    { icon: <FileText size={18} />, label: "Create Invoice", onClick: () => navigate("/invoices") },
+    { icon: <AlarmClock size={18} />, label: "Set Reminder", onClick: () => setShowAdd(true) },
+    { icon: <PieIcon size={18} />, label: "View Reports", onClick: () => navigate("/reports") },
+  ];
 
-  // Chart Data
+  /* Charts Data */
   const revenueData = [
     { month: "Jan", revenue: 40000 },
     { month: "Feb", revenue: 52000 },
@@ -136,56 +173,41 @@ export default function Dashboard() {
   return (
     <div className="p-4 sm:p-6 md:p-8 min-h-screen pb-40 bg-gradient-to-br from-white via-blue-50 to-gray-100">
 
-      {/* 🌟 Header (from main) */}
+      {/* Summary Cards */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="mb-8 text-center"
-      ></motion.div>
+        initial="hidden"
+        animate="show"
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 mb-10"
+      >
+        {summary.map((item, i) => (
+          <motion.div
+            key={i}
+            custom={i}
+            variants={cardVariant}
+            whileHover={{
+              scale: 1.02,
+              y: -2,
+              boxShadow: "0 8px 15px rgba(0,0,0,0.05)",
+            }}
+            onClick={item.onClick}
+            className={`cursor-pointer p-4 rounded-xl bg-gradient-to-r ${item.color} 
+                        shadow-sm flex justify-between items-center hover:opacity-95 transition`}
+          >
+            <div>
+              <p className="text-lg text-gray-700 mb-2">{item.title}</p>
+              <AnimatedCounter
+                value={item.value}
+                isCurrency={item.isCurrency}
+                className="text-gray-700 text-lg font-semibold"
+              />
+            </div>
 
-      {/* 🧩 Summary Cards */}
-   <motion.div
-  initial="hidden"
-  animate="show"
-  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 mb-10"
->
-  {summary.map((item, i) => (
-    <motion.div
-      key={i}
-      custom={i}
-      variants={cardVariant}
-      whileHover={{
-        scale: 1.02,
-        y: -2,
-        boxShadow: "0 8px 15px rgba(0,0,0,0.05)",
-      }}
-      onClick={item.onClick}
-      className={`cursor-pointer p-4 rounded-xl bg-gradient-to-r ${item.color} 
-                  shadow-sm flex justify-between items-center hover:opacity-95 transition`}
-    >
-      <div>
-        {/* SIMPLE TITLE TEXT */}
-        <p className="text-lg text-gray-700 mb-2">{item.title}</p>
+            <div className="bg-black/20 p-3 rounded-full">{item.icon}</div>
+          </motion.div>
+        ))}
+      </motion.div>
 
-        {/* SIMPLE VALUE TEXT */}
-        <AnimatedCounter
-          value={item.value}
-          isCurrency={item.isCurrency}
-          className="text-gray-700 text-lg font-semibold"
-        />
-      </div>
-
-      <div className="bg-black/20 p-3 rounded-full">
-        {item.icon}
-      </div>
-    </motion.div>
-  ))}
-</motion.div>
-
-
-
-      {/* 📊 Charts */}
+      {/* Charts */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -226,7 +248,7 @@ export default function Dashboard() {
                 dataKey="value"
               >
                 {leadData.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                  <Cell key={index} fill={COLORS[index]} />
                 ))}
               </Pie>
               <Tooltip />
@@ -235,8 +257,66 @@ export default function Dashboard() {
         </div>
       </motion.div>
 
-      
+      {/* Reminders Section */}
+      <div className="bg-white rounded-2xl p-6 shadow border border-gray-200 mb-20">
+        <h2 className="text-lg font-semibold text-gray-700 mb-4">Reminders</h2>
 
+        {reminders.length === 0 ? (
+          <p className="text-gray-500 text-sm">No reminders</p>
+        ) : (
+          <div className="space-y-3">
+            {reminders.map((r) => (
+              <div
+                key={r.id}
+                className="p-4 rounded-xl border hover:bg-gray-100 transition flex flex-col gap-2"
+              >
+                <div>
+                  <p className="font-semibold text-gray-800">{r.title}</p>
+                  <p className="text-xs text-gray-600">
+                    {r.project} • {r.time}
+                  </p>
+                  <p
+                    className={`text-xs font-medium ${
+                      r.status === "done"
+                        ? "text-green-600"
+                        : "text-yellow-600"
+                    }`}
+                  >
+                    {r.date} • {r.status.toUpperCase()}
+                  </p>
+                </div>
+
+                <div className="flex gap-2 mt-2">
+                  <button
+                    onClick={() => handleUpdateStatus(r.id)}
+                    className={`px-2 py-1 text-xs rounded ${
+                      r.status === "done"
+                        ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
+                        : "bg-green-100 text-green-700 hover:bg-green-200"
+                    }`}
+                  >
+                    {r.status === "done" ? "Mark Pending" : "Mark Done"}
+                  </button>
+
+                  <button
+                    onClick={() => handleDelete(r.id)}
+                    className="px-2 py-1 text-xs rounded bg-red-100 text-red-700 hover:bg-red-200"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Add Reminder Modal */}
+      <ReminderModal
+        show={showAdd}
+        onClose={() => setShowAdd(false)}
+        defaultDate={new Date().toISOString().split("T")[0]}
+      />
     </div>
   );
 }
