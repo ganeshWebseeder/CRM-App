@@ -141,25 +141,33 @@ export default function Projects() {
       text: "text-yellow-700",
     },
   ].map((card, i) => (
-    <motion.div
-      key={i}
-      whileHover={{
-        scale: 1.05,
-        y: -5,
-        boxShadow: "0 12px 25px rgba(0,0,0,0.1)",
-      }}
-      transition={{ type: "spring", stiffness: 120 }}
-      className={`cursor-pointer p-4 sm:p-5 rounded-xl bg-gradient-to-r 
-        ${card.color} shadow-md text-center flex flex-col items-center`}
-    >
-      <i className={`${card.icon} text-2xl mb-2 ${card.text}`}></i>
+   <motion.div
+  key={i}
+  whileHover={{
+    scale: 1.02,
+    y: -2,
+    boxShadow: "0 8px 15px rgba(0,0,0,0.05)",
+  }}
+  transition={{ type: "spring", stiffness: 120 }}
+  className={`cursor-pointer p-4 rounded-xl bg-gradient-to-r ${card.color} 
+              shadow-sm flex justify-between items-center hover:opacity-95 transition`}
+>
+  {/* LEFT SIDE: Label + Value */}
+  <div>
+    <p className="text-base text-gray-600 mb-2">{card.label}</p>
 
-      <p className="text-gray-700 text-sm font-medium">{card.label}</p>
+    <h2 className="text-base font-semibold text-gray-600">
+      {card.value}
+    </h2>
+  </div>
 
-      <h2 className={`text-2xl font-semibold ${card.text}`}>
-        {card.value}
-      </h2>
-    </motion.div>
+  {/* RIGHT SIDE: Icon */}
+  <div className="w-10 h-10 flex items-center justify-center bg-black/10 p-3 rounded-full">
+  <i className={`${card.icon} text-xl ${card.text}`}></i>
+</div>
+
+</motion.div>
+
   ))}
 </motion.div>
 
