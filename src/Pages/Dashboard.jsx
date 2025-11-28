@@ -202,7 +202,7 @@ export default function Dashboard() {
               />
             </div>
 
-            <div className="bg-black/20 p-2 rounded-full">{item.icon}</div>
+            <div className="bg-black/10 p-2 rounded-full">{item.icon}</div>
           </motion.div>
         ))}
       </motion.div>
