@@ -194,15 +194,15 @@ export default function Dashboard() {
                         shadow-sm flex justify-between items-center hover:opacity-95 transition`}
           >
             <div>
-              <p className="text-lg text-gray-700 mb-2">{item.title}</p>
+              <p className="text-base text-gray-600 mb-2">{item.title}</p>
               <AnimatedCounter
                 value={item.value}
                 isCurrency={item.isCurrency}
-                className="text-gray-700 text-lg font-semibold"
+                className="text-gray-600 text-base font-semibold"
               />
             </div>
 
-            <div className="bg-black/20 p-3 rounded-full">{item.icon}</div>
+            <div className="bg-black/20 p-2 rounded-full">{item.icon}</div>
           </motion.div>
         ))}
       </motion.div>
