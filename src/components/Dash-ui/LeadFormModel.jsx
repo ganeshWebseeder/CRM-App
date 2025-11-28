@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Pencil, PlusCircle } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 
 export default function LeadFormModal({ isOpen, onClose, onAddLead }) {
   const [newLead, setNewLead] = useState({
     clientName: "",
+    countryCode: "+91",
     phone: "",
     mail: "",
     status: "New",
@@ -16,17 +17,33 @@ export default function LeadFormModal({ isOpen, onClose, onAddLead }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onAddLead({ ...newLead, id: Date.now() });
+
+    onAddLead({
+      ...newLead,
+      id: Date.now(),
+      fullPhone: `${newLead.countryCode} ${newLead.phone}`,
+    });
+
     setNewLead({
       clientName: "",
+      countryCode: "+91",
       phone: "",
       mail: "",
       status: "New",
       source: "",
       notes: "",
     });
+
     onClose();
   };
+
+  const countryCodes = [
+    { code: "+91", name: "India" },
+    { code: "+1", name: "USA" },
+    { code: "+44", name: "UK" },
+    { code: "+61", name: "Australia" },
+    { code: "+971", name: "UAE" },
+  ];
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
@@ -44,54 +61,100 @@ export default function LeadFormModal({ isOpen, onClose, onAddLead }) {
           ✕
         </button>
 
+        {/* Title */}
         <h2 className="text-xl font-semibold text-indigo-600 mb-4">
           Add New Lead
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-3">
+          {/* Client Name */}
           <input
             type="text"
             placeholder="Client Name"
             value={newLead.clientName}
-            onChange={(e) => setNewLead({ ...newLead, clientName: e.target.value })}
+            onChange={(e) =>
+              setNewLead({ ...newLead, clientName: e.target.value })
+            }
             className="border p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
             required
           />
-          <input
-            type="text"
-            placeholder="Phone"
-            value={newLead.phone}
-            onChange={(e) => setNewLead({ ...newLead, phone: e.target.value })}
-            className="border p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
-            required
-          />
+
+        
+         {/* Country Code + Phone Input (Compact Style) */}
+<div className="flex gap-2">
+  
+  {/* Small Dropdown */}
+  <div className="relative">
+    <select
+      value={newLead.countryCode}
+      onChange={(e) =>
+        setNewLead({ ...newLead, countryCode: e.target.value })
+      }
+      className="border p-2 rounded-lg bg-white pr-6 cursor-pointer focus:ring-2 focus:ring-indigo-500"
+      style={{ width: "80px" }}  // small compact width
+    >
+      {countryCodes.map((c) => (
+        <option key={c.code} value={c.code}>
+          {c.code}
+        </option>
+      ))}
+    </select>
+  </div>
+
+  {/* Phone Number Input */}
+  <input
+    type=""
+    placeholder="Phone Number"
+    value={newLead.phone}
+    onChange={(e) =>
+      setNewLead({ ...newLead, phone: e.target.value })
+    }
+    className="border p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
+    required
+  />
+</div>
+
+
+          {/* Email */}
           <input
             type="email"
             placeholder="Email"
             value={newLead.mail}
-            onChange={(e) => setNewLead({ ...newLead, mail: e.target.value })}
+            onChange={(e) =>
+              setNewLead({ ...newLead, mail: e.target.value })
+            }
             className="border p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
             required
           />
+
+          {/* Source */}
           <input
             type="text"
             placeholder="Source"
             value={newLead.source}
-            onChange={(e) => setNewLead({ ...newLead, source: e.target.value })}
-            className="border p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
-          />
-          <textarea
-            placeholder="Notes"
-            value={newLead.notes}
-            onChange={(e) => setNewLead({ ...newLead, notes: e.target.value })}
+            onChange={(e) =>
+              setNewLead({ ...newLead, source: e.target.value })
+            }
             className="border p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
           />
 
+          {/* Notes */}
+          <textarea
+            placeholder="Notes"
+            value={newLead.notes}
+            onChange={(e) =>
+              setNewLead({ ...newLead, notes: e.target.value })
+            }
+            className="border p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
+          />
+
+          {/* Submit Button */}
           <button
             type="submit"
             className="mt-3 flex items-center justify-center bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-all w-full"
           >
-            <PlusCircle size={18} className="mr-2" /> Add Lead
+            <PlusCircle size={18} className="mr-2" />
+            Add Lead
           </button>
         </form>
       </motion.div>

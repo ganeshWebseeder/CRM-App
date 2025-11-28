@@ -48,7 +48,7 @@ export default function InvoiceItemRow({ item, onUpdate, onDelete, isFinalized, 
       <td className="p-2 text-center w-16">
         {!isFinalized && (
           <i
-            className="ri-delete-bin-line text-red-500 hover:text-red-700 cursor-pointer text-lg"
+            className="ri-delete-bin-line action-btn text-red-500 cursor-pointer hover:text-red-700 p-2"
             onClick={() => onDelete(item.id)}
           ></i>
         )}

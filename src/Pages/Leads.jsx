@@ -85,28 +85,28 @@ export default function LeadManagementPage() {
                     className="text-indigo-600 hover:text-indigo-800"
                     title="Edit"
                   >
-                    <Pencil size={18} />
+                   <i className="ri-edit-line action-btn text-indigo-600 cursor-pointer hover:text-indigo-800 p-2"></i>
                   </button>
                   <button
                     onClick={() => convertToProject(lead.id)}
-                    className="text-green-600 hover:text-green-800"
+                    className="text-green-600 hover:text-green-800 p-2"
                     title="Convert"
                   >
-                    <Briefcase size={18} />
+                    <Briefcase size={14} />
                   </button>
                   <button
                     onClick={() => updateStatus(lead.id, "Closed")}
-                    className="text-gray-600 hover:text-gray-800"
+                    className="text-gray-600 hover:text-gray-800 p-2"
                     title="Close"
                   >
-                    <CheckCircle size={18} />
+                    <CheckCircle size={14} />
                   </button>
                   <button
                     onClick={() => deleteLead(lead.id)}
                     className="text-red-600 hover:text-red-800"
                     title="Delete"
                   >
-                    <Trash2 size={18} />
+                   <i  className="ri-delete-bin-line action-btn text-red-500 cursor-pointer hover:text-red-700 p-2"></i>
                   </button>
                 </td>
               </motion.tr>
@@ -156,7 +156,7 @@ export default function LeadManagementPage() {
         </div>
       </motion.div>
 
-      {/* ✅ Edit Lead Modal */}
+      {/* Edit Lead Modal */}
       {editingLead && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
           {/* Leads Table */}

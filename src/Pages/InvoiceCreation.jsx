@@ -3,7 +3,7 @@ import InvoiceItemRow from "../components/invoices/InvoiceItemRow";
 import InvoiceSummary from "../components/invoices/InvoiceSummary";
 import InvoiceActions from "../components/invoices/InvoiceActions";
 import { motion } from "framer-motion";
-import { X } from "lucide-react";
+import { PlusSquare, X } from "lucide-react";
 
 export default function InvoiceCreation() {
   const [invoice, setInvoice] = useState({
@@ -77,9 +77,10 @@ export default function InvoiceCreation() {
       <div className="absolute top-6 right-6">
         <button
           onClick={() => setShowBasicForm(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md shadow text-sm"
+         className=" sm:inline-flex items-center gap-2 px-2 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
         >
-          + Create Invoice
+          <PlusSquare size={14} />
+          <span>Create Invoice</span> 
         </button>
       </div>
 
@@ -213,9 +214,10 @@ export default function InvoiceCreation() {
           {invoice.status !== "Finalized" && (
             <button
               onClick={handleAddItem}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded-md"
+             className="hidden sm:inline-flex items-center gap-2 px-2 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
             >
-              + Add Item
+               <PlusSquare size={14}  />
+                <span>New Item</span>
             </button>
           )}
         </div>

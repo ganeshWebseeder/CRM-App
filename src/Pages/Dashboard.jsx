@@ -259,57 +259,103 @@ export default function Dashboard() {
 
       {/* Reminders Section */}
       <div className="bg-white rounded-2xl p-6 shadow border border-gray-200 mb-20">
-        <h2 className="text-lg font-semibold text-gray-700 mb-4">Reminders</h2>
+  <h2 className="text-lg font-semibold text-gray-700 mb-4">Reminders</h2>
 
-        {reminders.length === 0 ? (
-          <p className="text-gray-500 text-sm">No reminders</p>
-        ) : (
-          <div className="space-y-3">
-            {reminders.map((r) => (
-              <div
-                key={r.id}
-                className="p-4 rounded-xl border hover:bg-gray-100 transition flex flex-col gap-2"
+  {reminders.length === 0 ? (
+    <p className="text-gray-500 text-sm">No reminders</p>
+  ) : (
+    <div className="space-y-4">
+      {reminders.map((r) => (
+        <div
+          key={r.id}
+          className="p-4 rounded-xl border hover:bg-gray-50 transition flex flex-col gap-3"
+        >
+          {/* Top Section */}
+          <div className="flex justify-between items-start">
+            <div>
+              {/* Title */}
+              <p className="font-semibold text-gray-800">{r.title}</p>
+
+              {/* Project + Time */}
+              <p className="text-xs text-gray-600">
+                {r.project} • {r.time}
+              </p>
+
+              {/* Date + Status */}
+              <p
+                className={`text-xs font-semibold ${
+                  r.status === "done"
+                    ? "text-green-600"
+                    : "text-yellow-600"
+                }`}
               >
-                <div>
-                  <p className="font-semibold text-gray-800">{r.title}</p>
-                  <p className="text-xs text-gray-600">
-                    {r.project} • {r.time}
-                  </p>
-                  <p
-                    className={`text-xs font-medium ${
-                      r.status === "done"
-                        ? "text-green-600"
-                        : "text-yellow-600"
-                    }`}
-                  >
-                    {r.date} • {r.status.toUpperCase()}
-                  </p>
-                </div>
+                {r.date} • {r.status?.toUpperCase()}
+              </p>
+            </div>
 
-                <div className="flex gap-2 mt-2">
-                  <button
-                    onClick={() => handleUpdateStatus(r.id)}
-                    className={`px-2 py-1 text-xs rounded ${
-                      r.status === "done"
-                        ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
-                        : "bg-green-100 text-green-700 hover:bg-green-200"
-                    }`}
-                  >
-                    {r.status === "done" ? "Mark Pending" : "Mark Done"}
-                  </button>
-
-                  <button
-                    onClick={() => handleDelete(r.id)}
-                    className="px-2 py-1 text-xs rounded bg-red-100 text-red-700 hover:bg-red-200"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
+            {/* Priority Badge */}
+            <span
+              className={`text-xs px-2 py-1 rounded-full font-medium ${
+                r.priority === "High"
+                  ? "bg-red-100 text-red-700"
+                  : r.priority === "Medium"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-green-100 text-green-700"
+              }`}
+            >
+              {r.priority}
+            </span>
           </div>
-        )}
-      </div>
+
+          {/* Category + Repeat */}
+          <div className="flex items-center gap-3 text-xs text-gray-600">
+            <span className="px-2 py-1 bg-indigo-50 text-indigo-700 rounded-full font-medium">
+              {r.category}
+            </span>
+
+            <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full">
+              {r.repeat}
+            </span>
+          </div>
+
+          {/* Alert Before */}
+          <p className="text-xs text-gray-500">
+            Alert Before: <span className="font-medium">{r.alertBefore}</span>
+          </p>
+
+          {/* Notes */}
+          {r.notes && r.notes.trim() !== "" && (
+            <p className="text-xs text-gray-600 border-l-4 border-indigo-300 pl-2">
+              {r.notes}
+            </p>
+          )}
+
+          {/* Action Buttons */}
+          <div className="flex gap-2 mt-1">
+            <button
+              onClick={() => handleUpdateStatus(r.id)}
+              className={`px-3 py-1 text-xs rounded-md ${
+                r.status === "done"
+                  ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
+                  : "bg-green-100 text-green-700 hover:bg-green-200"
+              }`}
+            >
+              {r.status === "done" ? "Mark Pending" : "Mark Done"}
+            </button>
+
+            <button
+              onClick={() => handleDelete(r.id)}
+              className="px-3 py-1 text-xs rounded-md bg-red-100 text-red-700 hover:bg-red-200"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
 
       {/* Add Reminder Modal */}
       <ReminderModal

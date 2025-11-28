@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import ProjectModal from "../components/ProjectModal";
+import { PlusSquare } from "lucide-react";
 
 export default function Projects() {
   const navigate = useNavigate();
@@ -203,9 +204,10 @@ export default function Projects() {
               setEditProject(null);
               setShowModal(true);
             }}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-md"
-          >
-            + Add Project
+              className=" sm:inline-flex items-center gap-2 px-2 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
+        >
+         <PlusSquare size={14} />
+         <span> New Project </span>
           </button>
         </div>
       </div>
@@ -247,11 +249,11 @@ export default function Projects() {
 
         <td className="p-3">{p.client}</td>
 
-        {/* ⭐ STATUS DROPDOWN ADDED HERE ⭐ */}
+        {/*  STATUS DROPDOWN ADDED HERE */}
         <td className="p-3">
   <select
     value={p.status}
-    onClick={(e) => e.stopPropagation()}   // ✅ Stop row navigation
+    onClick={(e) => e.stopPropagation()}  
     onChange={(e) => {
       e.stopPropagation(); // extra safety
       const newStatus = e.target.value;
@@ -283,14 +285,14 @@ export default function Projects() {
         <td className="p-3">{p.end}</td>
 
         <td className="p-3">
-          <div className="flex justify-center gap-4">
+          <div className="flex justify-center gap-2">
             <i
-              className="ri-edit-line action-btn text-indigo-600 cursor-pointer hover:text-indigo-800"
+              className="ri-edit-line action-btn text-indigo-600 cursor-pointer hover:text-indigo-800 p-2"
               onClick={() => handleEdit(p)}
             ></i>
 
             <i
-              className="ri-delete-bin-line action-btn text-red-500 cursor-pointer hover:text-red-700"
+              className="ri-delete-bin-line action-btn text-red-500 cursor-pointer hover:text-red-700 p-2"
               onClick={() => handleDelete(p.id)}
             ></i>
           </div>
