@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { X } from "lucide-react";
 
 export default function ExpenseModal({ show, onClose, onSave, expense }) {
-  const [form, setForm] = useState({
+  const emptyForm = {
     type: "",
     project: "",
     amount: "",
@@ -9,10 +11,13 @@ export default function ExpenseModal({ show, onClose, onSave, expense }) {
     paidTo: "",
     mode: "Cash",
     remarks: "",
-  });
+  };
+
+  const [form, setForm] = useState(emptyForm);
 
   useEffect(() => {
     if (expense) setForm(expense);
+    else setForm(emptyForm);
   }, [expense]);
 
   const handleChange = (e) => {
@@ -29,61 +34,101 @@ export default function ExpenseModal({ show, onClose, onSave, expense }) {
     onSave(form);
   };
 
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 space-y-4">
-        <div className="flex justify-between items-center border-b pb-2">
-          <h2 className="text-lg font-semibold text-gray-800">
-            {expense ? "Edit Expense" : "Add Expense"}
-          </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-700">
-            ✕
-          </button>
-        </div>
+  if (!show) return null;
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  return (
+    <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50 px-4">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9, y: -20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        className="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-gray-100 p-7 relative"
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition"
+        >
+          <X size={22} />
+        </button>
+
+        {/* Title */}
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
+          {expense ? "Edit Expense" : "Add Expense"}
+        </h2>
+
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-5">
+
+          {/* Expense Type */}
+          <div>
+            <label className="text-gray-600 text-sm font-medium">Expense Type *</label>
             <input
               name="type"
-              placeholder="Expense Type"
+              placeholder="Enter expense type"
               value={form.type}
               onChange={handleChange}
-              className="border px-3 py-2 rounded-md text-sm focus:ring-1 focus:ring-indigo-400"
+              className=" border border-gray-300 p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
             />
+          </div>
+
+          {/* Project */}
+          <div>
+            <label className="text-gray-600 text-sm font-medium">Project *</label>
             <input
               name="project"
-              placeholder="Project Name"
+              placeholder="Enter project name"
               value={form.project}
               onChange={handleChange}
-              className="border px-3 py-2 rounded-md text-sm focus:ring-1 focus:ring-indigo-400"
+              className=" border border-gray-300 p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
             />
-            <input
-              name="amount"
-              type="number"
-              placeholder="Amount ₹"
-              value={form.amount}
-              onChange={handleChange}
-              className="border px-3 py-2 rounded-md text-sm focus:ring-1 focus:ring-indigo-400"
-            />
-            <input
-              name="date"
-              type="date"
-              value={form.date}
-              onChange={handleChange}
-              className="border px-3 py-2 rounded-md text-sm focus:ring-1 focus:ring-indigo-400"
-            />
+          </div>
+
+          {/* Amount & Date */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label className="text-gray-600 text-sm font-medium">Amount *</label>
+              <input
+                name="amount"
+                type="number"
+                placeholder="₹ Amount"
+                value={form.amount}
+                onChange={handleChange}
+                className=" border border-gray-300 p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+
+            <div>
+              <label className="text-gray-600 text-sm font-medium">Date</label>
+              <input
+                name="date"
+                type="date"
+                value={form.date}
+                onChange={handleChange}
+                className=" border border-gray-300 p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
+              />
+            </div>
+          </div>
+
+          {/* Paid To */}
+          <div>
+            <label className="text-gray-600 text-sm font-medium">Paid To</label>
             <input
               name="paidTo"
               placeholder="Paid To"
               value={form.paidTo}
               onChange={handleChange}
-              className="border px-3 py-2 rounded-md text-sm focus:ring-1 focus:ring-indigo-400"
+              className=" border border-gray-300 p-2 rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
             />
+          </div>
+
+          {/* Mode */}
+          <div>
+            <label className="text-gray-600 text-sm font-medium">Payment Mode</label>
             <select
               name="mode"
               value={form.mode}
               onChange={handleChange}
-              className="border px-3 py-2 rounded-md text-sm focus:ring-1 focus:ring-indigo-400"
+              className="border border-gray-300 p-2 rounded-lg w-full bg-white focus:ring-2 focus:ring-indigo-500"
             >
               <option>Cash</option>
               <option>UPI</option>
@@ -91,30 +136,28 @@ export default function ExpenseModal({ show, onClose, onSave, expense }) {
               <option>Card</option>
             </select>
           </div>
-          <textarea
-            name="remarks"
-            placeholder="Remarks"
-            value={form.remarks}
-            onChange={handleChange}
-            className="border px-3 py-2 rounded-md text-sm w-full focus:ring-1 focus:ring-indigo-400"
-          />
-          <div className="flex justify-end space-x-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="bg-gray-200 hover:bg-gray-300 text-gray-700 text-sm px-4 py-2 rounded-md"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-md"
-            >
-              {expense ? "Save Changes" : "Add Expense"}
-            </button>
+
+          {/* Remarks */}
+          <div>
+            <label className="text-gray-600 text-sm font-medium">Remarks</label>
+            <textarea
+              name="remarks"
+              placeholder="Optional remarks"
+              value={form.remarks}
+              onChange={handleChange}
+              className=" border border-gray-300 p-2 rounded-lg w-full min-h-[70px] focus:ring-2 focus:ring-indigo-500"
+            />
           </div>
+
+          {/* Save Button */}
+          <button
+            type="submit"
+            className="mt-2 bg-indigo-600 text-white py-2 rounded-lg font-medium hover:bg-indigo-700 transition"
+          >
+            {expense ? "Save Changes" : "Add Expense"}
+          </button>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }

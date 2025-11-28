@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import ExpenseModal from "../components/expenses/ExpenseModal";
 import ExpenseTable from "../components/expenses/ExpenseTable";
+import { PlusSquare } from "lucide-react";
 
 export default function ExpenseManagement() {
   // 🧠 States
@@ -164,9 +165,10 @@ export default function ExpenseManagement() {
             setEditExpense(null);
             setShowModal(true);
           }}
-          className="ml-auto bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-md transition"
+           className=" sm:inline-flex items-center gap-2 px-2 py-2 ml-28 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
         >
-          + Add Expense
+           <PlusSquare size={14} />
+          <span> Add Expense</span>
         </button>
       </div>
 

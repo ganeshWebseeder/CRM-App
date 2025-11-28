@@ -338,102 +338,150 @@ const allReminders = storedReminders.map((r) => ({
       </div>
 
       {/* ADD LEAD MODAL */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-lg relative"
-          >
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-3 right-3 text-gray-500 hover:text-black"
-            >
-              <X size={20} />
-            </button>
+     {isModalOpen && (
+  <div className="fixed inset-0 bg-black/40  flex justify-center items-center z-50 px-4">
+    
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9, y: -20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-gray-100 p-8 relative"
+    >
+      {/* Close Button */}
+      <button
+        onClick={() => setIsModalOpen(false)}
+        className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition"
+      >
+        <X size={22} />
+      </button>
 
-            <h2 className="text-xl font-semibold text-indigo-600 mb-4 text-center">
-              Add New Lead
-            </h2>
+      {/* Title */}
+      <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
+        Add New Lead
+      </h2>
 
-            <form
-              onSubmit={handleSubmit}
-              className="grid grid-cols-1 sm:grid-cols-2 gap-4"
-            >
-              <input
-                type="text"
-                placeholder="Client Name"
-                value={newLead.clientName}
-                onChange={(e) =>
-                  setNewLead({ ...newLead, clientName: e.target.value })
-                }
-                className="border p-2 rounded"
-                required
-              />
-
-              <input
-                type="text"
-                placeholder="Phone"
-                value={newLead.phone}
-                onChange={(e) =>
-                  setNewLead({ ...newLead, phone: e.target.value })
-                }
-                className="border p-2 rounded"
-                required
-              />
-
-              <input
-                type="email"
-                placeholder="Email"
-                value={newLead.mail}
-                onChange={(e) =>
-                  setNewLead({ ...newLead, mail: e.target.value })
-                }
-                className="border p-2 rounded"
-                required
-              />
-
-              <select
-                value={newLead.status}
-                onChange={(e) =>
-                  setNewLead({ ...newLead, status: e.target.value })
-                }
-                className="border p-2 rounded"
-              >
-                <option>New</option>
-                <option>Follow Up</option>
-                <option>Closed</option>
-              </select>
-
-              <input
-                type="text"
-                placeholder="Source"
-                value={newLead.source}
-                onChange={(e) =>
-                  setNewLead({ ...newLead, source: e.target.value })
-                }
-                className="border p-2 rounded"
-              />
-
-              <textarea
-                placeholder="Notes"
-                value={newLead.notes}
-                onChange={(e) =>
-                  setNewLead({ ...newLead, notes: e.target.value })
-                }
-                className="border p-2 rounded sm:col-span-2"
-              />
-
-              <button
-                type="submit"
-                className="sm:col-span-2 bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700"
-              >
-                Add Lead
-              </button>
-            </form>
-          </motion.div>
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 sm:grid-cols-2 gap-5"
+      >
+        {/* Input - Client Name */}
+        <div className="sm:col-span-2">
+          <label className="text-gray-600 text-sm font-medium">Client Name</label>
+          <input
+            type="text"
+            placeholder="Enter client name"
+            value={newLead.clientName}
+            onChange={(e) =>
+              setNewLead({ ...newLead, clientName: e.target.value })
+            }
+            className="mt-1 border border-gray-300 p-2.5 rounded-lg w-full focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            required
+          />
         </div>
-      )}
+
+        {/* Country Code + Phone */}
+        <div>
+          <label className="text-gray-600 text-sm font-medium">Country Code</label>
+          <select
+            value={newLead.countryCode}
+            onChange={(e) =>
+              setNewLead({ ...newLead, countryCode: e.target.value })
+            }
+            className="mt-1 border border-gray-300 p-2.5 rounded-lg w-full bg-white focus:ring-2 focus:ring-indigo-500"
+          >
+            <option value="+91">🇮🇳 +91</option>
+            <option value="+1">🇺🇸 +1</option>
+            <option value="+44">🇬🇧 +44</option>
+            <option value="+61">🇦🇺 +61</option>
+            <option value="+971">🇦🇪 +971</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="text-gray-600 text-sm font-medium">Phone Number</label>
+          <input
+            type="text"
+            placeholder="Enter phone"
+            value={newLead.phone}
+            onChange={(e) =>
+              setNewLead({ ...newLead, phone: e.target.value })
+            }
+            className="mt-1 border border-gray-300 p-2.5 rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
+            required
+          />
+        </div>
+
+        {/* Email */}
+        <div className="sm:col-span-2">
+          <label className="text-gray-600 text-sm font-medium">Email</label>
+          <input
+            type="email"
+            placeholder="Enter email"
+            value={newLead.mail}
+            onChange={(e) =>
+              setNewLead({ ...newLead, mail: e.target.value })
+            }
+            className="mt-1 border border-gray-300 p-2.5 rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
+            required
+          />
+        </div>
+
+        {/* Status */}
+        <div>
+          <label className="text-gray-600 text-sm font-medium">Status</label>
+          <select
+            value={newLead.status}
+            onChange={(e) =>
+              setNewLead({ ...newLead, status: e.target.value })
+            }
+            className="mt-1 border border-gray-300 p-2.5 rounded-lg w-full bg-white focus:ring-2 focus:ring-indigo-500"
+          >
+            <option>New</option>
+            <option>Follow Up</option>
+            <option>Closed</option>
+          </select>
+        </div>
+
+        {/* Source */}
+        <div>
+          <label className="text-gray-600 text-sm font-medium">Source</label>
+          <input
+            type="text"
+            placeholder="Source of lead"
+            value={newLead.source}
+            onChange={(e) =>
+              setNewLead({ ...newLead, source: e.target.value })
+            }
+            className="mt-1 border border-gray-300 p-2.5 rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        {/* Notes */}
+        <div className="sm:col-span-2">
+          <label className="text-gray-600 text-sm font-medium">Notes</label>
+          <textarea
+            placeholder="Write notes here..."
+            value={newLead.notes}
+            onChange={(e) =>
+              setNewLead({ ...newLead, notes: e.target.value })
+            }
+            className="mt-1 border border-gray-300 p-3 rounded-lg w-full min-h-[90px] focus:ring-2 focus:ring-indigo-500"
+          />
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className="sm:col-span-2 mt-2 bg-indigo-600 text-white py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition"
+        >
+          Add Lead
+        </button>
+      </form>
+    </motion.div>
+  </div>
+)}
+
+
     </>
   );
 }

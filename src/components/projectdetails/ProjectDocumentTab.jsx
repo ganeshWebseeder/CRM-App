@@ -80,7 +80,6 @@ export default function ProjectDocumentsTab() {
               <option value="Contract">Contract</option>
               <option value="Invoice">Invoice</option>
               <option value="Proposal">Proposal</option>
-              <option value="Report">Report</option>
               <option value="Other">Other</option>
             </select>
           </div>

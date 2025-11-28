@@ -52,7 +52,7 @@ export default function ExpenseTable({ expenses, onEdit, onDelete }) {
                       className="text-indigo-600 hover:text-indigo-800"
                       title="Edit"
                     >
-                      <i className="ri-edit-2-fill text-lg"></i>
+                      <i className="ri-edit-line action-btn text-indigo-600 cursor-pointer hover:text-indigo-800 p-2"></i>
                     </button>
 
                     <button
@@ -60,7 +60,7 @@ export default function ExpenseTable({ expenses, onEdit, onDelete }) {
                       className="text-red-500 hover:text-red-700"
                       title="Delete"
                     >
-                      <i className="ri-delete-bin-6-line text-lg"></i>
+                      <i  className="ri-delete-bin-line action-btn text-red-500 cursor-pointer hover:text-red-700 p-2"></i>
                     </button>
                   </div>
                 </td>

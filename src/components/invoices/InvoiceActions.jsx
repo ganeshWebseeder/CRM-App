@@ -13,7 +13,7 @@ export default function InvoiceActions({ onSaveDraft, onFinalize, isFinalized })
           </button>
           <button
             onClick={onFinalize}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-md"
+             className=" sm:inline-flex items-center gap-2 px-2 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
           >
              Finalize Invoice
           </button>
