@@ -15,7 +15,7 @@ export default function Projects() {
   const [statusFilter, setStatusFilter] = useState("All");
   const [clientFilter, setClientFilter] = useState("All");
 
-  // Sample Data
+  // Project List
   const [projects, setProjects] = useState([
     {
       id: 1,
@@ -51,44 +51,53 @@ export default function Projects() {
     },
   ]);
 
-  // Unique Clients
+  // Unique client list
   const uniqueClients = useMemo(
     () => ["All", ...new Set(projects.map((p) => p.client))],
     [projects]
   );
 
-  // Filtered List
+  // Filter Logic
   const filteredProjects = projects.filter((p) => {
-    const q = searchTerm.toLowerCase();
-    const matchesSearch =
-      p.name.toLowerCase().includes(q) || p.client.toLowerCase().includes(q);
-    const matchesStatus = statusFilter === "All" || p.status === statusFilter;
-    const matchesClient = clientFilter === "All" || p.client === clientFilter;
+  const q = searchTerm.toLowerCase();
 
-    return matchesSearch && matchesStatus && matchesClient;
-  });
+  const matchesSearch =
+    p.name.toLowerCase().includes(q) ||
+    p.client.toLowerCase().includes(q);
 
-  // Edit project
+  const matchesStatus =
+    statusFilter === "All" || p.status === statusFilter;
+
+  const matchesClient =
+    clientFilter === "All" || p.client === clientFilter;
+
+  return matchesSearch && matchesStatus && matchesClient;
+});
+
+
+  // Edit handler
   const handleEdit = (project) => {
     setEditProject(project);
     setShowModal(true);
   };
 
-  // Delete project
+  // Delete handler
   const handleDelete = (id) => {
     if (window.confirm("Are you sure you want to delete this project?")) {
       setProjects((prev) => prev.filter((p) => p.id !== id));
     }
   };
 
-  // Save project
+  // Save (Add/Edit)
   const handleSave = (project) => {
     if (editProject) {
+      // Update existing project
       setProjects((prev) =>
-        prev.map((p) => (p.id === editProject.id ? project : p))
+        prev.map((p) => (p.id === project.id ? project : p))
       );
     } else {
-      setProjects((prev) => [...prev, { ...project, id: Date.now() }]);
+      // Add new project
+      setProjects((prev) => [...prev, project]);
     }
 
     setShowModal(false);
@@ -98,80 +107,70 @@ export default function Projects() {
   return (
     <div className="px-4 sm:px-6 lg:px-10 py-6 space-y-6 bg-gray-50 min-h-screen">
       {/* Page Header */}
-      <div>
-        <p className="text-gray-500 text-sm">
-          Manage, search, filter, and view all active and completed projects.
-        </p>
-      </div>
+      <p className="text-gray-500 text-sm">
+        Manage, search, filter, and view all active and completed projects.
+      </p>
 
       {/* Summary Cards */}
-      {/* Summary Cards (Dashboard Style Hover Animation) */}
-<motion.div
-  initial="hidden"
-  animate="show"
-  className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4"
->
-  {[
-    {
-      label: "Total Projects",
-      value: projects.length,
-      icon: "ri-briefcase-line",
-      color: "from-blue-200 to-blue-200",
-      text: "text-blue-700",
-    },
-    {
-      label: "Active",
-      value: projects.filter((p) => p.status === "Active").length,
-      icon: "ri-play-circle-line",
-      color: "from-green-200 to-green-200",
-      text: "text-green-700",
-    },
-    {
-      label: "Completed",
-      value: projects.filter((p) => p.status === "Completed").length,
-      icon: "ri-checkbox-circle-line",
-      color: "from-yellow-200 to-yellow-200",
-      text: "text-indigo-700",
-    },
-    {
-      label: "On Hold",
-      value: projects.filter((p) => p.status === "On Hold").length,
-      icon: "ri-time-line",
-      color: "from-rose-200 to-rose-200",
-      text: "text-yellow-700",
-    },
-  ].map((card, i) => (
-   <motion.div
-  key={i}
-  whileHover={{
-    scale: 1.02,
-    y: -2,
-    boxShadow: "0 8px 15px rgba(0,0,0,0.05)",
-  }}
-  transition={{ type: "spring", stiffness: 120 }}
-  className={`cursor-pointer p-4 rounded-xl bg-gradient-to-r ${card.color} 
-              shadow-sm flex justify-between items-center hover:opacity-95 transition`}
->
-  {/* LEFT SIDE: Label + Value */}
-  <div>
-    <p className="text-base text-gray-600 mb-2">{card.label}</p>
+      <motion.div
+        initial="hidden"
+        animate="show"
+        className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+      >
+        {[
+          {
+            label: "Total Projects",
+            value: projects.length,
+            icon: "ri-briefcase-line",
+            color: "from-blue-200 to-blue-200",
+            text: "text-blue-700",
+          },
+          {
+            label: "Active",
+            value: projects.filter((p) => p.status === "Active").length,
+            icon: "ri-play-circle-line",
+            color: "from-green-200 to-green-200",
+            text: "text-green-700",
+          },
+          {
+            label: "Completed",
+            value: projects.filter((p) => p.status === "Completed").length,
+            icon: "ri-checkbox-circle-line",
+            color: "from-yellow-200 to-yellow-200",
+            text: "text-indigo-700",
+          },
+          {
+            label: "On Hold",
+            value: projects.filter((p) => p.status === "On Hold").length,
+            icon: "ri-time-line",
+            color: "from-rose-200 to-rose-200",
+            text: "text-yellow-700",
+          },
+        ].map((card, i) => (
+          <motion.div
+            key={i}
+            whileHover={{
+              scale: 1.02,
+              y: -2,
+              boxShadow: "0 8px 15px rgba(0,0,0,0.05)",
+            }}
+            transition={{ type: "spring", stiffness: 120 }}
+            className={`cursor-pointer p-4 rounded-xl bg-gradient-to-r ${card.color}
+                        shadow-sm flex justify-between items-center hover:opacity-95 transition`}
+          >
+            <div>
+              <p className="text-base text-gray-600 mb-2">{card.label}</p>
+              <h2 className="text-base font-semibold text-gray-600">
+                {card.value}
+              </h2>
+            </div>
 
-    <h2 className="text-base font-semibold text-gray-600">
-      {card.value}
-    </h2>
-  </div>
-
-  {/* RIGHT SIDE: Icon */}
-  <div className="w-10 h-10 flex items-center justify-center bg-black/10 p-3 rounded-full">
-  <i className={`${card.icon} text-xl ${card.text}`}></i>
-</div>
-
-</motion.div>
-
-  ))}
-</motion.div>
-
-
+            <div className="w-10 h-10 flex items-center justify-center bg-black/10 p-3 rounded-full">
+              <i className={`${card.icon} text-xl ${card.text}`}></i>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
 
       {/* Search + Filters */}
       <div className="bg-white p-4 rounded-lg shadow-sm flex flex-col md:flex-row gap-4 justify-between">
@@ -212,114 +211,109 @@ export default function Projects() {
               setEditProject(null);
               setShowModal(true);
             }}
-              className=" sm:inline-flex items-center gap-2 px-2 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
-        >
-         <PlusSquare size={14} />
-         <span> New Project </span>
+            className="sm:inline-flex items-center gap-2 px-2 py-1 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
+          >
+            <PlusSquare size={14} />
+            <span> New Project </span>
           </button>
         </div>
       </div>
 
       {/* Projects Table */}
-      {/* Projects Table */}
-<motion.div
-  className="overflow-x-auto bg-white rounded-lg shadow-md border border-gray-200 p-6"
-  initial={{ opacity: 0, x: 20 }}
-  animate={{ opacity: 1, x: 0 }}
->
-  <table className="min-w-full text-sm text-gray-700">
-    <thead className="bg-gray-100 text-gray-600 uppercase ">
-      <tr className="bg-indigo-100 text-gray-700">
-        <th className="p-3 text-left">Project Name</th>
-        <th className="p-3 text-left">Client</th>
-        <th className="p-3 text-left">Status</th>
-        <th className="p-3 text-left">Start Date</th>
-        <th className="p-3 text-left">End Date</th>
-        <th className="p-3 text-center">Actions</th>
-      </tr>
-    </thead>
-
-   <tbody>
-  {filteredProjects.length > 0 ? (
-    filteredProjects.map((p, index) => (
-      <motion.tr
-        key={p.id}
-        className="border-b hover:bg-gray-50 transition cursor-pointer"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: index * 0.05 }}
-        onClick={(e) => {
-          if (e.target.closest(".action-btn")) return;
-          navigate(`/projects/${p.id}`);
-        }}
+      <motion.div
+        className="overflow-x-auto bg-white rounded-lg shadow-md border border-gray-200 p-6"
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
       >
-        <td className="p-3 font-medium text-gray-800">{p.name}</td>
+        <table className="min-w-full text-sm text-gray-700">
+          <thead className="bg-indigo-100 text-gray-700 uppercase">
+            <tr>
+              <th className="p-3 text-left">Project Name</th>
+              <th className="p-3 text-left">Client</th>
+              <th className="p-3 text-left">Status</th>
+              <th className="p-3 text-left">Start Date</th>
+              <th className="p-3 text-left">End Date</th>
+              <th className="p-3 text-center">Actions</th>
+            </tr>
+          </thead>
 
-        <td className="p-3">{p.client}</td>
+          <tbody>
+            {filteredProjects.length > 0 ? (
+              filteredProjects.map((p, index) => (
+                <motion.tr
+                  key={p.id}
+                  className="border-b hover:bg-gray-50 transition cursor-pointer"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: index * 0.05 }}
+                  onClick={(e) => {
+                    if (e.target.closest(".action-btn")) return;
+                    navigate(`/projects/${p.id}`);
+                  }}
+                >
+                  <td className="p-3 font-medium text-gray-800">{p.name}</td>
+                  <td className="p-3">{p.client}</td>
 
-        {/*  STATUS DROPDOWN ADDED HERE */}
-        <td className="p-3">
-  <select
-    value={p.status}
-    onClick={(e) => e.stopPropagation()}  
-    onChange={(e) => {
-      e.stopPropagation(); // extra safety
-      const newStatus = e.target.value;
+                  {/* Status dropdown */}
+                  <td className="p-3">
+                    <select
+                      value={p.status}
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={(e) => {
+                        const newStatus = e.target.value;
 
-      setProjects((prev) =>
-        prev.map((proj) =>
-          proj.id === p.id ? { ...proj, status: newStatus } : proj
-        )
-      );
-    }}
-    className={`px-3 py-1 rounded-md text-sm font-medium border 
-      ${
-        p.status === "Active"
-          ? "bg-green-100 text-green-700 border-green-300"
-          : p.status === "Completed"
-          ? "bg-indigo-100 text-indigo-700 "
-          : "bg-yellow-100 text-yellow-700 border-yellow-300"
-      }
-    `}
-  >
-    <option value="Active">Active</option>
-    <option value="Completed">Completed</option>
-    <option value="On Hold">On Hold</option>
-  </select>
-</td>
+                        setProjects((prev) =>
+                          prev.map((proj) =>
+                            proj.id === p.id
+                              ? { ...proj, status: newStatus }
+                              : proj
+                          )
+                        );
+                      }}
+                      className={`px-3 py-1 rounded-md text-sm font-medium border 
+                        ${
+                          p.status === "Active"
+                            ? "bg-green-100 text-green-700 border-green-300"
+                            : p.status === "Completed"
+                            ? "bg-indigo-100 text-indigo-700"
+                            : "bg-yellow-100 text-yellow-700 border-yellow-300"
+                        }
+                      `}
+                    >
+                      <option value="Active">Active</option>
+                      <option value="Completed">Completed</option>
+                      <option value="On Hold">On Hold</option>
+                    </select>
+                  </td>
 
+                  <td className="p-3">{p.start}</td>
+                  <td className="p-3">{p.end}</td>
 
-        <td className="p-3">{p.start}</td>
-        <td className="p-3">{p.end}</td>
+                  <td className="p-3">
+                    <div className="flex justify-center gap-2">
+                      <i
+                        className="ri-edit-line action-btn text-indigo-600 cursor-pointer hover:text-indigo-800 p-2"
+                        onClick={() => handleEdit(p)}
+                      ></i>
 
-        <td className="p-3">
-          <div className="flex justify-center gap-2">
-            <i
-              className="ri-edit-line action-btn text-indigo-600 cursor-pointer hover:text-indigo-800 p-2"
-              onClick={() => handleEdit(p)}
-            ></i>
-
-            <i
-              className="ri-delete-bin-line action-btn text-red-500 cursor-pointer hover:text-red-700 p-2"
-              onClick={() => handleDelete(p.id)}
-            ></i>
-          </div>
-        </td>
-      </motion.tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan="6" className="text-center text-gray-500 py-6">
-        No projects found.
-      </td>
-    </tr>
-  )}
-</tbody>
-
-  </table>
-</motion.div>
-
-
+                      <i
+                        className="ri-delete-bin-line action-btn text-red-500 cursor-pointer hover:text-red-700 p-2"
+                        onClick={() => handleDelete(p.id)}
+                      ></i>
+                    </div>
+                  </td>
+                </motion.tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" className="text-center text-gray-500 py-6">
+                  No projects found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </motion.div>
 
       {/* Modal */}
       {showModal && (
